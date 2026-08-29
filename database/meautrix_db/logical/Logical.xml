@@ -1,0 +1,7 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<LogicalDesign class="oracle.dbtools.crest.model.design.logical.LogicalDesign" name="Logical" id="547319A4-94F0-9E0B-9F99-3FFD44399F2D" mainViewID="D1AF53AA-A782-C01C-0E02-FCB3AB30CD7C">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 13:50:58 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<shouldBeOpen>false</shouldBeOpen>
+</LogicalDesign>

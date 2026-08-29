@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="USUARIOv2" directorySegmentName="seg_0" id="EECA0905-7895-1516-FF1E-D016C5D9B87F">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 23:18:14 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="true"/>
+</engineerTo>
+<sourcePk>419C5B8D-310B-B0E7-DD1F-42DC3D5AB7A1</sourcePk>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>B636B7DD-2DC4-0321-6DCB-82BFF9F067D6</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>25456976-CCEE-73D3-D6E0-B263D895F563</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

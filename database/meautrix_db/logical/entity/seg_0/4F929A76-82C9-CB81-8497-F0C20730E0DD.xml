@@ -1,0 +1,74 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="4F929A76-82C9-CB81-8497-F0C20730E0DD" name="FORNECEDORES">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:17:21 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="FORN ID" id="E6D71113-FF2F-61C3-007E-1D3A964927AA">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:17:24 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="FORN RAZAO SOCIAL" id="714E9581-D84C-E1AB-C839-16F5E4CA1571">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:19:42 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>60</dataTypeSize>
+<ownDataTypeParameters>60,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="FORN CNPJ" id="3E5BC867-4E57-84C0-8B42-CF09B3484D9E">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:20:09 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>20</dataTypeSize>
+<ownDataTypeParameters>20,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="316D4A24-3D76-6CD2-4F1F-8B60F890280B" name="FORNECEDORES PK">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:19:39 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="false"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>E6D71113-FF2F-61C3-007E-1D3A964927AA</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

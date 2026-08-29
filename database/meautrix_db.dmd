@@ -1,0 +1,8 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="meautrix_db" id="EF25C5A8-AA84-2B2D-331D-FF6F2155506B" version="3.5">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 13:50:58 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<capitalNames>false</capitalNames>
+<designId>EF25C5A8-AA84-2B2D-331D-FF6F2155506B</designId>
+</OSDM_Design>

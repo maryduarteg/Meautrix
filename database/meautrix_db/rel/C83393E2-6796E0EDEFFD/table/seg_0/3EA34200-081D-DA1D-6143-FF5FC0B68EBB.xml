@@ -1,0 +1,96 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="3EA34200-081D-DA1D-6143-FF5FC0B68EBB" name="USUARIOS">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:29:07 UTC</createdTime>
+<generatorID>B636B7DD-2DC4-0321-6DCB-82BFF9F067D6</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="USU_ID" id="7C088432-06CC-9878-70D9-F1CAC5AC51C0">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:29:07 UTC</createdTime>
+<generatorID>55A621BE-69CC-A8CB-D440-B912E439F424</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="USU_NOME" id="029A79C7-446A-4B05-1C1A-40D7300AFB09">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:29:07 UTC</createdTime>
+<generatorID>E0245127-5270-F24B-2A84-1217109F7EF2</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>60</dataTypeSize>
+<ownDataTypeParameters>60,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="USU_LOGIN" id="3952F6E9-76F8-DD82-74D9-CE28341A5B24">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:29:07 UTC</createdTime>
+<generatorID>E40DD883-10ED-2B00-0D07-FA36B01BCC40</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>30</dataTypeSize>
+<ownDataTypeParameters>30,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="USU_SENHA" id="65D5E7E3-2F3D-9E9A-4B64-5B6243B97F3D">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:29:07 UTC</createdTime>
+<generatorID>D6B41792-E517-EEAD-51FB-D9C8C62C5B38</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>60</dataTypeSize>
+<ownDataTypeParameters>60,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="USU_E_ADM" id="1131DCD3-3DCC-F4F3-8A13-941F5EBF2BD6">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:29:07 UTC</createdTime>
+<generatorID>B3BE09FA-752F-84E8-7001-917C0E8CA52D</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT006</logicalDatatype>
+<dataTypeSize>1</dataTypeSize>
+<ownDataTypeParameters>1,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="USU_ATIVO" id="955BFFEE-81F6-7C71-07D1-3A489CB64CD4">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-23 20:43:44 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT025</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="E40E4DBB-2700-2115-BA43-EDCF09017130" name="USUARIOS_PK">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:29:07 UTC</createdTime>
+<generatorID>419C5B8D-310B-B0E7-DD1F-42DC3D5AB7A1</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="7C088432-06CC-9878-70D9-F1CAC5AC51C0"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

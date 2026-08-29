@@ -1,0 +1,145 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="D6A916B1-DBCB-B804-F74B-043EFE08447D" name="ITENS">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:29:07 UTC</createdTime>
+<generatorID>9185559A-BF4B-7ED6-FE03-60B2A04EEB52</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="ITE_ID" id="320B7012-5814-DC56-CD3F-DFE75AFC1596">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:29:07 UTC</createdTime>
+<generatorID>7AE6B576-1DBB-6749-35FD-7FA661A115A5</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="ITE_NOME" id="87600DAA-4E1A-5EED-BAD5-BE90FB6C3F16">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:29:07 UTC</createdTime>
+<generatorID>606732F6-369B-563F-99C6-5F28ECDEDFB8</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>60</dataTypeSize>
+<ownDataTypeParameters>60,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PRODUTOS_PROD_ID" id="D3AD9CF8-72F8-6D7F-A669-027AEA1116F1">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 15:29:33 UTC</createdTime>
+<generatorID>0AD9910B-FF30-6DDC-A1AE-27AC294D2E68</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="C80F4555-C6FA-E487-F436-C37B1FDA5844" referredColumn="8299CD0A-E6CA-947D-BA77-8AD76796253C"/>
+</associations>
+</Column>
+<Column name="ITE_ATIVO" id="2637A1AB-0085-1FE3-652C-5ABE3308FD96">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 16:40:33 UTC</createdTime>
+<generatorID>084AFF5E-2D39-9214-5BC3-4E3284F85A99</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT006</logicalDatatype>
+<dataTypeSize>1</dataTypeSize>
+<ownDataTypeParameters>1,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="ITE_QUANTIDADE_ATUAL" id="A44A0651-6195-E53E-6B74-9A89E5D575C7">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-24 19:05:39 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT021</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="ITE_QUANTIDADE_SAIDA_ALTERADA" id="E2898B49-43DA-3454-1341-81689A9608E5">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-24 19:17:45 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT021</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="ITE_LOTE_NOME" id="B91CD7B7-D532-F36A-CCA2-841BAF0F362D">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-26 01:50:26 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>60</dataTypeSize>
+<ownDataTypeParameters>60,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="ITE_LOTE_DATA_AQUISICAO" id="DE36F664-527B-7962-6E5F-7942EC20CB36">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-26 01:50:40 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="ITE_LOTE_DATA_VENCIMENTO" id="F23BE53D-3EC5-14CD-E761-8424A59C9421">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-26 01:50:55 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="01A0755A-2563-5810-83B9-7FBC14D87DDE" name="ITENS_PK">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:29:07 UTC</createdTime>
+<generatorID>67C7231D-4091-994C-592B-4E1838456A8E</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="320B7012-5814-DC56-CD3F-DFE75AFC1596"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="4450843E-6FEC-5924-0EBE-15112CF43A43" name="ITENS_PRODUTOS_FK">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 15:29:34 UTC</createdTime>
+<generatorID>4E63B966-3DF2-771B-1DCA-2AA82B987564</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="D3AD9CF8-72F8-6D7F-A669-027AEA1116F1"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

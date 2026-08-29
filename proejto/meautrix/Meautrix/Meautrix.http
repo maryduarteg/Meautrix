@@ -1,0 +1,6 @@
+@Meautrix_HostAddress = http://localhost:5139
+
+GET {{Meautrix_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

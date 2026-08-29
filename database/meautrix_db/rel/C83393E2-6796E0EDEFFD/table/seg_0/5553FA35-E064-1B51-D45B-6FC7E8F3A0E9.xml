@@ -1,0 +1,62 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="5553FA35-E064-1B51-D45B-6FC7E8F3A0E9" name="PROCEDIMENTOS">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:29:07 UTC</createdTime>
+<generatorID>5B07E457-EC70-E7BC-C7CC-B499FB0E6A03</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="PROC_ID" id="5F4765B4-35D7-DFA4-F670-E6F979162A08">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:29:07 UTC</createdTime>
+<generatorID>9A860055-E1F8-7B0C-4DE8-A90828742B86</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PROC_NOME" id="81639159-1722-AD02-347A-98F30685F4BB">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:29:07 UTC</createdTime>
+<generatorID>A51211F8-9FA4-2898-D45B-498F4FCED0CB</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>60</dataTypeSize>
+<ownDataTypeParameters>60,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PROC_DESCRIÇÃO" id="BB02416A-AF74-866E-25F7-279241155261">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:29:07 UTC</createdTime>
+<generatorID>78DAFAE3-B5E2-15AB-56EB-D47F46B54C44</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>60</dataTypeSize>
+<ownDataTypeParameters>60,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="1B441384-4C01-5820-E3A1-AD497F795F69" name="PROCEDIMENTOS_PK">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:29:07 UTC</createdTime>
+<generatorID>AF50A0E4-A25B-D3DC-2BF8-9849FA083D46</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="5F4765B4-35D7-DFA4-F670-E6F979162A08"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

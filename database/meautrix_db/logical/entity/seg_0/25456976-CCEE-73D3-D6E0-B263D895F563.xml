@@ -1,0 +1,100 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="25456976-CCEE-73D3-D6E0-B263D895F563" name="PROCEDIMENTOS CONCLUIDOS">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:31:40 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="PROC CONC ID" id="38D3A0C7-0A67-7B51-3A1A-60A2BEF7045B">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:31:49 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="PROC CONC DATA CONCLUSAO" id="238FEFAE-D4B4-F11A-1B75-A477B23B6F64">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:32:06 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="PROC PREV ID" id="B9D5EF89-1B07-3456-4148-AE25C2DC4AC8">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:57:50 UTC</createdTime>
+<generatorID>927CF7AB-E819-5DB1-9347-E81BCD8C2625</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="true"/>
+</engineerTo>
+<referedAttribute>C7E10D65-5745-F279-61CD-3D8B6A5443ED</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="PROC CONC ALTERACAO PADRAO" id="E6E3D645-3418-AA72-F335-DB3ACDCE23CE">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 22:07:37 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT006</logicalDatatype>
+<dataTypeSize>1</dataTypeSize>
+<ownDataTypeParameters>1,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="USU ID" id="4953E8B3-FAD3-EA4F-01F0-AE50B2D97FF7">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 23:18:14 UTC</createdTime>
+<generatorID>EECA0905-7895-1516-FF1E-D016C5D9B87F</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="true"/>
+</engineerTo>
+<referedAttribute>55A621BE-69CC-A8CB-D440-B912E439F424</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="C15C6265-29F1-BEC5-E0C8-C554997B694F" name="PROCEDIMENTOS_CONCLUIDOS_PK">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:31:57 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="false"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>38D3A0C7-0A67-7B51-3A1A-60A2BEF7045B</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

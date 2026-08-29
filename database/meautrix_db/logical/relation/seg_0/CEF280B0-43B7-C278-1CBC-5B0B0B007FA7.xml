@@ -1,0 +1,34 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="PROD_ALTERADOS_PROC_CONC" directorySegmentName="seg_0" id="CEF280B0-43B7-C278-1CBC-5B0B0B007FA7">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 22:08:54 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="true"/>
+</engineerTo>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>*</sourceCardinality>
+<sourceEntity>F725D123-4FFD-865D-DEE9-DED6941D175C</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>25456976-CCEE-73D3-D6E0-B263D895F563</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<attribute name="PROD ALT QNT USADA" id="D43F651A-EB7E-D53B-28EE-687A8391B2F1">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 22:57:03 UTC</createdTime>
+<generatorID>C7B76D5C-FC1B-72CC-623A-71B7BFEEBEE9</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT021</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</attribute>
+</attributes>
+</Relation>

@@ -1,0 +1,76 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="1734227B-522D-FCEB-3C03-4479A03E45AF" name="CLI_PROC_PREV">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:53:06 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<ordsAlias>clientes_procedimentos_previstos</ordsAlias>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="PROC_PREV_ID" id="CF36815E-8D18-4606-FFC5-E22931D2F78A">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:53:06 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="39AE1B54-EA25-A436-7452-CB9C29541E0A" referredColumn="4E584F0F-D27D-23BA-4C97-B43F1885F582"/>
+</associations>
+</Column>
+<Column name="CLIENTES_CLI_ID" id="DB20B004-216B-8CC2-BCA6-904152FA2463">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:53:06 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="2540F163-289A-F8EC-9AA6-AEFD00CD6965" referredColumn="6F056473-CB43-90A5-D06F-6994A30A0713"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="CBD4FEF0-42D4-B126-FB8B-92FC97EE6B4E" name="CLI_PROC_PREV_PK">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:53:06 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="CF36815E-8D18-4606-FFC5-E22931D2F78A"/>
+<colUsage columnID="DB20B004-216B-8CC2-BCA6-904152FA2463"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="9AC0D296-68C3-968E-DC1C-FF0609DAD723" name="PROC_PREV_FKv3">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:53:06 UTC</createdTime>
+<generatorID>43869618-58B0-6F40-83CA-4690938C69A4</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="CF36815E-8D18-4606-FFC5-E22931D2F78A"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="5E01AC8C-5455-B5A9-9891-2783DE8FAFE7" name="CLIENTES_FK">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:53:06 UTC</createdTime>
+<generatorID>43869618-58B0-6F40-83CA-4690938C69A4</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="DB20B004-216B-8CC2-BCA6-904152FA2463"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

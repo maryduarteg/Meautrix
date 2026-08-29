@@ -1,0 +1,98 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="B636B7DD-2DC4-0321-6DCB-82BFF9F067D6" name="USUARIOS">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 13:59:41 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="USU ID" id="55A621BE-69CC-A8CB-D440-B912E439F424">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:00:05 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="USU NOME" id="E0245127-5270-F24B-2A84-1217109F7EF2">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:01:15 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>60</dataTypeSize>
+<ownDataTypeParameters>60,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="USU LOGIN" id="E40DD883-10ED-2B00-0D07-FA36B01BCC40">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:03:12 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>30</dataTypeSize>
+<ownDataTypeParameters>30,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="USU SENHA" id="D6B41792-E517-EEAD-51FB-D9C8C62C5B38">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:02:42 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>60</dataTypeSize>
+<ownDataTypeParameters>60,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="USU E ADM" id="B3BE09FA-752F-84E8-7001-917C0E8CA52D">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:03:58 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT006</logicalDatatype>
+<dataTypeSize>1</dataTypeSize>
+<ownDataTypeParameters>1,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="419C5B8D-310B-B0E7-DD1F-42DC3D5AB7A1" name="USUARIOS PK">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:03:10 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="false"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>55A621BE-69CC-A8CB-D440-B912E439F424</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

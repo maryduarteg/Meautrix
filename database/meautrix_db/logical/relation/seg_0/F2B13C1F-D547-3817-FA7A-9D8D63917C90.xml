@@ -1,0 +1,18 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="LOTES_PRODUTOS" directorySegmentName="seg_0" id="F2B13C1F-D547-3817-FA7A-9D8D63917C90">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:29:40 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="true"/>
+</engineerTo>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>*</sourceCardinality>
+<sourceEntity>F725D123-4FFD-865D-DEE9-DED6941D175C</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>43D94338-0E28-9A1A-F055-5522BBF8F7D7</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

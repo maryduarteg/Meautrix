@@ -1,0 +1,55 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="D1F095CF-EC26-A1AB-B934-367387CFBDCB" name="PROMOCOES">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-23 15:01:14 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<ordsAlias>table_21</ordsAlias>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="PROM_ID" id="81A3B29B-745B-3623-39F0-717121F1A6E2">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-23 15:01:36 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PROM_DATA_MINIMA" id="4844FE99-4E66-1948-9015-7F2126E6A436">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-23 15:01:56 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PROM_DATA_MAXIMA" id="8209DEB3-86FF-1715-07E5-7D7F76A7F6EF">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-23 15:02:09 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="A388A500-E99E-7D1E-3CC1-C6A4170FD212" name="PROMOCOES_PK">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-23 15:01:36 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="81A3B29B-745B-3623-39F0-717121F1A6E2"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

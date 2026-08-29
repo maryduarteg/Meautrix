@@ -1,0 +1,126 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="F725D123-4FFD-865D-DEE9-DED6941D175C" name="PRODUTOS">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 13:57:27 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="PROD ID" id="0CAD0AF6-E5C5-58F5-4B01-E41803FEC443">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 13:59:14 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="PROD DESCRICAO" id="6726B9F2-B538-F00F-6F4F-41AACBD00D58">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 13:57:37 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>90</dataTypeSize>
+<ownDataTypeParameters>90,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="PROD QUANTIDADE TOTAL" id="EF454DCB-795B-AC31-42BC-C08AAD73213D">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:22:26 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT021</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="MEDIDAS MED ID ENTRADA" id="44FDA8A0-56CE-6C80-C3B9-AA9AA5CBFDA1">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 16:20:34 UTC</createdTime>
+<generatorID>C79D13AE-1CB8-6FB3-D6C8-B5F60CB44E20</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="true"/>
+</engineerTo>
+<referedAttribute>42060915-9103-9707-089A-D7F739D12060</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="MEDIDAS MED ID BAIXA" id="F51D5BC4-8074-8396-7D7D-46A2E4B039DE">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 16:21:30 UTC</createdTime>
+<generatorID>EF0E5E88-0811-A183-02C0-A47B4491D7D0</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="true"/>
+</engineerTo>
+<referedAttribute>42060915-9103-9707-089A-D7F739D12060</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="PROD QUANTIDAE MINIMA" id="96718E6D-CDEA-A920-F317-8B9FCD10A01D">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 16:34:27 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT021</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="PROD FATOR CONVERSAO" id="A55FBC51-74D9-0490-3CBF-89C44FBA7C9B">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 16:35:13 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT021</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="4CE2A794-D352-7CA0-8791-F684FA159B95" name="PRODUTOS PK">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 13:57:46 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="false"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>0CAD0AF6-E5C5-58F5-4B01-E41803FEC443</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

@@ -1,0 +1,75 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="AC02DF03-849A-8751-1F34-6B73DFE19C66" name="FORNECEDORES_PRODUTOS">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 16:40:33 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="FORNECEDORES_FORN_ID" id="BBED4517-D65E-C107-6106-B8877776AE93">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 16:40:33 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="D6D9320A-65C6-5342-E890-1FAE4D6539CE" referredColumn="5FED2446-8560-8211-196A-14FF97AE0935"/>
+</associations>
+</Column>
+<Column name="PRODUTOS_PROD_ID" id="3F28E13B-7640-6322-91A2-456B23D10C14">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 16:40:33 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="052435AD-338D-3F7B-4520-6CC9979825BC" referredColumn="8299CD0A-E6CA-947D-BA77-8AD76796253C"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="C104CC9A-BF48-CFA9-2092-1019F54BDB24" name="FORNECEDORES_PRODUTOS_PK">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 16:40:33 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="BBED4517-D65E-C107-6106-B8877776AE93"/>
+<colUsage columnID="3F28E13B-7640-6322-91A2-456B23D10C14"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="BBB38374-96C4-5AEE-2FA0-833D06BA3B71" name="FORNECEDORES_FK">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 16:40:33 UTC</createdTime>
+<generatorID>EF92DC3C-082B-74D3-312B-3F8BC8C58D4E</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="BBED4517-D65E-C107-6106-B8877776AE93"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="C2AB69B0-134F-61CC-E88B-D8C29F87150A" name="PRODUTOS_FK">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 16:40:33 UTC</createdTime>
+<generatorID>EF92DC3C-082B-74D3-312B-3F8BC8C58D4E</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="3F28E13B-7640-6322-91A2-456B23D10C14"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

@@ -1,0 +1,61 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="B00838C4-9987-3502-B980-9CAD1B4195A1" name="MEDIDAS">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:29:07 UTC</createdTime>
+<generatorID>E0D2C32E-085B-D81C-ECFD-E66BB15D7D8D</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="MED_ID" id="64449BCC-1BD7-9471-76B5-8D5C6C326ABB">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:29:07 UTC</createdTime>
+<generatorID>42060915-9103-9707-089A-D7F739D12060</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="MED_DESCRICAO" id="6CE59184-F789-D451-0D0F-4D0D8483ABC6">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:29:07 UTC</createdTime>
+<generatorID>64575DCD-620A-551F-8D3B-0D81CA5B507E</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>30</dataTypeSize>
+<ownDataTypeParameters>30,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="MED_SIGLA" id="D8C6B90D-035B-72B9-7C6E-4C61C9782063">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:29:07 UTC</createdTime>
+<generatorID>C9417FB5-29AB-0AAA-4D2F-0BC38719FA9F</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>10</dataTypeSize>
+<ownDataTypeParameters>10,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="DC9D8586-D652-E177-6AC9-580E936B02FE" name="MEDIDA_PK">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:29:07 UTC</createdTime>
+<generatorID>F5979CA2-3936-ECF7-55BF-A548B037BD9E</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="64449BCC-1BD7-9471-76B5-8D5C6C326ABB"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

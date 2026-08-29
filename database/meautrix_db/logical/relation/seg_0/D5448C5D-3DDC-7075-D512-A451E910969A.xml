@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="PROC FK" directorySegmentName="seg_0" id="D5448C5D-3DDC-7075-D512-A451E910969A">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:41:26 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="true"/>
+</engineerTo>
+<sourcePk>AF50A0E4-A25B-D3DC-2BF8-9849FA083D46</sourcePk>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>5B07E457-EC70-E7BC-C7CC-B499FB0E6A03</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>BED92F7A-CC5A-BA56-60F9-C58A28E2CD49</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

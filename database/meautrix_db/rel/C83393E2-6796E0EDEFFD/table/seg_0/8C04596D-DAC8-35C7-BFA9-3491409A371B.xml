@@ -1,0 +1,141 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="8C04596D-DAC8-35C7-BFA9-3491409A371B" name="PARAMETROS">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 15:29:33 UTC</createdTime>
+<generatorID>9DBF63A7-B364-B0B6-4BB0-8B8DCD375648</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="PARAM_COR_4" id="F87A3C90-97BB-EEDF-749B-8AFE5EEED90E">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 15:29:33 UTC</createdTime>
+<generatorID>7E22A4C3-DD5B-4A8B-BD7F-7B4FBA1A679F</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>10</dataTypeSize>
+<ownDataTypeParameters>10,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PARAM_COR_5" id="A5696D18-E674-52BA-CDB5-284506CDA234">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 15:29:33 UTC</createdTime>
+<generatorID>F0D5202A-CF62-B6D1-994A-2314E1DCF57A</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>10</dataTypeSize>
+<ownDataTypeParameters>10,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PARAM_ID" id="9483C4E2-EB62-554D-4332-1D1A85DA7634">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 15:29:33 UTC</createdTime>
+<generatorID>26B4DCF0-8F11-5B6E-CEA9-D44B4D272BFC</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PARAM_RAZAO_SOCIAL" id="B5F70317-FEC2-765A-21BB-0E03380EB07C">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 15:29:33 UTC</createdTime>
+<generatorID>949D4CDD-6F4C-C9A2-8857-69E53217EEF0</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>60</dataTypeSize>
+<ownDataTypeParameters>60,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PARAM_COR_1" id="3E21F02C-0C38-BB87-6F1E-536B8ABD8A36">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 15:29:33 UTC</createdTime>
+<generatorID>42270826-1C4B-EFF4-511B-70AF99D18442</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>10</dataTypeSize>
+<ownDataTypeParameters>10,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PARAM_COR_2" id="27FA0BE0-CBA7-776A-1A4E-6562F9600333">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 15:29:33 UTC</createdTime>
+<generatorID>1F4A4949-8238-C978-9A37-82F2168FF1F8</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>10</dataTypeSize>
+<ownDataTypeParameters>10,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PARAM_COR_3" id="AE45A45F-CD92-FC42-D125-091FBE2C1C46">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 15:29:33 UTC</createdTime>
+<generatorID>9DF21749-9DAC-78A3-F6FC-10646162C0E4</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>10</dataTypeSize>
+<ownDataTypeParameters>10,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PARAM_URL_LOGO" id="9D862BCF-653D-C475-B322-A0BD6F78448B">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 15:29:33 UTC</createdTime>
+<generatorID>7C13504C-6C1C-3BD2-B69B-38A790BBF193</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>100</dataTypeSize>
+<ownDataTypeParameters>100,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PARAM_URL_FAVICON" id="8CBDA4E7-FE13-F79B-5FDC-8826BD472737">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 15:29:33 UTC</createdTime>
+<generatorID>9A68C380-30E1-7065-FF61-32859262F233</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>100</dataTypeSize>
+<ownDataTypeParameters>100,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="80154C32-A466-8077-B5F0-78FE5BD6DC3B" name="PARAMETROS_PK">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 15:29:33 UTC</createdTime>
+<generatorID>CABD50F8-95CE-193E-83FE-8C5413C0D3E7</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="9483C4E2-EB62-554D-4332-1D1A85DA7634"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

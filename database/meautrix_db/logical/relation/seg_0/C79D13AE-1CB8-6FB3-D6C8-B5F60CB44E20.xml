@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="PRODUTOS MEDIDAS FKv2" directorySegmentName="seg_0" id="C79D13AE-1CB8-6FB3-D6C8-B5F60CB44E20">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 16:20:34 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="true"/>
+</engineerTo>
+<sourcePk>F5979CA2-3936-ECF7-55BF-A548B037BD9E</sourcePk>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>E0D2C32E-085B-D81C-ECFD-E66BB15D7D8D</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>F725D123-4FFD-865D-DEE9-DED6941D175C</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

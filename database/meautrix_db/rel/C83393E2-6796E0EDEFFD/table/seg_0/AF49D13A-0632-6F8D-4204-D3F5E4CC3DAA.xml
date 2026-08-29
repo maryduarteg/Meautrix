@@ -1,0 +1,111 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="AF49D13A-0632-6F8D-4204-D3F5E4CC3DAA" name="PRODUTOS">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:29:07 UTC</createdTime>
+<generatorID>F725D123-4FFD-865D-DEE9-DED6941D175C</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="PROD_ID" id="8299CD0A-E6CA-947D-BA77-8AD76796253C">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:29:07 UTC</createdTime>
+<generatorID>0CAD0AF6-E5C5-58F5-4B01-E41803FEC443</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PROD_DESCRICAO" id="E205C780-D3DF-B818-88C1-B14C2B9E707B">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:29:07 UTC</createdTime>
+<generatorID>6726B9F2-B538-F00F-6F4F-41AACBD00D58</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>90</dataTypeSize>
+<ownDataTypeParameters>90,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PROD_QUANTIDAE_MINIMA" id="2BB821FD-DECD-CCBC-6B26-FA60DD94544B">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 16:40:33 UTC</createdTime>
+<generatorID>96718E6D-CDEA-A920-F317-8B9FCD10A01D</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT021</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="MEDIDAS_MED_ID" id="588516AC-EBFC-2DB3-9400-0C7C6E3FFD2C">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-24 19:21:28 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="6CC51374-2BE5-860A-E5E9-45F0AD01ED73" referredColumn="64449BCC-1BD7-9471-76B5-8D5C6C326ABB"/>
+</associations>
+</Column>
+<Column name="CATEGORIAS_PRODUTOS_CAT_PROD_ID" id="7F59B2B0-3AED-27E6-D171-76F951182DD2">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-26 02:11:14 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="40EA2A48-C89B-C6DF-A5C5-9192B551FB88" referredColumn="60F8F115-FBF9-3D3E-C128-0EAB16A64202"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="69838399-7E85-C161-507A-6A8191A35F49" name="PRODUTOS_PK">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:29:07 UTC</createdTime>
+<generatorID>4CE2A794-D352-7CA0-8791-F684FA159B95</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="8299CD0A-E6CA-947D-BA77-8AD76796253C"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="EBE4DC59-9019-6948-1AE8-44A24AD049E0" name="MEDIDAS_FK">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-24 19:21:28 UTC</createdTime>
+<generatorID>F5979CA2-3936-ECF7-55BF-A548B037BD9E</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="588516AC-EBFC-2DB3-9400-0C7C6E3FFD2C"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="F7872663-4B8B-AF77-7573-A4AF118D72FA" name="CATEGORIAS_PRODUTOS_FK">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-26 02:11:14 UTC</createdTime>
+<generatorID>CAAF677A-24E7-C211-782A-C1BB5BF786A9</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="7F59B2B0-3AED-27E6-D171-76F951182DD2"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

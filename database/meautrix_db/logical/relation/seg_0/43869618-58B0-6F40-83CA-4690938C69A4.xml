@@ -1,0 +1,18 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="CLI_PROC_PREV" directorySegmentName="seg_0" id="43869618-58B0-6F40-83CA-4690938C69A4">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:49:52 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="true"/>
+</engineerTo>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>*</sourceCardinality>
+<sourceEntity>BED92F7A-CC5A-BA56-60F9-C58A28E2CD49</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>A000E9B4-4C8B-2273-DDE2-651F53905ED1</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

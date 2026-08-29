@@ -1,0 +1,17 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="D6D9320A-65C6-5342-E890-1FAE4D6539CE" containerWithKeyObject="AC02DF03-849A-8751-1F34-6B73DFE19C66" localFKIndex="BBB38374-96C4-5AEE-2FA0-833D06BA3B71" name="FORNECEDORES_FK">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 16:40:33 UTC</createdTime>
+<generatorID>EF92DC3C-082B-74D3-312B-3F8BC8C58D4E</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<referredTableLongName>FORNECEDORES</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>1C14EA2E-3AC7-1C77-A366-E884A69D3D54</referredTableID>
+<keyObject>22DD192D-146F-DADB-A764-8A3DBC742E25</keyObject>
+<referredKeyID>22DD192D-146F-DADB-A764-8A3DBC742E25</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>FORN_ID</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

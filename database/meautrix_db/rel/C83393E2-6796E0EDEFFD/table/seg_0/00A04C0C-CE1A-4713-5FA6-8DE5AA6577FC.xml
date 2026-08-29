@@ -1,0 +1,150 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="00A04C0C-CE1A-4713-5FA6-8DE5AA6577FC" name="PROCEDIMENTOS_PREVISTOS">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:38:49 UTC</createdTime>
+<generatorID>BED92F7A-CC5A-BA56-60F9-C58A28E2CD49</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="PROC_PREV_ID" id="4E584F0F-D27D-23BA-4C97-B43F1885F582">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:38:49 UTC</createdTime>
+<generatorID>C7E10D65-5745-F279-61CD-3D8B6A5443ED</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PROC_PREV_DATA_AGENDADO_PARA" id="DC68E8FC-F47D-6356-FB11-D3AC7A06471B">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:38:49 UTC</createdTime>
+<generatorID>2AD0D52C-3DC1-84CF-5C06-BE38476C2B6A</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PROC_PREV_DATA_AGENDADO_EM" id="FEA97D19-1787-92A5-BE16-4EBEC9987561">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:38:49 UTC</createdTime>
+<generatorID>C0D92D4E-B021-B7C3-D0BE-DDE6726ADE1E</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PROCEDIMENTOS_PROC_ID" id="714133FF-5934-F781-37A1-8523069EE799">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:42:06 UTC</createdTime>
+<generatorID>1F851A5A-3243-EF49-2B18-ECFC6A7086C0</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="C3E8A0D1-070E-BDA6-FB30-81C750E8F8C5" referredColumn="5F4765B4-35D7-DFA4-F670-E6F979162A08"/>
+</associations>
+</Column>
+<Column name="PROC_PREV_CANCELADO" id="311111E3-E4E1-50A3-2A4D-BAB2FC4DE408">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-25 21:39:42 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT025</logicalDatatype>
+<dataTypeSize>1</dataTypeSize>
+<ownDataTypeParameters>1,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="USUARIOS_USU_PREV_ID" id="BC203A70-85AB-0F78-B052-D5763E077847">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 23:21:22 UTC</createdTime>
+<generatorID>737DB353-BC52-D563-47F3-57A2C30DB76A</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="7E74081A-8FDF-FEA7-9BE6-C67B1085BF59" referredColumn="7C088432-06CC-9878-70D9-F1CAC5AC51C0"/>
+</associations>
+</Column>
+<Column name="USUARIOS_USU_CANCELOU_ID" id="B34AE7C1-6108-FB1C-EC1F-3427856BE765">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-25 21:40:47 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="CEF490D0-A579-BC59-C1FC-5B3D766B55EE" referredColumn="7C088432-06CC-9878-70D9-F1CAC5AC51C0"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="051A7245-6C6E-C878-0CDB-1DBC002BF420" name="PROCEDIMENTOS_PREVISTOS_PK">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:38:49 UTC</createdTime>
+<generatorID>3F4BE983-F1A4-336B-63FD-0B7814EF842E</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="4E584F0F-D27D-23BA-4C97-B43F1885F582"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="3E615298-244D-843B-2FCF-6FEC92D9BD07" name="PROC_FK">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:42:06 UTC</createdTime>
+<generatorID>D5448C5D-3DDC-7075-D512-A451E910969A</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="714133FF-5934-F781-37A1-8523069EE799"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="A3E13B20-D12C-D4B5-B5A3-6367F76FDD74" name="USU_FK">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 23:21:22 UTC</createdTime>
+<generatorID>6E76B5B1-9523-6F01-4D3B-4364A1FA61AA</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="BC203A70-85AB-0F78-B052-D5763E077847"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="DDF97C3A-3AC4-AF81-AE62-D64A47F873C8" name="PROCE_PREV_USUARIOS_FK">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-25 21:40:47 UTC</createdTime>
+<generatorID>419C5B8D-310B-B0E7-DD1F-42DC3D5AB7A1</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="B34AE7C1-6108-FB1C-EC1F-3427856BE765"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

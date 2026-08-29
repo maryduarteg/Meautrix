@@ -1,0 +1,124 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="E6655511-0AC3-31DD-2E1C-295490F439BA" name="PROCEDIMENTOS_CONCLUIDOS">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:38:49 UTC</createdTime>
+<generatorID>25456976-CCEE-73D3-D6E0-B263D895F563</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="PROC_CONC_ID" id="44CFAA01-A650-4501-79A5-1DFA992EA242">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:38:49 UTC</createdTime>
+<generatorID>38D3A0C7-0A67-7B51-3A1A-60A2BEF7045B</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PROC_CONC_DATA_CONCLUSAO" id="CB882677-3534-B867-63A7-341B0EB25C10">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:38:49 UTC</createdTime>
+<generatorID>238FEFAE-D4B4-F11A-1B75-A477B23B6F64</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PROC_PREV_ID" id="64F47AC4-A33D-1D5A-CBEE-B9BAFBC45F9A">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 15:29:33 UTC</createdTime>
+<generatorID>B9D5EF89-1B07-3456-4148-AE25C2DC4AC8</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="64CCADF8-A18F-52DC-ACBE-4B79D81E6A8D" referredColumn="4E584F0F-D27D-23BA-4C97-B43F1885F582"/>
+</associations>
+</Column>
+<Column name="PROC_CONC_ALTERACAO_PADRAO" id="E439C878-28FB-4E7A-D20D-AAA5E16E6FD6">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 22:38:47 UTC</createdTime>
+<generatorID>E6E3D645-3418-AA72-F335-DB3ACDCE23CE</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT006</logicalDatatype>
+<dataTypeSize>1</dataTypeSize>
+<ownDataTypeParameters>1,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="USUARIOS_USU_ID" id="3FBE5169-EFDF-AEBD-5006-47FA2AC31B73">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 23:21:22 UTC</createdTime>
+<generatorID>4953E8B3-FAD3-EA4F-01F0-AE50B2D97FF7</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="7F1FC2F6-AAE6-F519-81C8-DCFF1C5DE6F5" referredColumn="7C088432-06CC-9878-70D9-F1CAC5AC51C0"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="C6818CCD-40E9-94E9-8CD4-52662448FD77" name="PROCEDIMENTOS_CONCLUIDOS_PK">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:38:49 UTC</createdTime>
+<generatorID>C15C6265-29F1-BEC5-E0C8-C554997B694F</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="44CFAA01-A650-4501-79A5-1DFA992EA242"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="6FE4DF6A-0CB7-115C-65DC-F16BEAF4A835" name="PROCEDIMENTOS_CONCLUIDOS__IDX">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 15:29:33 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<relationGeneratorID>927CF7AB-E819-5DB1-9347-E81BCD8C2625</relationGeneratorID>
+<indexColumnUsage>
+<colUsage columnID="64F47AC4-A33D-1D5A-CBEE-B9BAFBC45F9A"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="ED3DFC5A-DF83-39A3-0603-873F904DB883" name="PROC_PREV_ID">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 15:29:33 UTC</createdTime>
+<generatorID>927CF7AB-E819-5DB1-9347-E81BCD8C2625</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="64F47AC4-A33D-1D5A-CBEE-B9BAFBC45F9A"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="89C6285C-5249-06BC-AF6E-A9330C599C86" name="USU_ID">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 23:21:22 UTC</createdTime>
+<generatorID>EECA0905-7895-1516-FF1E-D016C5D9B87F</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="3FBE5169-EFDF-AEBD-5006-47FA2AC31B73"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

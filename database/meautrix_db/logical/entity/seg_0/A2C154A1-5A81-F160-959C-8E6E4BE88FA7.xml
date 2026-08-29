@@ -1,0 +1,73 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="A2C154A1-5A81-F160-959C-8E6E4BE88FA7" name="PROCEDIMENTOS CANCELADOS">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 16:38:05 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="PROC CANC ID" id="F79D9240-BC5B-84A2-D48A-6E7B5CBB6C78">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 16:38:13 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="PROC CANC DATA CANCELAMENTO" id="AC90451E-0184-27FC-AC97-1B7BF39657B7">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 16:38:32 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="PROC PREV ID" id="CA26AA6C-0B8D-3C6A-4517-B22AC16DA6FB">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 16:48:15 UTC</createdTime>
+<generatorID>E5AE4209-B5B4-EDFD-D661-C2E392809272</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="true"/>
+</engineerTo>
+<referedAttribute>C7E10D65-5745-F279-61CD-3D8B6A5443ED</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="9585F68A-F854-3A1F-543A-A3937D34E956" name="PROCEDIMENTOS_CANCELADOS_PK">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 16:38:29 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
+<engineerTo>
+<item key="C83393E2-4099-102C-63AD-6796E0EDEFFD" value="false"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>F79D9240-BC5B-84A2-D48A-6E7B5CBB6C78</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

@@ -1,0 +1,7 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<ProcessModel class="oracle.dbtools.crest.model.design.process.ProcessModel" name="Process Model" id="B38D4696-81DF-546A-8D92-C5F1B53F53AD">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 13:50:59 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<shouldBeOpen>false</shouldBeOpen>
+</ProcessModel>

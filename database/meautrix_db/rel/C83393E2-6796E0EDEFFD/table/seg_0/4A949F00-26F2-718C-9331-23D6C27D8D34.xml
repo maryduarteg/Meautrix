@@ -1,0 +1,87 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="4A949F00-26F2-718C-9331-23D6C27D8D34" name="ITENS_PROCEDIMENTOS_CONCLUIDOS">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 15:29:33 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="ITENS_ITE_ID" id="162DE2E9-728B-726C-071C-8E939B242BB2">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 15:29:33 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="3C9D0CCA-43F4-8277-FD29-B359F318B232" referredColumn="320B7012-5814-DC56-CD3F-DFE75AFC1596"/>
+</associations>
+</Column>
+<Column name="PROC_CONC_ID" id="D49C9FB0-3C30-19C8-446D-84CE13AE414E">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 15:29:33 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="3C5F56A5-41C6-9D74-708B-4226284A4F79" referredColumn="44CFAA01-A650-4501-79A5-1DFA992EA242"/>
+</associations>
+</Column>
+<Column name="ITENS_PROC_CONC_QNT_USADA" id="80125686-E24D-E841-AEF4-34BD87307F97">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 22:56:52 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT021</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<isRelationshipColumn>true</isRelationshipColumn>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="E9EF6389-4066-4517-9742-630BD26195F4" name="ITENS_PROC_CONC_PK">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 15:29:33 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="162DE2E9-728B-726C-071C-8E939B242BB2"/>
+<colUsage columnID="D49C9FB0-3C30-19C8-446D-84CE13AE414E"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="4E5A6D4A-5D7A-5DBF-B391-7E372B8BC32B" name="ITENS_FK">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 15:29:33 UTC</createdTime>
+<generatorID>FD3EAFF7-D1A1-2DAC-2EE6-6BAC3D600FDB</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="162DE2E9-728B-726C-071C-8E939B242BB2"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="600FB8B6-E2F2-827A-5D8B-3364332359E3" name="PROC_CONC_FK">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 15:29:33 UTC</createdTime>
+<generatorID>FD3EAFF7-D1A1-2DAC-2EE6-6BAC3D600FDB</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="D49C9FB0-3C30-19C8-446D-84CE13AE414E"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

@@ -1,0 +1,86 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="D2BA43DD-1B4B-DE5E-B241-1EDA1178A430" name="PRODUTOS_PROCEDIMENTOS">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:29:08 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="PRODUTOS_PROD_ID" id="8B6C4E5D-6875-4BA8-8543-B3F5ADFB2F52">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:29:08 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="2526A9DE-2BAD-BCA9-B387-8C65E76A09D1" referredColumn="8299CD0A-E6CA-947D-BA77-8AD76796253C"/>
+</associations>
+</Column>
+<Column name="PROCEDIMENTOS_PROC_ID" id="BE6041C6-BD00-919C-6FF8-BDC46ABC465C">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:29:08 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="6067D69F-A8C7-C3C9-CEDD-4C77406211B7" referredColumn="5F4765B4-35D7-DFA4-F670-E6F979162A08"/>
+</associations>
+</Column>
+<Column name="PROD_PROC_QUANTIDADE_SAIDA" id="70119BB0-25C7-21CE-7185-A4D07E5A7561">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-24 19:22:18 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT021</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="C376CF12-092F-D00A-6E7D-367A425ACADA" name="PRODUTOS_PROCEDIMENTOS_PK">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:29:08 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="8B6C4E5D-6875-4BA8-8543-B3F5ADFB2F52"/>
+<colUsage columnID="BE6041C6-BD00-919C-6FF8-BDC46ABC465C"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="CE649E56-B531-78A8-5A6C-47E9D67DA6F2" name="PRODUTOS_FKv2">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:29:08 UTC</createdTime>
+<generatorID>6864A0EE-004C-069F-7923-365C51B05E98</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="8B6C4E5D-6875-4BA8-8543-B3F5ADFB2F52"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="44FFE8F8-A96D-5579-D8EB-99624DDCCE45" name="PROCEDIMENTOS_FK">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:29:08 UTC</createdTime>
+<generatorID>6864A0EE-004C-069F-7923-365C51B05E98</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="BE6041C6-BD00-919C-6FF8-BDC46ABC465C"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

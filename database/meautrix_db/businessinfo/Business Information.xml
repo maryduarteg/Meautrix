@@ -1,0 +1,7 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<BusinessInfoDesign class="oracle.dbtools.crest.model.businessinfo.BusinessInfoDesign" name="Business Information" id="343C711D-B710-D0A1-4FCC-CD1BE8D7BF72">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 13:50:59 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<shouldBeOpen>false</shouldBeOpen>
+</BusinessInfoDesign>

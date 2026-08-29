@@ -1,0 +1,17 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="C3E8A0D1-070E-BDA6-FB30-81C750E8F8C5" containerWithKeyObject="00A04C0C-CE1A-4713-5FA6-8DE5AA6577FC" localFKIndex="3E615298-244D-843B-2FCF-6FEC92D9BD07" name="PROC_FK">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-16 14:42:06 UTC</createdTime>
+<generatorID>D5448C5D-3DDC-7075-D512-A451E910969A</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<referredTableLongName>PROCEDIMENTOS</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>5553FA35-E064-1B51-D45B-6FC7E8F3A0E9</referredTableID>
+<keyObject>1B441384-4C01-5820-E3A1-AD497F795F69</keyObject>
+<referredKeyID>1B441384-4C01-5820-E3A1-AD497F795F69</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>PROC_ID,PROC_NOME</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>
