@@ -25,7 +25,7 @@ namespace Meautrix.Repository
 
             modelBuilder.Entity<Usuario>(entity =>
             {
-                entity.HasIndex(u => u.UsuEmail).IsUnique();
+                entity.HasIndex(u => u.UsuLogin).IsUnique();
             });
         }
     }

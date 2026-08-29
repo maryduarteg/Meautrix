@@ -1,16 +1,16 @@
-﻿using Meautrix.Application.DTOs.Usuario;
+﻿using Meautrix.DTO;
+using Meautrix.DTOs;
+using Meautrix.Entidades;
 
-namespace Meautrix.Application.Interfaces
+namespace Meautrix.Interfaces
 {
     public interface IUsuarioService
     {
-        UsuarioResponseDTO Criar(UsuarioCriarDTO usuarioDto);
-
-        UsuarioResponseDTO Alterar(UsuarioAlterarDTO usuarioDto);
-
-        UsuarioResponseDTO AlterarParcial(UsuarioAlterarParcialDTO usuarioDto);
-
-        // No diagrama consta "Buscart", ajustei para "Buscar" para manter a semântica correta
-        UsuarioResponseDTO Buscar(int id);
+        Task<IEnumerable<Usuario>> BuscarTodosAsync();
+        Task<Usuario?> BuscarPorIdAsync(int id);
+        Task CriarAsync(UsuarioCriarDTO dto);
+        Task AlterarAsync(int id, UsuarioAlterarDTO dto);
+        Task AlterarParcialAsync(int id, UsuarioAlterarParcialDTO dto);
+        Task InativarAsync(int id);
     }
 }

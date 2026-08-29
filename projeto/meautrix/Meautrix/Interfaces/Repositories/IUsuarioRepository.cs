@@ -1,16 +1,13 @@
 ﻿using Meautrix.Entidades;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
-namespace Meautrix.Interfaces.Repositories
+namespace Meautrix.Interfaces
 {
     public interface IUsuarioRepository
     {
-        // No diagrama, a entidade é chamada de "Usuarios", mas usamos "Usuario"
-        void Inserir(Usuario usuario);
-
-        void Alterar(Usuario usuario);
-
-        Usuario BuscarPorId(int id); // Retorna a entidade para ser manipulada no Service
+        Task<IEnumerable<Usuario>> BuscarTodosAtivosAsync();
+        Task<Usuario?> BuscarPorIdAsync(int id);
+        Task<Usuario?> BuscarPorLoginAsync(string login);
+        Task InserirAsync(Usuario usuario);
+        Task AlterarAsync(Usuario usuario);
     }
 }
