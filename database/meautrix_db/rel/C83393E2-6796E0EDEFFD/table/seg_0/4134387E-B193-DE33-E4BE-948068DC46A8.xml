@@ -31,6 +31,18 @@
 <ownDataTypeParameters>30,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
+<Column name="CAT_PROD_ATIVO" id="07E9B208-2788-C597-AD0E-057789E57663">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-29 21:00:40 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT025</logicalDatatype>
+<dataTypeSize>1</dataTypeSize>
+<ownDataTypeParameters>1,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
 </columns>
 <indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
 <ind_PK_UK id="3072FDF7-E0B0-A686-BE71-8CF64039AE13" name="CATEGORIAS_PRODUTOS_PK">

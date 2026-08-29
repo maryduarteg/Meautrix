@@ -57,7 +57,7 @@
 <colAssociation fkAssociation="6CC51374-2BE5-860A-E5E9-45F0AD01ED73" referredColumn="64449BCC-1BD7-9471-76B5-8D5C6C326ABB"/>
 </associations>
 </Column>
-<Column name="CATEGORIAS_PRODUTOS_CAT_PROD_ID" id="7F59B2B0-3AED-27E6-D171-76F951182DD2">
+<Column name="CAT_PROD_ID" id="7F59B2B0-3AED-27E6-D171-76F951182DD2">
 <createdBy>Mary</createdBy>
 <createdTime>2026-08-26 02:11:14 UTC</createdTime>
 <ownerDesignName>meautrix_db</ownerDesignName>
@@ -70,6 +70,18 @@
 <associations>
 <colAssociation fkAssociation="40EA2A48-C89B-C6DF-A5C5-9192B551FB88" referredColumn="60F8F115-FBF9-3D3E-C128-0EAB16A64202"/>
 </associations>
+</Column>
+<Column name="CAT_ATIVO" id="4F6E2149-F71D-5DC8-D1EF-3F9F0A01C0FB">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-29 20:57:57 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT025</logicalDatatype>
+<dataTypeSize>1</dataTypeSize>
+<ownDataTypeParameters>1,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
 </Column>
 </columns>
 <indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
