@@ -17,7 +17,6 @@ namespace Meautrix.Repository
         {
             return await _context.Usuarios
                 .AsNoTracking()
-                .Where(u => u.UsuAtivo == 'A') // Aspas simples para char
                 .ToListAsync();
         }
 

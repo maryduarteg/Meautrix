@@ -16,10 +16,10 @@ namespace Meautrix
             builder.Services.AddDbContext<MeautrixDbContext>(options =>
                 options.UseNpgsql(connectionString));
 
-            // 2. Configuração de CORS (Permite comunicação com o front-end React)
+            // 2. Configuração de CORS (Permite acesso a partir do Next.js)
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy("PermitirReact", policy =>
+                options.AddPolicy("AllowFrontend", policy =>
                 {
                     policy.WithOrigins("http://localhost:3000")
                           .AllowAnyHeader()
@@ -45,8 +45,12 @@ namespace Meautrix
                 app.UseSwaggerUI();
             }
 
-            app.UseHttpsRedirection();
-            app.UseCors("PermitirReact");
+            // 5. CORS aplicado antes das rotas e autorizações
+            app.UseCors("AllowFrontend");
+
+            // Redirecionamento HTTPS desativado em desenvolvimento local para evitar erro 307
+            // app.UseHttpsRedirection();
+
             app.UseAuthorization();
             app.MapControllers();
 

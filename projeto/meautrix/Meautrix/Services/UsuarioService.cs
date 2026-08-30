@@ -51,19 +51,24 @@ namespace Meautrix.Services
 
         public async Task AlterarAsync(int id, UsuarioAlterarDTO dto)
         {
-            var usuarioExistente = await _usuarioRepository.BuscarPorIdAsync(id);
+            var usuario = await _usuarioRepository.BuscarPorIdAsync(id);
+            if (usuario == null)
+                throw new KeyNotFoundException("Usuário não encontrado.");
 
-            if (usuarioExistente == null || usuarioExistente.UsuAtivo == 'I')
+            usuario.UsuNome = dto.UsuNome;
+            usuario.UsuLogin = dto.UsuLogin;
+
+            // Proteção contra o byte 0x00 no PostgreSQL
+            usuario.UsuEAdm = (dto.UsuEAdm == '\0') ? 'N' : dto.UsuEAdm;
+            usuario.UsuAtivo = (dto.UsuAtivo == '\0') ? 'A' : dto.UsuAtivo;
+
+            // Atualiza a senha apenas se informada
+            if (!string.IsNullOrWhiteSpace(dto.UsuSenha))
             {
-                throw new KeyNotFoundException("Usuário não encontrado ou inativo no sistema.");
+                usuario.UsuSenha = dto.UsuSenha;
             }
 
-            usuarioExistente.UsuNome = dto.UsuNome;
-            usuarioExistente.UsuLogin = dto.UsuLogin;
-            usuarioExistente.UsuSenha = dto.UsuSenha;
-            usuarioExistente.UsuEAdm = dto.UsuEAdm;
-
-            await _usuarioRepository.AlterarAsync(usuarioExistente);
+            await _usuarioRepository.AlterarAsync(usuario);
         }
 
         public async Task AlterarParcialAsync(int id, UsuarioAlterarParcialDTO dto)

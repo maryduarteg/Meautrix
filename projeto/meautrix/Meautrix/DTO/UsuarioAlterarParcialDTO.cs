@@ -6,5 +6,6 @@
         public string? UsuLogin { get; set; }
         public string? UsuSenha { get; set; }
         public char? UsuEAdm { get; set; } // Nulo caso não queira atualizar o campo no PATCH
+        public char Usuativo { get; set; }
     }
 }
