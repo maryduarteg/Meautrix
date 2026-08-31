@@ -54,7 +54,7 @@ export default function LoginPage() {
               <Sparkles className="h-5 w-5" />
             </div>
             <div className="leading-tight">
-              <p className="font-semibold text-foreground">Lumière</p>
+              <p className="font-semibold text-foreground">Meautrix</p>
               <p className="text-xs text-muted-foreground">Estética & Gestão</p>
             </div>
           </div>

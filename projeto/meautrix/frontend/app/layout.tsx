@@ -12,7 +12,7 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Lumière Estética — Gestão de Estoque e Procedimentos',
+  title: 'Meautrix — Gestão de Estoque e Procedimentos',
   description:
     'Sistema para cadastro de produtos, registro de procedimentos e baixa automática de estoque para clínicas de estética.',
   generator: 'v0.app',
