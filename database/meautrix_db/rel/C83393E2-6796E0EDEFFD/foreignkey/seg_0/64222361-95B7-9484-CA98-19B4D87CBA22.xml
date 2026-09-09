@@ -1,0 +1,17 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="64222361-95B7-9484-CA98-19B4D87CBA22" containerWithKeyObject="AF49D13A-0632-6F8D-4204-D3F5E4CC3DAA" localFKIndex="22627ABC-9879-3FDF-9B14-C509F1E9551F" name="PRODUTOS_MEDIDAS_FK_2">
+<createdBy>Mary</createdBy>
+<createdTime>2026-09-07 14:31:12 UTC</createdTime>
+<generatorID>F5979CA2-3936-ECF7-55BF-A548B037BD9E</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<referredTableLongName>MEDIDAS</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>B00838C4-9987-3502-B980-9CAD1B4195A1</referredTableID>
+<keyObject>DC9D8586-D652-E177-6AC9-580E936B02FE</keyObject>
+<referredKeyID>DC9D8586-D652-E177-6AC9-580E936B02FE</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>MED_ID</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

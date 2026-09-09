@@ -43,20 +43,6 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
-<Column name="MEDIDAS_MED_ID" id="588516AC-EBFC-2DB3-9400-0C7C6E3FFD2C">
-<createdBy>Mary</createdBy>
-<createdTime>2026-08-24 19:21:28 UTC</createdTime>
-<ownerDesignName>meautrix_db</ownerDesignName>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT011</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<previousColumn>false</previousColumn>
-<autoIncrementCycle>false</autoIncrementCycle>
-<associations>
-<colAssociation fkAssociation="6CC51374-2BE5-860A-E5E9-45F0AD01ED73" referredColumn="64449BCC-1BD7-9471-76B5-8D5C6C326ABB"/>
-</associations>
-</Column>
 <Column name="CAT_PROD_ID" id="7F59B2B0-3AED-27E6-D171-76F951182DD2">
 <createdBy>Mary</createdBy>
 <createdTime>2026-08-26 02:11:14 UTC</createdTime>
@@ -71,7 +57,7 @@
 <colAssociation fkAssociation="40EA2A48-C89B-C6DF-A5C5-9192B551FB88" referredColumn="60F8F115-FBF9-3D3E-C128-0EAB16A64202"/>
 </associations>
 </Column>
-<Column name="CAT_ATIVO" id="4F6E2149-F71D-5DC8-D1EF-3F9F0A01C0FB">
+<Column name="PROD_ATIVO" id="4F6E2149-F71D-5DC8-D1EF-3F9F0A01C0FB">
 <createdBy>Mary</createdBy>
 <createdTime>2026-08-29 20:57:57 UTC</createdTime>
 <ownerDesignName>meautrix_db</ownerDesignName>
@@ -82,6 +68,34 @@
 <dataTypeSize>1</dataTypeSize>
 <ownDataTypeParameters>1,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="MEDIDAS_MED_ID_1" id="D9587E69-ED3D-8C05-E316-062FB8465DB6">
+<createdBy>Mary</createdBy>
+<createdTime>2026-09-07 14:31:12 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="64222361-95B7-9484-CA98-19B4D87CBA22" referredColumn="64449BCC-1BD7-9471-76B5-8D5C6C326ABB"/>
+</associations>
+</Column>
+<Column name="MEDIDAS_MED_ID_2" id="588516AC-EBFC-2DB3-9400-0C7C6E3FFD2C">
+<createdBy>Mary</createdBy>
+<createdTime>2026-08-24 19:21:28 UTC</createdTime>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="6CC51374-2BE5-860A-E5E9-45F0AD01ED73" referredColumn="64449BCC-1BD7-9471-76B5-8D5C6C326ABB"/>
+</associations>
 </Column>
 </columns>
 <indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
@@ -117,6 +131,17 @@
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
 <colUsage columnID="7F59B2B0-3AED-27E6-D171-76F951182DD2"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="22627ABC-9879-3FDF-9B14-C509F1E9551F" name="PRODUTOS_MEDIDAS_FK_2">
+<createdBy>Mary</createdBy>
+<createdTime>2026-09-07 14:31:12 UTC</createdTime>
+<generatorID>F5979CA2-3936-ECF7-55BF-A548B037BD9E</generatorID>
+<ownerDesignName>meautrix_db</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="D9587E69-ED3D-8C05-E316-062FB8465DB6"/>
 </indexColumnUsage>
 </ind_PK_UK>
 </indexes>

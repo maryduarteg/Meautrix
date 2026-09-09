@@ -9,6 +9,7 @@ export type Product = {
   unit: string
   quantity: number
   minStock: number
+  active: boolean
 }
 
 export type ProcedureItem = {
@@ -36,8 +37,10 @@ type StoreContextType = {
   products: Product[]
   procedures: Procedure[]
   movements: Movement[]
-  addProduct: (p: Omit<Product, "id">) => void
+  addProduct: (p: Omit<Product, "id" | "active">) => void
+  updateProduct: (id: string, p: Partial<Omit<Product, "id">>) => void
   removeProduct: (id: string) => void
+  toggleProductStatus: (id: string) => void
   addProcedure: (p: Omit<Procedure, "id">) => void
   removeProcedure: (id: string) => void
   registerBaixa: (input: {
@@ -56,12 +59,12 @@ type StoreContextType = {
 const StoreContext = createContext<StoreContextType | null>(null)
 
 const seedProducts: Product[] = [
-  { id: "p1", name: "Ácido Hialurônico 1ml", category: "Preenchedor", unit: "ml", quantity: 24, minStock: 5 },
-  { id: "p2", name: "Toxina Botulínica 100U", category: "Botox", unit: "frasco", quantity: 8, minStock: 3 },
-  { id: "p3", name: "Agulha 30G", category: "Descartável", unit: "un", quantity: 120, minStock: 30 },
-  { id: "p4", name: "Luva Nitrílica", category: "Descartável", unit: "par", quantity: 60, minStock: 20 },
-  { id: "p5", name: "Anestésico Tópico", category: "Anestésico", unit: "g", quantity: 4, minStock: 5 },
-  { id: "p6", name: "Sérum Vitamina C", category: "Skincare", unit: "ml", quantity: 90, minStock: 15 },
+  { id: "p1", name: "Ácido Hialurônico 1ml", category: "Preenchedor", unit: "ml", quantity: 24, minStock: 5, active: true },
+  { id: "p2", name: "Toxina Botulínica 100U", category: "Botox", unit: "frasco", quantity: 8, minStock: 3, active: true },
+  { id: "p3", name: "Agulha 30G", category: "Descartável", unit: "un", quantity: 120, minStock: 30, active: true },
+  { id: "p4", name: "Luva Nitrílica", category: "Descartável", unit: "par", quantity: 60, minStock: 20, active: true },
+  { id: "p5", name: "Anestésico Tópico", category: "Anestésico", unit: "g", quantity: 4, minStock: 5, active: true },
+  { id: "p6", name: "Sérum Vitamina C", category: "Skincare", unit: "ml", quantity: 90, minStock: 15, active: true },
 ]
 
 const seedProcedures: Procedure[] = [
@@ -129,12 +132,20 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [procedures, setProcedures] = useState<Procedure[]>(seedProcedures)
   const [movements, setMovements] = useState<Movement[]>(seedMovements)
 
-  function addProduct(p: Omit<Product, "id">) {
-    setProducts((prev) => [...prev, { ...p, id: `p${Date.now()}` }])
+  function addProduct(p: Omit<Product, "id" | "active">) {
+    setProducts((prev) => [...prev, { ...p, id: `p${Date.now()}`, active: true }])
+  }
+
+  function updateProduct(id: string, updates: Partial<Omit<Product, "id">>) {
+    setProducts((prev) => prev.map((p) => (p.id === id ? { ...p, ...updates } : p)))
   }
 
   function removeProduct(id: string) {
     setProducts((prev) => prev.filter((p) => p.id !== id))
+  }
+
+  function toggleProductStatus(id: string) {
+    setProducts((prev) => prev.map((p) => (p.id === id ? { ...p, active: !p.active } : p)))
   }
 
   function addProcedure(p: Omit<Procedure, "id">) {
@@ -250,7 +261,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         procedures,
         movements,
         addProduct,
+        updateProduct,
         removeProduct,
+        toggleProductStatus,
         addProcedure,
         removeProcedure,
         registerBaixa,

@@ -3,12 +3,14 @@
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { useState } from "react"
-import { Package, ClipboardList, BarChart3, LogOut, Sparkles, Menu, X, CalendarDays, Users, UserRound, KeyRound } from "lucide-react"
+import { Package, ClipboardList, BarChart3, LogOut, Sparkles, Menu, X, CalendarDays, Users, UserRound, KeyRound, Tags, Ruler } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 
 const navItems = [
   { href: "/cadastro", label: "Cadastro de Produtos", icon: Package },
+  { href: "/categorias", label: "Gerenciar Categorias", icon: Tags },
+  { href: "/medidas", label: "Gerenciar Medidas", icon: Ruler },
   { href: "/procedimentos", label: "Procedimentos do Dia", icon: CalendarDays },
   { href: "/usuarios", label: "Gerenciar Usuários", icon: Users },
   { href: "/clientes", label: "Gerenciar Clientes", icon: UserRound },
