@@ -1,4 +1,4 @@
-﻿namespace Meautrix.DTOs
+﻿namespace Meautrix.DTO.Usuario
 {
     public class UsuarioAlterarParcialDTO
     {

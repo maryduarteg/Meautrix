@@ -1,9 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore; // for Index attribute
 
 namespace Meautrix.Entidades
 {
     [Table("usuarios")]
+    [Index(nameof(UsuLogin), IsUnique = true)] // enforce unique login at DB level
     public class Usuario
     {
         [Key]

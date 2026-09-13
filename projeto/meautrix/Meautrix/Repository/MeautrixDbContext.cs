@@ -12,6 +12,7 @@ namespace Meautrix.Repository
         // DbSets das Entidades
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Cliente> Clientes { get; set; }
+        public DbSet<Medida> Medidas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

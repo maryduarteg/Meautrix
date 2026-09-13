@@ -230,7 +230,7 @@ async function updateUser() {
   return (
     <DashboardShell title="Gerenciar Usuários" description="Consulte perfis, atualize acessos e acompanhe a atividade de cada usuário.">
       <div className="flex flex-col gap-6">
-        <div className="grid gap-4 sm:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2">
           <Card>
             <CardContent className="flex items-center gap-3 p-5">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-primary">
@@ -243,7 +243,7 @@ async function updateUser() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card >
             <CardContent className="flex items-center gap-3 p-5">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-primary">
                 <ShieldCheck className="h-5 w-5" />
@@ -251,18 +251,6 @@ async function updateUser() {
               <div>
                 <p className="text-2xl font-semibold">{userList.filter((u) => u.usuAtivo === "A").length}</p>
                 <p className="text-xs text-muted-foreground">Acessos ativos</p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="flex items-center gap-3 p-5">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-primary">
-                <Activity className="h-5 w-5" />
-              </div>
-              <div>
-                <p className="text-2xl font-semibold">{userMovements.length}</p>
-                <p className="text-xs text-muted-foreground">Atividades do usuário</p>
               </div>
             </CardContent>
           </Card>
@@ -455,42 +443,6 @@ async function updateUser() {
                       <Button onClick={updateUser} disabled={submitting}>
                         {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} Salvar alterações
                       </Button>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-base"><Activity className="h-4 w-4 text-primary" />Relatório do usuário</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {userMovements.length > 0 ? (
-                    <div className="overflow-x-auto">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Procedimento</TableHead>
-                            <TableHead>Cliente</TableHead>
-                            <TableHead>Data</TableHead>
-                            <TableHead>Produtos baixados</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {userMovements.map((m) => (
-                            <TableRow key={m.id}>
-                              <TableCell className="font-medium">{m.procedureName}</TableCell>
-                              <TableCell>{m.client || "Não informado"}</TableCell>
-                              <TableCell>{new Date(m.date).toLocaleDateString("pt-BR")}</TableCell>
-                              <TableCell><Badge variant="outline">{m.consumption.length} itens</Badge></TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </div>
-                  ) : (
-                    <div className="rounded-xl border border-dashed p-8 text-center">
-                      <p className="text-sm font-medium">Nenhuma atividade registrada</p>
                     </div>
                   )}
                 </CardContent>

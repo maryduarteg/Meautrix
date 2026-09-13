@@ -1,4 +1,4 @@
-﻿using Meautrix.DTOs;
+﻿using Meautrix.DTO.Usuario;
 using Meautrix.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -47,6 +47,28 @@ namespace Meautrix.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("/login")]
+        public async Task<IActionResult> Login([FromBody] UsuarioLoginDTO dto)
+        {
+            try
+            {
+                UsuarioLoginDTO usuAux = await _usuarioService.BuscarPorLoginAsync(dto.UsuLogin);
+                if(dto.UsuLogin == usuAux.UsuLogin && dto.UsuSenha == usuAux.UsuSenha)
+                {
+                    return StatusCode(StatusCodes.Status201Created, new { mensagem = "Usuário válido." });
+                }
+                else
+                {
+                    return BadRequest(new { mensagem = "Senha inválida." });
+                }
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { mensagem = ex.Message });
+            }
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> Alterar(int id, [FromBody] UsuarioAlterarDTO dto)
         {
@@ -58,6 +80,10 @@ namespace Meautrix.Controllers
             catch (KeyNotFoundException ex)
             {
                 return NotFound(new { mensagem = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { mensagem = ex.Message });
             }
         }
 
@@ -73,6 +99,10 @@ namespace Meautrix.Controllers
             {
                 return NotFound(new { mensagem = ex.Message });
             }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { mensagem = ex.Message });
+            }
         }
 
         [HttpDelete("{id}")]
@@ -86,6 +116,10 @@ namespace Meautrix.Controllers
             catch (KeyNotFoundException ex)
             {
                 return NotFound(new { mensagem = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { mensagem = ex.Message });
             }
         }
     }

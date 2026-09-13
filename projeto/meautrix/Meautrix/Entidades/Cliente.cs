@@ -29,13 +29,13 @@ namespace Meautrix.Entidades
         /// A data de nascimento é opcional.
         /// </summary>
         [Column("CLI_DATA_NASCIMENTO")]
-        public DateTime? CliDataNascimento { get; set; }
+        public DateTime CliDataNascimento { get; set; }
 
         /// <summary>
         /// Indicador de situação da cliente: 'A' para Ativo, 'I' para Inativo.
         /// </summary>
         [Required]
         [Column("CLI_ATIVO")]
-        public char CliAtivo { get; set; }
+        public string CliAtivo { get; set; }
     }
 }

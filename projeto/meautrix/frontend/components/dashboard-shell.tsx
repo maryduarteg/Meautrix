@@ -14,7 +14,6 @@ const navItems = [
   { href: "/procedimentos", label: "Procedimentos do Dia", icon: CalendarDays },
   { href: "/usuarios", label: "Gerenciar Usuários", icon: Users },
   { href: "/clientes", label: "Gerenciar Clientes", icon: UserRound },
-  { href: "/minha-senha", label: "Minha Senha", icon: KeyRound },
   { href: "/baixa", label: "Dar Baixa", icon: ClipboardList },
   { href: "/relatorio", label: "Relatório", icon: BarChart3 },
 ]

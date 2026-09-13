@@ -1,4 +1,4 @@
-﻿using Meautrix.Entidades;
+using Meautrix.Entidades;
 
 namespace Meautrix.Interfaces
 {
@@ -9,5 +9,6 @@ namespace Meautrix.Interfaces
         Task<Usuario?> BuscarPorLoginAsync(string login);
         Task InserirAsync(Usuario usuario);
         Task AlterarAsync(Usuario usuario);
+        Task<int> ContarAdminsAsync();
     }
 }

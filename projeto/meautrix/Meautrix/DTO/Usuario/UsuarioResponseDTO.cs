@@ -1,4 +1,4 @@
-﻿namespace Meautrix.DTO
+﻿namespace Meautrix.DTO.Usuario
 {
     public class UsuarioResponseDTO
     {

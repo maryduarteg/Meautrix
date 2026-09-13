@@ -1,4 +1,4 @@
-﻿using Meautrix.Entidades;
+using Meautrix.Entidades;
 using Meautrix.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -43,6 +43,14 @@ namespace Meautrix.Repository
         {
             _context.Usuarios.Update(usuario);
             await _context.SaveChangesAsync();
+        }
+
+        // New method: count active admin users
+        public async Task<int> ContarAdminsAsync()
+        {
+            return await _context.Usuarios
+                .Where(u => u.UsuEAdm == 'S' && u.UsuAtivo == 'A')
+                .CountAsync();
         }
     }
 }
