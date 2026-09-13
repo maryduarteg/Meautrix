@@ -13,6 +13,7 @@ namespace Meautrix.Repository
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Cliente> Clientes { get; set; }
         public DbSet<Medida> Medidas { get; set; }
+        public DbSet<Fornecedor> Fornecedores { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -27,6 +28,11 @@ namespace Meautrix.Repository
             modelBuilder.Entity<Usuario>(entity =>
             {
                 entity.HasIndex(u => u.UsuLogin).IsUnique();
+            });
+
+            modelBuilder.Entity<Fornecedor>(entity =>
+            {
+                entity.HasIndex(f => f.FornCnpj).IsUnique();
             });
         }
     }
