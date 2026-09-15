@@ -41,6 +41,7 @@ export default function UsuariosPage() {
     usuEAdmin: "N",
     usuAtivo: "A",
     usuSenha: "",
+    confirmarSenha: "",
   })
 
   // Form de criação
@@ -97,6 +98,7 @@ export default function UsuariosPage() {
         usuEAdmin: selected.usuEAdmin,
         usuAtivo: selected.usuAtivo,
         usuSenha: "",
+        confirmarSenha: "",
       })
     }
   }, [selected, editing])
@@ -107,6 +109,16 @@ export default function UsuariosPage() {
       item.professional ? item.professional.toLowerCase().includes(selected.usuNome.toLowerCase()) : false
     )
   }, [movements, selected])
+
+  function loginEmUso(login: string, ignoreUserId?: number) {
+    const loginNormalizado = login.trim().toLocaleLowerCase()
+    return userList.some((user) => user.usuId !== ignoreUserId && user.usuLogin.trim().toLocaleLowerCase() === loginNormalizado)
+  }
+
+  async function getApiError(response: Response, fallback: string) {
+    const body = await response.json().catch(() => null)
+    return body?.mensagem ?? fallback
+  }
 
   // Filtro correto usando 'A' (Ativo) e 'I' (Inativo)
   const filteredUsers = useMemo(() => {
@@ -132,6 +144,17 @@ async function updateUser() {
   if (!editData.usuNome.trim() || !editData.usuLogin.trim()) {
     return toast.error("Nome e login são obrigatórios.")
   }
+  if (loginEmUso(editData.usuLogin, selected.usuId)) {
+    return toast.error("Já existe um usuário cadastrado com este login.")
+  }
+  if (editData.usuSenha || editData.confirmarSenha) {
+    if (editData.usuSenha.length < 6) {
+      return toast.error("A nova senha deve ter pelo menos 6 caracteres.")
+    }
+    if (editData.usuSenha !== editData.confirmarSenha) {
+      return toast.error("As senhas não coincidem.")
+    }
+  }
 
   try {
     setSubmitting(true)
@@ -151,13 +174,13 @@ async function updateUser() {
       body: JSON.stringify(payload),
     })
 
-    if (!response.ok) throw new Error()
+    if (!response.ok) throw new Error(await getApiError(response, "Erro ao atualizar usuário."))
 
     toast.success("Usuário atualizado com sucesso!")
     setEditing(false)
     fetchUsers()
-  } catch {
-    toast.error("Erro ao atualizar usuário.")
+  } catch (error) {
+    toast.error(error instanceof Error ? error.message : "Erro ao atualizar usuário.")
   } finally {
     setSubmitting(false)
   }
@@ -199,6 +222,9 @@ async function updateUser() {
     if (newUser.usuSenha !== newUser.confirmarSenha) {
       return toast.error("As senhas não coincidem.")
     }
+    if (loginEmUso(newUser.usuLogin)) {
+      return toast.error("Já existe um usuário cadastrado com este login.")
+    }
 
     try {
       setSubmitting(true)
@@ -214,14 +240,14 @@ async function updateUser() {
         }),
       })
 
-      if (!response.ok) throw new Error()
+      if (!response.ok) throw new Error(await getApiError(response, "Erro ao cadastrar usuário."))
 
       toast.success("Usuário cadastrado com sucesso!")
       setNewUser({ usuNome: "", usuLogin: "", usuSenha: "", confirmarSenha: "", usuEAdmin: "N" })
       setShowCreateForm(false)
       fetchUsers()
-    } catch {
-      toast.error("Erro ao cadastrar usuário.")
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Erro ao cadastrar usuário.")
     } finally {
       setSubmitting(false)
     }
@@ -418,7 +444,7 @@ async function updateUser() {
                   {editing && (
                     <div className="sm:col-span-2 grid gap-4 sm:grid-cols-2">
                       <Separator className="mb-2 sm:col-span-2" />
-                      <div className="sm:col-span-2">
+                      <div>
                         <Label htmlFor="edit-password">Nova Senha (deixe em branco para não alterar)</Label>
                         <div className="relative mt-2">
                           <KeyRound className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -434,6 +460,17 @@ async function updateUser() {
                             {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                           </button>
                         </div>
+                      </div>
+                      <div>
+                        <Label htmlFor="edit-confirm-password">Confirmar nova senha</Label>
+                        <Input
+                          id="edit-confirm-password"
+                          type={showPassword ? "text" : "password"}
+                          placeholder="Repita a nova senha"
+                          value={editData.confirmarSenha}
+                          onChange={(e) => setEditData((p) => ({ ...p, confirmarSenha: e.target.value }))}
+                          className="mt-2"
+                        />
                       </div>
                     </div>
                   )}

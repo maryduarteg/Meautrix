@@ -30,6 +30,8 @@ namespace Meautrix
             // 3. Injeção de Dependência
             builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+            builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
+            builder.Services.AddScoped<IClienteService, ClienteService>();
 
             // 4. Controllers e Documentação Swagger
             builder.Services.AddControllers();

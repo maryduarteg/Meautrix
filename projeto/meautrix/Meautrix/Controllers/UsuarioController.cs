@@ -51,22 +51,14 @@ namespace Meautrix.Controllers
         [Route("/login")]
         public async Task<IActionResult> Login([FromBody] UsuarioLoginDTO dto)
         {
-            try
-            {
-                UsuarioLoginDTO usuAux = await _usuarioService.BuscarPorLoginAsync(dto.UsuLogin);
-                if(dto.UsuLogin == usuAux.UsuLogin && dto.UsuSenha == usuAux.UsuSenha)
-                {
-                    return StatusCode(StatusCodes.Status201Created, new { mensagem = "Usuário válido." });
-                }
-                else
-                {
-                    return BadRequest(new { mensagem = "Senha inválida." });
-                }
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(new { mensagem = ex.Message });
-            }
+            if (string.IsNullOrWhiteSpace(dto.UsuLogin) || string.IsNullOrWhiteSpace(dto.UsuSenha))
+                return BadRequest(new { mensagem = "Informe o login e a senha." });
+
+            var usuario = await _usuarioService.BuscarPorLoginAsync(dto.UsuLogin);
+            if (usuario == null || !string.Equals(dto.UsuSenha, usuario.UsuSenha, StringComparison.Ordinal))
+                return Unauthorized(new { mensagem = "Login ou senha inválidos." });
+
+            return Ok(new { mensagem = "Login realizado com sucesso." });
         }
 
         [HttpPut("{id}")]

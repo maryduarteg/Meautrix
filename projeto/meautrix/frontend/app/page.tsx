@@ -6,19 +6,46 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { Sparkles, Mail, Lock, Eye, EyeOff } from "lucide-react"
+import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
 export default function LoginPage() {
   const router = useRouter()
-  const [email, setEmail] = useState("recepcao@lumiere.com")
+  const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [show, setShow] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    router.push("/cadastro")
+    if (!email.trim() || !password) {
+      toast.error("Informe o login e a senha.")
+      return
+    }
+
+    setSubmitting(true)
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5139"}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ usuLogin: email.trim(), usuSenha: password }),
+      })
+      const body = await response.json().catch(() => null)
+
+      if (!response.ok) {
+        throw new Error(body?.mensagem ?? "Não foi possível realizar o login.")
+      }
+
+      sessionStorage.setItem("meautrix.usuarioLogin", email.trim())
+      toast.success(body?.mensagem ?? "Login realizado com sucesso.")
+      router.push("/cadastro")
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Não foi possível realizar o login.")
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -64,17 +91,17 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-5">
             <div className="flex flex-col gap-2">
-              <Label htmlFor="email">E-mail</Label>
+              <Label htmlFor="email">Login</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   id="email"
-                  type="email"
+                  type="text"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-9"
-                  placeholder="voce@clinica.com"
+                  placeholder="Seu login"
                 />
               </div>
             </div>
@@ -113,8 +140,8 @@ export default function LoginPage() {
               </a>
             </div>
 
-            <Button type="submit" size="lg" className="w-full">
-              Entrar no painel
+            <Button type="submit" size="lg" className="w-full" disabled={submitting}>
+              {submitting ? "Entrando..." : "Entrar no painel"}
             </Button>
           </form>
 

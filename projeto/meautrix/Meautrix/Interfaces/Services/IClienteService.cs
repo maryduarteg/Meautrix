@@ -1,3 +1,4 @@
+using Meautrix.DTO.CategoriaProduto;
 using Meautrix.DTO.Cliente;
 
 namespace Meautrix.Interfaces

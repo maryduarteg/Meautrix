@@ -81,6 +81,10 @@ namespace Meautrix.Services
             if (usuario == null)
                 throw new KeyNotFoundException("Usuário não encontrado.");
 
+            var usuarioComMesmoLogin = await _usuarioRepository.BuscarPorLoginAsync(dto.UsuLogin);
+            if (usuarioComMesmoLogin != null && usuarioComMesmoLogin.UsuId != id)
+                throw new InvalidOperationException("Já existe um usuário cadastrado com este login.");
+
             // Converte string → char; padrão: 'N'
             var novoEAdm  = (dto.UsuEAdmin == "S") ? 'S' : 'N';
             var novoAtivo = (dto.UsuAtivo  == "I") ? 'I' : 'A';
@@ -115,6 +119,13 @@ namespace Meautrix.Services
             if (usuarioExistente == null || usuarioExistente.UsuAtivo == 'I')
             {
                 throw new KeyNotFoundException("Usuário não encontrado ou inativo no sistema.");
+            }
+
+            if (!string.IsNullOrWhiteSpace(dto.UsuLogin))
+            {
+                var usuarioComMesmoLogin = await _usuarioRepository.BuscarPorLoginAsync(dto.UsuLogin);
+                if (usuarioComMesmoLogin != null && usuarioComMesmoLogin.UsuId != id)
+                    throw new InvalidOperationException("Já existe um usuário cadastrado com este login.");
             }
 
             // Guard: impede remover o último administrador via PATCH

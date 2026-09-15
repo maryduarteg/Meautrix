@@ -1,3 +1,4 @@
+using Meautrix.DTO.CategoriaProduto;
 using Meautrix.DTO.Cliente;
 using Meautrix.Entidades;
 using Meautrix.Interfaces;
@@ -7,7 +8,7 @@ namespace Meautrix.Services
 {
     public class ClienteService : IClienteService
     {
-        private readonly IClienteRepository _clienteRepository; 
+        private readonly IClienteRepository _clienteRepository;
 
         public ClienteService(IClienteRepository clienteRepository)
         {
@@ -17,11 +18,11 @@ namespace Meautrix.Services
         // Mapeia entidade para DTO de resposta, garantindo o nome UsuEAdmin no JSON
         private static ClienteResponseDTO MapToDTO(Cliente c) => new()
         {
-            CliId     = c.CliId,
-            CliNome   = c.CliGenero,
-            CliGenero  = c.CliGenero,
+            CliId = c.CliId,
+            CliNome = c.CliNome,
+            CliGenero = c.CliGenero,
             CliDataNascimento = c.CliDataNascimento,
-            CliAtivo  = c.CliAtivo,
+            CliAtivo = c.CliAtivo,
             CliCpf = c.CliCpf
         };
 
@@ -55,14 +56,14 @@ namespace Meautrix.Services
                 throw new InvalidOperationException("Já existe um cliente cadastrado com este cpf.");
             }
 
-            var ativo = (dto.CliAtivo  == "I") ? "I" : "A";
+            var ativo = (dto.CliAtivo == "I") ? "I" : "A";
 
             var novoCliente = new Cliente
             {
-                CliNome  = dto.CliNome,
+                CliNome = dto.CliNome,
                 CliCpf = dto.CliCpf,
                 CliGenero = dto.CliGenero,
-                CliDataNascimento  = dto.CliDataNascimento,
+                CliDataNascimento = dto.CliDataNascimento,
                 CliAtivo = ativo
             };
 
@@ -73,15 +74,15 @@ namespace Meautrix.Services
         {
             var cliente = await _clienteRepository.BuscarPorIdAsync(id);
             if (cliente == null)
-                throw new KeyNotFoundException("Usuário não encontrado.");
+                throw new KeyNotFoundException("Cliente não encontrado.");
 
             // Converte string → char; padrão: 'N'
-            var novoAtivo = (dto.CliAtivo  == "I") ? 'I' : 'A';
+            var novoAtivo = (dto.CliAtivo == "I") ? 'I' : 'A';
 
 
             // Aplica as alterações
-            cliente.CliNome  = dto.CliNome;
-            cliente.CliGenero  = dto.CliGenero;
+            cliente.CliNome = dto.CliNome;
+            cliente.CliGenero = dto.CliGenero;
             cliente.CliAtivo = dto.CliAtivo;
             cliente.CliDataNascimento = dto.CliDataNascimento;
 
@@ -93,15 +94,15 @@ namespace Meautrix.Services
         {
             var clienteExistente = await _clienteRepository.BuscarPorIdAsync(id);
 
-            if (clienteExistente == null || clienteExistente.CliAtivo == "I")
+            if (clienteExistente == null)
             {
-                throw new KeyNotFoundException("Usuário não encontrado ou inativo no sistema.");
+                throw new KeyNotFoundException("Cliente não encontrado.");
             }
 
             if (!string.IsNullOrEmpty(dto.CliNome)) clienteExistente.CliNome = dto.CliNome;
             if (!string.IsNullOrEmpty(dto.CliGenero)) clienteExistente.CliGenero = dto.CliGenero;
             if (!string.IsNullOrEmpty(dto.CliAtivo)) clienteExistente.CliAtivo = dto.CliAtivo;
-   
+
 
             await _clienteRepository.AlterarAsync(clienteExistente);
         }
@@ -110,9 +111,14 @@ namespace Meautrix.Services
         {
             var cliente = await _clienteRepository.BuscarPorIdAsync(id);
 
-            if (cliente == null || cliente.CliAtivo == "I")
+            if (cliente == null)
             {
-                throw new KeyNotFoundException("Cliente não encontrado ou já inativado.");
+                throw new KeyNotFoundException("Cliente não encontrado.");
+            }
+
+            if (cliente.CliAtivo == "I")
+            {
+                throw new InvalidOperationException("Cliente já está inativado.");
             }
 
             cliente.CliAtivo = "I";
