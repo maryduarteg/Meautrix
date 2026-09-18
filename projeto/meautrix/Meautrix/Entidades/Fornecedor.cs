@@ -4,20 +4,20 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Meautrix.Entidades
 {
-    [Table("FORNECEDORES")]
+    [Table("fornecedores")]
     public class Fornecedor
     {
         [Key]
-        [Column("FORN_ID")]
+        [Column("forn_id")]
         public int FornId { get; set; }
 
         [Required(ErrorMessage = "A razão social é obrigatória.")]
-        [Column("FORN_RAZAO_SOCIAL")]
+        [Column("forn_razao_social")]
         [StringLength(60)]
         public string FornRazaoSocial { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "O CNPJ é obrigatório.")]
-        [Column("FORN_CNPJ")]
+        [Column("forn_cnpj")]
         [StringLength(20)]
         public string FornCnpj { get; set; } = string.Empty;
 
@@ -25,7 +25,7 @@ namespace Meautrix.Entidades
         /// Indicador de situação da fornecedor: 'A' para Ativo, 'I' para Inativo.
         /// </summary>
         [Required]
-        [Column("FORN_ATIVO")]
+        [Column("forn_ativo")]
         public string FornAtivo { get; set; }
     }
 }

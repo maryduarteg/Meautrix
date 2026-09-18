@@ -22,7 +22,8 @@ namespace Meautrix.Services
             ProdQuantidadeMinima = p.ProdQuantidadeMinima,
             ProdAtivo            = p.ProdAtivo,
             MedidasMedId       = p.MedidasMedId,
-            CatProdId          = p.CatProdId
+            CatProdId          = p.CatProdId,
+            FornId             = p.FornId
             
         };
 

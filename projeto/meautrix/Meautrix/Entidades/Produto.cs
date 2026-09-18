@@ -28,6 +28,9 @@ namespace Meautrix.Entidades
         [Column("cat_prod_id")]
         public int CatProdId { get; set; }
 
+        [Required(ErrorMessage = "O id de fornecedor é obrigatório.")]
+        [Column("forn_id")]
+        public int FornId { get; set; }
         /// <summary>
         /// Indicador de situação do produto: 'A' para Ativo, 'I' para Inativo.
         /// </summary>

@@ -32,7 +32,7 @@ namespace Meautrix.Services
         public async Task<FornecedorResponseDTO?> BuscarPorIdAsync(int id)
         {
             var fornecedor = await _fornecedorRepository.BuscarPorIdAsync(id);
-            if (fornecedor == null || fornecedor.FornAtivo == "I")
+            if (fornecedor == null)
                 return null;
             return MapToDTO(fornecedor);
         }
@@ -55,7 +55,7 @@ namespace Meautrix.Services
             var fornecedorExistente = await _fornecedorRepository.BuscarPorCnpjAsync(dto.FornCnpj);
             if (fornecedorExistente != null)
             {
-                throw new InvalidOperationException("Já existe um fornecedor cadastrado com este cpf.");
+                throw new InvalidOperationException("Já existe um fornecedor cadastrado com este cnpj.");
             }
 
             var ativo = (dto.FornAtivo  == "I") ? "I" : "A";
@@ -94,7 +94,7 @@ namespace Meautrix.Services
         {
             var fornecedorExistente = await _fornecedorRepository.BuscarPorIdAsync(id);
 
-            if (fornecedorExistente == null || fornecedorExistente.FornAtivo == "I")
+            if (fornecedorExistente == null)
             {
                 throw new KeyNotFoundException("Fornecedor não encontrado ou inativo no sistema.");
             }
@@ -111,7 +111,7 @@ namespace Meautrix.Services
         {
             var fornecedor = await _fornecedorRepository.BuscarPorIdAsync(id);
 
-            if (fornecedor == null || fornecedor.FornAtivo == "I")
+            if (fornecedor == null)
             {
                 throw new KeyNotFoundException("Fornecedor não encontrado ou já inativado.");
             }

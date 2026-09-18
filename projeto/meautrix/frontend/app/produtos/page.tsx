@@ -21,7 +21,9 @@ import {
 
 const PRODUTO_API_URL = "http://localhost:5139/api/produto"
 const CATEGORIA_API_URL = "http://localhost:5139/api/categoriaproduto"
-const MEDIDA_API_URL = "http://localhost:5139/api/medidas"
+const MEDIDA_API_URL = "http://localhost:5139/api/medida"
+const FORNECEDOR_API_URL = "http://localhost:5139/api/fornecedor"
+
 
 // Classe usada em todo SelectTrigger para impedir que o shadcn/ui trunque
 // (line-clamp-1) o texto do valor selecionado quando a descrição é longa.
@@ -34,7 +36,16 @@ export interface Produto {
   medidasMedId: number
   catProdId: number
   prodAtivo: string // 'A' (Ativo) ou 'I' (Inativo)
+  fornId: number
 }
+
+export interface Fornecedor {
+  fornId: number
+  fornRazaoSocial: string
+  fornCnpj: string
+  fornAtivo: string // 'A' (Ativo) ou 'I' (Inativo)
+}
+
 
 export interface Categoria {
   catProdId: number
@@ -53,6 +64,7 @@ export default function CadastroPage() {
   const [produtos, setProdutos] = useState<Produto[]>([])
   const [categorias, setCategorias] = useState<Categoria[]>([])
   const [medidas, setMedidas] = useState<Medida[]>([])
+  const [fornecedores, setFornecedores] = useState<Fornecedor[]>([])
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
 
@@ -70,6 +82,7 @@ export default function CadastroPage() {
     catProdId: "",
     medidasMedId: "",
     quantidadeMinima: "",
+    fornId: "",
   })
 
   // Form de criação
@@ -78,10 +91,12 @@ export default function CadastroPage() {
     catProdId: "",
     medidasMedId: "",
     quantidadeMinima: "",
+    fornId: "",
   })
 
   const categoriasAtivas = useMemo(() => categorias.filter((c) => c.catProdAtivo === "A"), [categorias])
   const medidasAtivas = useMemo(() => medidas.filter((m) => m.medAtivo === "A"), [medidas])
+  const fornecedoresAtivos = useMemo(() => fornecedores.filter((f) => f.fornAtivo === "A"), [fornecedores])
 
   function getCategoriaDescricao(id: number) {
     return categorias.find((c) => c.catProdId === id)?.catProdDescricao ?? "—"
@@ -89,6 +104,10 @@ export default function CadastroPage() {
 
   function getMedidaSigla(id: number) {
     return medidas.find((m) => m.medId === id)?.medSigla ?? "—"
+  }
+
+  function getFornecedorRazaoSocial(id: number) {
+    return fornecedores.find((f) => f.fornId === id)?.fornRazaoSocial ?? "—"
   }
 
   async function fetchProdutos() {
@@ -130,9 +149,21 @@ export default function CadastroPage() {
     }
   }
 
+  async function fetchFornecedores() {
+    try {
+      const res = await fetch(FORNECEDOR_API_URL)
+      if (!res.ok) throw new Error("Falha ao buscar fornecedores.")
+      const data: Fornecedor[] = await res.json()
+      setFornecedores(data)
+    } catch (err) {
+      toast.error("Erro ao carregar fornecedores.")
+      console.error(err)
+    }
+  }
+
   async function fetchAll() {
     setLoading(true)
-    await Promise.all([fetchProdutos(), fetchCategorias(), fetchMedidas()])
+    await Promise.all([fetchProdutos(), fetchCategorias(), fetchMedidas(), fetchFornecedores()])
     setLoading(false)
   }
 
@@ -153,6 +184,7 @@ export default function CadastroPage() {
         catProdId: String(selected.catProdId),
         medidasMedId: String(selected.medidasMedId),
         quantidadeMinima: String(selected.prodQuantidadeMinima),
+        fornId: String(selected.fornId),
       })
     }
   }, [selected, editing])
@@ -174,8 +206,8 @@ export default function CadastroPage() {
   // Alterar produto (PUT /api/produto/{id})
   async function updateProduto() {
     if (!selected) return
-    if (!editData.descricao.trim() || !editData.catProdId || !editData.medidasMedId) {
-      return toast.error("Descrição, categoria e unidade são obrigatórias.")
+    if (!editData.descricao.trim() || !editData.catProdId || !editData.medidasMedId || !editData.fornId) {
+      return toast.error("Descrição, categoria, Medida e Fornecedor são obrigatórios.")
     }
     if (editData.descricao.length > 90) {
       return toast.error("A descrição do produto deve possuir no máximo 90 caracteres.")
@@ -191,6 +223,7 @@ export default function CadastroPage() {
           prodQuantidadeMinima: Number(editData.quantidadeMinima) || 0,
           medidasMedId: Number(editData.medidasMedId),
           catProdId: Number(editData.catProdId),
+          fornId: Number(editData.fornId),
           prodAtivo: selected.prodAtivo,
         }),
       })
@@ -208,6 +241,7 @@ export default function CadastroPage() {
               prodQuantidadeMinima: Number(editData.quantidadeMinima) || 0,
               medidasMedId: Number(editData.medidasMedId),
               catProdId: Number(editData.catProdId),
+              fornId: Number(editData.fornId),
             }
           : p
       )
@@ -251,8 +285,8 @@ export default function CadastroPage() {
 
   // Criar produto (POST /api/produto)
   async function createProduto() {
-    if (!novoProduto.descricao.trim() || !novoProduto.catProdId || !novoProduto.medidasMedId) {
-      return toast.error("Preencha descrição, categoria e unidade do produto.")
+    if (!novoProduto.descricao.trim() || !novoProduto.catProdId || !novoProduto.medidasMedId || !novoProduto.fornId) {
+      return toast.error("Preencha descrição, categoria, Medida e Fornecedor do produto.")
     }
     if (novoProduto.descricao.length > 90) {
       return toast.error("A descrição do produto deve possuir no máximo 90 caracteres.")
@@ -268,6 +302,7 @@ export default function CadastroPage() {
           prodQuantidadeMinima: Number(novoProduto.quantidadeMinima) || 0,
           medidasMedId: Number(novoProduto.medidasMedId),
           catProdId: Number(novoProduto.catProdId),
+          fornId: Number(novoProduto.fornId),
           prodAtivo: "A",
         }),
       })
@@ -278,7 +313,7 @@ export default function CadastroPage() {
       }
 
       toast.success("Produto cadastrado com sucesso!")
-      setNovoProduto({ descricao: "", catProdId: "", medidasMedId: "", quantidadeMinima: "" })
+      setNovoProduto({ descricao: "", catProdId: "", medidasMedId: "", quantidadeMinima: "", fornId: "" })
       setShowCreateForm(false)
       await fetchProdutos() // recarrega para pegar o novo prodId gerado pelo banco
     } catch (err: any) {
@@ -340,7 +375,11 @@ export default function CadastroPage() {
                 <Label>Categoria</Label>
                 <Select value={novoProduto.catProdId} onValueChange={(v) => setNovoProduto((p) => ({ ...p, catProdId: v }))}>
                   <SelectTrigger className={`mt-2 ${SELECT_TRIGGER_NO_CLAMP}`}>
-                    <SelectValue placeholder="Selecione" />
+                    <SelectValue placeholder="Selecione">
+                      {novoProduto.catProdId
+                        ? categoriasAtivas.find((c) => String(c.catProdId) === novoProduto.catProdId)?.catProdDescricao
+                        : undefined}
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {categoriasAtivas.map((c) => (
@@ -352,10 +391,14 @@ export default function CadastroPage() {
                 </Select>
               </div>
               <div>
-                <Label>Unidade</Label>
+                <Label>Medida</Label>
                 <Select value={novoProduto.medidasMedId} onValueChange={(v) => setNovoProduto((p) => ({ ...p, medidasMedId: v }))}>
                   <SelectTrigger className={`mt-2 ${SELECT_TRIGGER_NO_CLAMP}`}>
-                    <SelectValue placeholder="Selecione" />
+                    <SelectValue placeholder="Selecione">
+                      {novoProduto.medidasMedId
+                        ? medidasAtivas.find((m) => String(m.medId) === novoProduto.medidasMedId)?.medSigla
+                        : undefined}
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {medidasAtivas.map((m) => (
@@ -367,7 +410,26 @@ export default function CadastroPage() {
                 </Select>
               </div>
               <div>
-                <Label htmlFor="prod-qtd-min">Qtde. mínima (Alerta)</Label>
+                <Label>Fornecedor</Label>
+                <Select value={novoProduto.fornId} onValueChange={(v) => setNovoProduto((p) => ({ ...p, fornId: v }))}>
+                  <SelectTrigger className={`mt-2 ${SELECT_TRIGGER_NO_CLAMP}`}>
+                    <SelectValue placeholder="Selecione">
+                      {novoProduto.fornId
+                        ? fornecedoresAtivos.find((f) => String(f.fornId) === novoProduto.fornId)?.fornRazaoSocial
+                        : undefined}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    {fornecedoresAtivos.map((f) => (
+                      <SelectItem key={f.fornId} value={String(f.fornId)}>
+                        {f.fornRazaoSocial}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="prod-qtd-min">Quantidade mínima (Alerta)</Label>
                 <Input
                   id="prod-qtd-min"
                   type="number"
@@ -402,7 +464,9 @@ export default function CadastroPage() {
               <Label htmlFor="prod-cat-filter">Categoria</Label>
               <Select value={categoriaFilter} onValueChange={setCategoriaFilter}>
                 <SelectTrigger id="prod-cat-filter" className={`mt-2 ${SELECT_TRIGGER_NO_CLAMP}`}>
-                  <SelectValue placeholder="Todas" />
+                    <SelectValue placeholder="Selecione">
+                      {categoriaFilter === "Todas" ? "Todas" : getCategoriaDescricao(Number(categoriaFilter))}
+                    </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="Todas">Todas</SelectItem>
@@ -526,7 +590,11 @@ export default function CadastroPage() {
                     {editing ? (
                       <Select value={editData.catProdId} onValueChange={(v) => setEditData((p) => ({ ...p, catProdId: v }))}>
                         <SelectTrigger className={`mt-2 ${SELECT_TRIGGER_NO_CLAMP}`}>
-                          <SelectValue placeholder="Selecione" />
+                          <SelectValue placeholder="Selecione">
+                            {editData.catProdId
+                              ? categoriasAtivas.find((c) => String(c.catProdId) === editData.catProdId)?.catProdDescricao
+                              : undefined}
+                          </SelectValue>
                         </SelectTrigger>
                         <SelectContent>
                           {categoriasAtivas.map((c) => (
@@ -542,11 +610,15 @@ export default function CadastroPage() {
                   </div>
 
                   <div>
-                    <Label>Unidade</Label>
+                    <Label>Medida</Label>
                     {editing ? (
                       <Select value={editData.medidasMedId} onValueChange={(v) => setEditData((p) => ({ ...p, medidasMedId: v }))}>
                         <SelectTrigger className={`mt-2 ${SELECT_TRIGGER_NO_CLAMP}`}>
-                          <SelectValue placeholder="Selecione" />
+                          <SelectValue placeholder="Selecione">
+                            {editData.medidasMedId
+                              ? medidasAtivas.find((m) => String(m.medId) === editData.medidasMedId)?.medSigla
+                              : undefined}
+                          </SelectValue>
                         </SelectTrigger>
                         <SelectContent>
                           {medidasAtivas.map((m) => (
@@ -562,7 +634,31 @@ export default function CadastroPage() {
                   </div>
 
                   <div>
-                    <Label>Qtde. mínima</Label>
+                    <Label>Fornecedor</Label>
+                    {editing ? (
+                      <Select value={editData.fornId} onValueChange={(v) => setEditData((p) => ({ ...p, fornId: v }))}>
+                        <SelectTrigger className={`mt-2 ${SELECT_TRIGGER_NO_CLAMP}`}>
+                          <SelectValue placeholder="Selecione">
+                            {editData.fornId
+                              ? fornecedoresAtivos.find((f) => String(f.fornId) === editData.fornId)?.fornRazaoSocial
+                              : undefined}
+                          </SelectValue>
+                        </SelectTrigger>
+                        <SelectContent>
+                          {fornecedoresAtivos.map((f) => (
+                            <SelectItem key={f.fornId} value={String(f.fornId)}>
+                              {f.fornRazaoSocial}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    ) : (
+                      <Input value={getFornecedorRazaoSocial(selected.fornId)} readOnly className="mt-2 bg-muted/40" />
+                    )}
+                  </div>
+
+                  <div>
+                    <Label>Quantidade mínima</Label>
                     <Input
                       type="number"
                       min="0"

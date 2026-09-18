@@ -7,6 +7,8 @@
         public double? ProdQuantidadeMinima { get; set; }
         public int? MedidasMedId { get; set; }
         public int? CatProdId { get; set; }
+        public int? FornId { get; set; }
+
         public string ProdAtivo { get; set; } = "A";
 
     }
