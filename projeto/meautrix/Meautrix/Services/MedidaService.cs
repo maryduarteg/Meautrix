@@ -17,6 +17,7 @@ namespace Meautrix.Services
         // Mapeia entidade para DTO de resposta, garantindo o nome UsuEAdmin no JSON
         private static MedidaResponseDTO MapToDTO(Medida m) => new()
         {
+            MedId        = m.MedId,
             MedDescricao = m.MedDescricao,
             MedSigla     = m.MedSigla,
             MedAtivo     = m.MedAtivo

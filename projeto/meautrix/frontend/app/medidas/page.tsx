@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useMemo, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { Pencil, ShieldCheck, Power, Loader2, List, Plus, Tag, Search, X, Ruler } from "lucide-react"
 import { toast } from "sonner"
 import { DashboardShell } from "@/components/dashboard-shell"
@@ -10,27 +10,21 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 
+const API_URL = "http://localhost:5139/api/medida"
+
 export interface Medida {
-  medId: string
+  medId: number
   medSigla: string
   medDescricao: string
   medAtivo: string  // 'A' (Ativa) ou 'I' (Inativa)
 }
 
-const mockMedidas: Medida[] = [
-  { medId: "MED-001", medSigla: "un", medDescricao: "Unidade", medAtivo: "A" },
-  { medId: "MED-002", medSigla: "ml", medDescricao: "Mililitro", medAtivo: "A" },
-  { medId: "MED-003", medSigla: "g", medDescricao: "Grama", medAtivo: "A" },
-  { medId: "MED-004", medSigla: "frasco", medDescricao: "Frasco", medAtivo: "A" },
-  { medId: "MED-005", medSigla: "par", medDescricao: "Par", medAtivo: "A" },
-  { medId: "MED-006", medSigla: "caixa", medDescricao: "Caixa", medAtivo: "I" },
-]
-
 export default function MedidasPage() {
-  const [medidaList, setMedidaList] = useState<Medida[]>(mockMedidas)
+  const [medidaList, setMedidaList] = useState<Medida[]>([])
+  const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
 
-  const [selectedId, setSelectedId] = useState<string | null>(mockMedidas[0]?.medId || null)
+  const [selectedId, setSelectedId] = useState<number | null>(null)
   const [showCreateForm, setShowCreateForm] = useState(false)
   const [editing, setEditing] = useState(false)
   const [statusFilter, setStatusFilter] = useState<"Todos" | "A" | "I">("Todos")
@@ -49,6 +43,30 @@ export default function MedidasPage() {
     sigla: "",
     descricao: "",
   })
+
+  // Busca todas as medidas na API
+  async function fetchMedidas() {
+    try {
+      setLoading(true)
+      const res = await fetch(API_URL)
+      if (!res.ok) throw new Error("Falha ao buscar medidas.")
+      const data: Medida[] = await res.json()
+      setMedidaList(data)
+      if (data.length > 0 && selectedId === null) {
+        setSelectedId(data[0].medId)
+      }
+    } catch (err) {
+      toast.error("Erro ao carregar medidas.")
+      console.error(err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchMedidas()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const selected = useMemo(() => {
     return medidaList.find((m) => m.medId === selectedId) || null
@@ -79,7 +97,7 @@ export default function MedidasPage() {
     return sigla.substring(0, 2).toUpperCase()
   }
 
-  // Alterar medida (mock)
+  // Alterar medida (PUT /api/medidas/{id})
   async function updateMedida() {
     if (!selected) return
     if (!editData.sigla.trim() || !editData.descricao.trim()) {
@@ -88,50 +106,72 @@ export default function MedidasPage() {
 
     try {
       setSubmitting(true)
-      // Simulando delay de API
-      await new Promise(resolve => setTimeout(resolve, 500))
-
-      const updatedList = medidaList.map(m => 
-        m.medId === selected.medId ? { 
-          ...m, 
-          medSigla: editData.sigla.trim(), 
+      const res = await fetch(`${API_URL}/${selected.medId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          medSigla: editData.sigla.trim(),
           medDescricao: editData.descricao.trim(),
-          medAtivo: editData.ativo
-        } : m
+          medAtivo: editData.ativo,
+        }),
+      })
+
+      if (!res.ok) {
+        const erro = await res.json().catch(() => null)
+        throw new Error(erro?.mensagem || "Erro ao atualizar medida.")
+      }
+
+      const updatedList = medidaList.map((m) =>
+        m.medId === selected.medId
+          ? {
+              ...m,
+              medSigla: editData.sigla.trim(),
+              medDescricao: editData.descricao.trim(),
+              medAtivo: editData.ativo,
+            }
+          : m
       )
       setMedidaList(updatedList)
 
       toast.success("Medida atualizada com sucesso!")
       setEditing(false)
-    } catch {
-      toast.error("Erro ao atualizar medida.")
+    } catch (err: any) {
+      toast.error(err.message || "Erro ao atualizar medida.")
     } finally {
       setSubmitting(false)
     }
   }
 
-  // Inativar / Ativar (mock)
-  async function toggleMedidaStatus(id: string) {
+  // Inativar / Ativar (PATCH /api/medidas/{id})
+  async function toggleMedidaStatus(id: number) {
     const medida = medidaList.find((m) => m.medId === id)
     if (!medida) return
 
+    const newStatus = medida.medAtivo === "A" ? "I" : "A"
+
     try {
-      // Simulando delay de API
-      await new Promise(resolve => setTimeout(resolve, 500))
-      
-      const newStatus = medida.medAtivo === "A" ? "I" : "A"
-      const updatedList = medidaList.map(m => 
+      const res = await fetch(`${API_URL}/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ medAtivo: newStatus }),
+      })
+
+      if (!res.ok) {
+        const erro = await res.json().catch(() => null)
+        throw new Error(erro?.mensagem || "Não foi possível alterar o status.")
+      }
+
+      const updatedList = medidaList.map((m) =>
         m.medId === id ? { ...m, medAtivo: newStatus } : m
       )
-      
       setMedidaList(updatedList)
       toast.success(`Medida ${newStatus === "A" ? "reativada" : "inativada"} com sucesso!`)
-    } catch {
-      toast.error("Não foi possível alterar o status.")
+    } catch (err: any) {
+      toast.error(err.message || "Não foi possível alterar o status.")
     }
   }
 
-  // Criar Medida (mock)
+  // Criar Medida (POST /api/medidas)
   async function createMedida() {
     if (!novaMedida.sigla.trim() || !novaMedida.descricao.trim()) {
       return toast.error("Preencha a sigla e a descrição da medida.")
@@ -139,26 +179,26 @@ export default function MedidasPage() {
 
     try {
       setSubmitting(true)
-      // Simulando delay de API
-      await new Promise(resolve => setTimeout(resolve, 500))
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          medSigla: novaMedida.sigla.trim(),
+          medDescricao: novaMedida.descricao.trim(),
+        }),
+      })
 
-      const nextIdNum = medidaList.length + 1
-      const nextId = `MED-${String(nextIdNum).padStart(3, '0')}`
-      
-      const nova: Medida = {
-        medId: nextId,
-        medSigla: novaMedida.sigla.trim(),
-        medDescricao: novaMedida.descricao.trim(),
-        medAtivo: "A",
+      if (!res.ok) {
+        const erro = await res.json().catch(() => null)
+        throw new Error(erro?.mensagem || "Erro ao cadastrar medida.")
       }
 
-      setMedidaList([...medidaList, nova])
       toast.success("Medida cadastrada com sucesso!")
       setNovaMedida({ sigla: "", descricao: "" })
       setShowCreateForm(false)
-      setSelectedId(nova.medId)
-    } catch {
-      toast.error("Erro ao cadastrar medida.")
+      await fetchMedidas() // recarrega a lista para pegar o novo MedId gerado pelo banco
+    } catch (err: any) {
+      toast.error(err.message || "Erro ao cadastrar medida.")
     } finally {
       setSubmitting(false)
     }
@@ -235,7 +275,7 @@ export default function MedidasPage() {
                 <Input id="med-desc-filter" value={descricaoFilter} onChange={(e) => setDescricaoFilter(e.target.value)} placeholder="Buscar por descrição..." className="pl-9" />
               </div>
             </div>
-            
+
             <div className="flex rounded-lg bg-muted p-1" role="group" aria-label="Filtrar medidas por status">
               {statusFilter !== "Todos" || siglaFilter || descricaoFilter ? (
                 <button type="button" onClick={() => { setSiglaFilter(""); setDescricaoFilter(""); setStatusFilter("Todos") }} className="mr-1 rounded-md px-2 text-muted-foreground hover:text-foreground" aria-label="Limpar filtros">
@@ -272,7 +312,11 @@ export default function MedidasPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-2">
-              {filteredMedidas.length === 0 ? (
+              {loading ? (
+                <div className="flex items-center justify-center p-8">
+                  <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+                </div>
+              ) : filteredMedidas.length === 0 ? (
                 <p className="p-4 text-center text-xs text-muted-foreground">Nenhuma medida encontrada.</p>
               ) : (
                 filteredMedidas.map((m) => (
@@ -320,16 +364,16 @@ export default function MedidasPage() {
                 </CardHeader>
                 <CardContent className="grid gap-4 sm:grid-cols-2">
                   <div>
-                    <Label>Identificador (MED_ID)</Label>
+                    <Label>Identificador</Label>
                     <Input value={selected.medId} readOnly className="mt-2 bg-muted/40 font-mono text-xs" />
                   </div>
                   <div>
-                    <Label>Status (MED_ATIVO)</Label>
+                    <Label>Status</Label>
                     <Input value={selected.medAtivo === "A" ? "Ativa" : "Inativa"} readOnly className="mt-2 bg-muted/40" />
                   </div>
-                  
+
                   <div>
-                    <Label>Sigla (MED_SIGLA)</Label>
+                    <Label>Sigla</Label>
                     <Input
                       value={editing ? editData.sigla : selected.medSigla}
                       onChange={(e) => setEditData((p) => ({ ...p, sigla: e.target.value }))}
@@ -338,7 +382,7 @@ export default function MedidasPage() {
                     />
                   </div>
                   <div>
-                    <Label>Descrição (MED_DESCRICAO)</Label>
+                    <Label>Descrição</Label>
                     <Input
                       value={editing ? editData.descricao : selected.medDescricao}
                       onChange={(e) => setEditData((p) => ({ ...p, descricao: e.target.value }))}

@@ -4,20 +4,20 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Meautrix.Entidades
 {
-    [Table("MEDIDAS")]
+    [Table("medidas")]
     public class Medida
     {
         [Key]
-        [Column("MED_ID")]
+        [Column("med_id")]
         public int MedId { get; set; }
 
         [Required(ErrorMessage = "A descrição da medida é obrigatório.")]
-        [Column("MED_DESCRICAO")]
+        [Column("med_descricao")]
         [StringLength(30)]
         public string MedDescricao { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "A sigla da medida é obrigatório.")]
-        [Column("MED_SIGLA")]
+        [Column("med_sigla")]
         [StringLength(10)] 
         public string MedSigla { get; set; } = string.Empty;
 
@@ -26,7 +26,7 @@ namespace Meautrix.Entidades
         /// Indicador de situação da medida: 'A' para Ativo, 'I' para Inativo.
         /// </summary>
         [Required]
-        [Column("MED_ATIVO")]
+        [Column("med_ativo")]
         public string MedAtivo { get; set; }
     }
 }

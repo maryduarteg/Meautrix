@@ -1,7 +1,7 @@
 "use client"
 
-import React, { useMemo, useState } from "react"
-import { Eye, EyeOff, Pencil, ShieldCheck, Activity, Power, Loader2, List, Plus, Tag, Search, X } from "lucide-react"
+import React, { useEffect, useMemo, useState } from "react"
+import { Pencil, ShieldCheck, Power, Loader2, List, Plus, Tag, Search, X } from "lucide-react"
 import { toast } from "sonner"
 import { DashboardShell } from "@/components/dashboard-shell"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -9,27 +9,21 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
+
+const API_URL = "http://localhost:5139/api/categoriaproduto"
 
 export interface Categoria {
-  id: number
-  descricao: string
-  ativo: string  // 'A' (Ativo) ou 'I' (Inativo)
+  catProdId: number
+  catProdDescricao: string
+  catProdAtivo: string // 'A' (Ativo) ou 'I' (Inativo)
 }
 
-const mockCategorias: Categoria[] = [
-  { id: 1, descricao: "Estética Facial", ativo: "A" },
-  { id: 2, descricao: "Estética Corporal", ativo: "A" },
-  { id: 3, descricao: "Cabelos", ativo: "A" },
-  { id: 4, descricao: "Unhas", ativo: "I" },
-  { id: 5, descricao: "Depilação", ativo: "A" },
-]
-
 export default function CategoriasPage() {
-  const [categoriaList, setCategoriaList] = useState<Categoria[]>(mockCategorias)
+  const [categoriaList, setCategoriaList] = useState<Categoria[]>([])
+  const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
 
-  const [selectedId, setSelectedId] = useState<number | null>(mockCategorias[0]?.id || null)
+  const [selectedId, setSelectedId] = useState<number | null>(null)
   const [showCreateForm, setShowCreateForm] = useState(false)
   const [editing, setEditing] = useState(false)
   const [statusFilter, setStatusFilter] = useState<"Todos" | "A" | "I">("Todos")
@@ -46,24 +40,48 @@ export default function CategoriasPage() {
     descricao: "",
   })
 
+  // Busca todas as categorias na API
+  async function fetchCategorias() {
+    try {
+      setLoading(true)
+      const res = await fetch(API_URL)
+      if (!res.ok) throw new Error("Falha ao buscar categorias.")
+      const data: Categoria[] = await res.json()
+      setCategoriaList(data)
+      if (data.length > 0 && selectedId === null) {
+        setSelectedId(data[0].catProdId)
+      }
+    } catch (err) {
+      toast.error("Erro ao carregar categorias.")
+      console.error(err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchCategorias()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   const selected = useMemo(() => {
-    return categoriaList.find((c) => c.id === selectedId) || null
+    return categoriaList.find((c) => c.catProdId === selectedId) || null
   }, [categoriaList, selectedId])
 
   // Preenche o formulário de edição ao selecionar/editar categoria
   React.useEffect(() => {
     if (selected) {
       setEditData({
-        descricao: selected.descricao,
-        ativo: selected.ativo,
+        descricao: selected.catProdDescricao,
+        ativo: selected.catProdAtivo,
       })
     }
   }, [selected, editing])
 
   const filteredCategorias = useMemo(() => {
     return categoriaList.filter((c) => {
-      const matchesDesc = c.descricao.toLowerCase().includes(descricaoFilter.toLowerCase())
-      const matchesStatus = statusFilter === "Todos" || c.ativo === statusFilter
+      const matchesDesc = c.catProdDescricao.toLowerCase().includes(descricaoFilter.toLowerCase())
+      const matchesStatus = statusFilter === "Todos" || c.catProdAtivo === statusFilter
       return matchesDesc && matchesStatus
     })
   }, [categoriaList, statusFilter, descricaoFilter])
@@ -80,7 +98,7 @@ export default function CategoriasPage() {
       .toUpperCase()
   }
 
-  // Alterar categoria (mock)
+  // Alterar categoria (PUT /api/categoriaproduto/{id})
   async function updateCategoria() {
     if (!selected) return
     if (!editData.descricao.trim()) {
@@ -89,45 +107,66 @@ export default function CategoriasPage() {
 
     try {
       setSubmitting(true)
-      // Simulando delay de API
-      await new Promise(resolve => setTimeout(resolve, 500))
+      const res = await fetch(`${API_URL}/${selected.catProdId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          catProdDescricao: editData.descricao.trim(),
+          catProdAtivo: editData.ativo,
+        }),
+      })
 
-      const updatedList = categoriaList.map(c => 
-        c.id === selected.id ? { ...c, descricao: editData.descricao.trim(), ativo: editData.ativo } : c
+      if (!res.ok) {
+        const erro = await res.json().catch(() => null)
+        throw new Error(erro?.mensagem || "Erro ao atualizar categoria.")
+      }
+
+      const updatedList = categoriaList.map((c) =>
+        c.catProdId === selected.catProdId
+          ? { ...c, catProdDescricao: editData.descricao.trim(), catProdAtivo: editData.ativo }
+          : c
       )
       setCategoriaList(updatedList)
 
       toast.success("Categoria atualizada com sucesso!")
       setEditing(false)
-    } catch {
-      toast.error("Erro ao atualizar categoria.")
+    } catch (err: any) {
+      toast.error(err.message || "Erro ao atualizar categoria.")
     } finally {
       setSubmitting(false)
     }
   }
 
-  // Inativar / Ativar (mock)
+  // Inativar / Ativar (PATCH /api/categoriaproduto/{id})
   async function toggleCategoriaStatus(id: number) {
-    const categoria = categoriaList.find((c) => c.id === id)
+    const categoria = categoriaList.find((c) => c.catProdId === id)
     if (!categoria) return
 
+    const newStatus = categoria.catProdAtivo === "A" ? "I" : "A"
+
     try {
-      // Simulando delay de API
-      await new Promise(resolve => setTimeout(resolve, 500))
-      
-      const newStatus = categoria.ativo === "A" ? "I" : "A"
-      const updatedList = categoriaList.map(c => 
-        c.id === id ? { ...c, ativo: newStatus } : c
+      const res = await fetch(`${API_URL}/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ catProdAtivo: newStatus }),
+      })
+
+      if (!res.ok) {
+        const erro = await res.json().catch(() => null)
+        throw new Error(erro?.mensagem || "Não foi possível alterar o status.")
+      }
+
+      const updatedList = categoriaList.map((c) =>
+        c.catProdId === id ? { ...c, catProdAtivo: newStatus } : c
       )
-      
       setCategoriaList(updatedList)
-      toast.success(`Status da categoria alterado com sucesso!`)
-    } catch {
-      toast.error("Não foi possível alterar o status.")
+      toast.success("Status da categoria alterado com sucesso!")
+    } catch (err: any) {
+      toast.error(err.message || "Não foi possível alterar o status.")
     }
   }
 
-  // Criar Categoria (mock)
+  // Criar Categoria (POST /api/categoriaproduto)
   async function createCategoria() {
     if (!novaCategoria.descricao.trim()) {
       return toast.error("Preencha a descrição da categoria.")
@@ -135,23 +174,25 @@ export default function CategoriasPage() {
 
     try {
       setSubmitting(true)
-      // Simulando delay de API
-      await new Promise(resolve => setTimeout(resolve, 500))
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          catProdDescricao: novaCategoria.descricao.trim(),
+        }),
+      })
 
-      const nextId = Math.max(0, ...categoriaList.map(c => c.id)) + 1
-      const nova = {
-        id: nextId,
-        descricao: novaCategoria.descricao.trim(),
-        ativo: "A",
+      if (!res.ok) {
+        const erro = await res.json().catch(() => null)
+        throw new Error(erro?.mensagem || "Erro ao cadastrar categoria.")
       }
 
-      setCategoriaList([...categoriaList, nova])
       toast.success("Categoria cadastrada com sucesso!")
       setNovaCategoria({ descricao: "" })
       setShowCreateForm(false)
-      setSelectedId(nova.id)
-    } catch {
-      toast.error("Erro ao cadastrar categoria.")
+      await fetchCategorias() // recarrega a lista para pegar o novo ID gerado pelo banco
+    } catch (err: any) {
+      toast.error(err.message || "Erro ao cadastrar categoria.")
     } finally {
       setSubmitting(false)
     }
@@ -179,7 +220,7 @@ export default function CategoriasPage() {
                 <ShieldCheck className="h-5 w-5" />
               </div>
               <div>
-                <p className="text-2xl font-semibold">{categoriaList.filter((c) => c.ativo === "A").length}</p>
+                <p className="text-2xl font-semibold">{categoriaList.filter((c) => c.catProdAtivo === "A").length}</p>
                 <p className="text-xs text-muted-foreground">Categorias ativas</p>
               </div>
             </CardContent>
@@ -216,7 +257,7 @@ export default function CategoriasPage() {
                 <Input id="cat-desc-filter" value={descricaoFilter} onChange={(e) => setDescricaoFilter(e.target.value)} placeholder="Buscar por descrição..." className="pl-9" />
               </div>
             </div>
-            
+
             <div className="flex rounded-lg bg-muted p-1" role="group" aria-label="Filtrar categorias por status">
               {statusFilter !== "Todos" || descricaoFilter ? (
                 <button type="button" onClick={() => { setDescricaoFilter(""); setStatusFilter("Todos") }} className="mr-1 rounded-md px-2 text-muted-foreground hover:text-foreground" aria-label="Limpar filtros">
@@ -253,28 +294,32 @@ export default function CategoriasPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-2">
-              {filteredCategorias.length === 0 ? (
+              {loading ? (
+                <div className="flex items-center justify-center p-8">
+                  <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+                </div>
+              ) : filteredCategorias.length === 0 ? (
                 <p className="p-4 text-center text-xs text-muted-foreground">Nenhuma categoria encontrada.</p>
               ) : (
                 filteredCategorias.map((c) => (
                   <div
-                    key={c.id}
+                    key={c.catProdId}
                     role="button"
                     tabIndex={0}
-                    onClick={() => { setSelectedId(c.id); setEditing(false); }}
-                    className={`flex items-center gap-3 rounded-xl border p-3 text-left transition-colors cursor-pointer ${selected?.id === c.id ? "border-primary bg-secondary/70" : "border-border hover:bg-muted"}`}
+                    onClick={() => { setSelectedId(c.catProdId); setEditing(false); }}
+                    className={`flex items-center gap-3 rounded-xl border p-3 text-left transition-colors cursor-pointer ${selected?.catProdId === c.catProdId ? "border-primary bg-secondary/70" : "border-border hover:bg-muted"}`}
                   >
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
-                      {getInitials(c.descricao)}
+                      {getInitials(c.catProdDescricao)}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium">{c.descricao}</p>
-                      <p className="truncate text-xs text-muted-foreground">ID: {c.id}</p>
+                      <p className="truncate text-sm font-medium">{c.catProdDescricao}</p>
+                      <p className="truncate text-xs text-muted-foreground">ID: {c.catProdId}</p>
                     </div>
-                    <Badge variant={c.ativo === "A" ? "default" : "secondary"} className="text-[10px]">
-                      {c.ativo === "A" ? "Ativa" : "Inativa"}
+                    <Badge variant={c.catProdAtivo === "A" ? "default" : "secondary"} className="text-[10px]">
+                      {c.catProdAtivo === "A" ? "Ativa" : "Inativa"}
                     </Badge>
-                    <Button type="button" size="icon" variant="ghost" onClick={(e) => { e.stopPropagation(); toggleCategoriaStatus(c.id) }}>
+                    <Button type="button" size="icon" variant="ghost" onClick={(e) => { e.stopPropagation(); toggleCategoriaStatus(c.catProdId) }}>
                       <Power className="h-4 w-4" />
                     </Button>
                   </div>
@@ -291,8 +336,8 @@ export default function CategoriasPage() {
                     <CardTitle className="flex items-center gap-2 text-base"><Tag className="h-4 w-4 text-primary" />Dados da categoria</CardTitle>
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
-                    <Badge variant={selected.ativo === "A" ? "default" : "secondary"}>
-                      {selected.ativo === "A" ? "Ativa" : "Inativa"}
+                    <Badge variant={selected.catProdAtivo === "A" ? "default" : "secondary"}>
+                      {selected.catProdAtivo === "A" ? "Ativa" : "Inativa"}
                     </Badge>
                     <Button variant="outline" size="sm" onClick={() => setEditing((p) => !p)}>
                       <Pencil className="mr-2 h-3.5 w-3.5" />{editing ? "Cancelar" : "Editar"}
@@ -302,12 +347,12 @@ export default function CategoriasPage() {
                 <CardContent className="grid gap-4 sm:grid-cols-2">
                   <div>
                     <Label>ID da Categoria</Label>
-                    <Input value={selected.id} readOnly className="mt-2 bg-muted/40 font-mono text-xs" />
+                    <Input value={selected.catProdId} readOnly className="mt-2 bg-muted/40 font-mono text-xs" />
                   </div>
                   <div>
                     <Label>Descrição</Label>
                     <Input
-                      value={editing ? editData.descricao : selected.descricao}
+                      value={editing ? editData.descricao : selected.catProdDescricao}
                       onChange={(e) => setEditData((p) => ({ ...p, descricao: e.target.value }))}
                       readOnly={!editing}
                       className="mt-2"
@@ -325,7 +370,7 @@ export default function CategoriasPage() {
                         <option value="I">Inativa</option>
                       </select>
                     ) : (
-                      <Input value={selected.ativo === "A" ? "Ativa" : "Inativa"} readOnly className="mt-2 bg-muted/40" />
+                      <Input value={selected.catProdAtivo === "A" ? "Ativa" : "Inativa"} readOnly className="mt-2 bg-muted/40" />
                     )}
                   </div>
 
