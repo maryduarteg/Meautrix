@@ -11,7 +11,7 @@ namespace Meautrix.Entidades
         [Column("cli_id")]
         public int CliId { get; set; }
 
-        [Required(ErrorMessage = "O nome da cliente é obrigatório.")]
+        [Required(ErrorMessage = "O nome do cliente é obrigatório.")]
         [Column("cli_nome")]
         [StringLength(90)]
         public string CliNome { get; set; } = string.Empty;

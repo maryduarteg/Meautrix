@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 
 const navItems = [
   { href: "/produtos", label: "Gerenciar Produtos", icon: Package },
+  { href: "/itens", label: "Gerenciar Itens", icon: Package },
   { href: "/fornecedores", label: "Gerenciar Fornecedores", icon: Package },
   { href: "/categorias", label: "Gerenciar Categorias", icon: Tags },
   { href: "/medidas", label: "Gerenciar Medidas", icon: Ruler },
