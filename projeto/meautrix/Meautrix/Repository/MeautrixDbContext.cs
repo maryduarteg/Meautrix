@@ -16,7 +16,7 @@ namespace Meautrix.Repository
         public DbSet<Fornecedor> Fornecedores { get; set; }
         public DbSet<CategoriaProduto> Categorias_Produtos { get; set; }
         public DbSet<Produto> Produtos { get; set; }
-
+        public DbSet<Item> Item { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -45,6 +45,17 @@ namespace Meautrix.Repository
             modelBuilder.Entity<Fornecedor>(entity =>
             {
                 entity.HasIndex(f => f.FornCnpj).IsUnique();
+            });
+
+            modelBuilder.Entity<Item>(entity =>
+            {
+                entity.Property(i => i.IteLoteDataAquisicao)
+                    .HasColumnName("ite_lote_data_aquisicao")
+                    .HasColumnType("date");
+
+                entity.Property(i => i.IteLoteDataVencimento)
+                    .HasColumnName("ite_lote_data_vencimento")
+                    .HasColumnType("date");
             });
         }
     }

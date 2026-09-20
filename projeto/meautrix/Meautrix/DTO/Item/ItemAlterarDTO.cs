@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Meautrix.DTO.Item
 {
    
-    public class ItemAlterarDTO : ControllerBase
+    public class ItemAlterarDTO
     {
         public string IteNome { get; set; }
         public int ProdId { get; set; }

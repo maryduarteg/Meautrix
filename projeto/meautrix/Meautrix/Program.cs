@@ -40,6 +40,8 @@ namespace Meautrix
             builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
             builder.Services.AddScoped<IFornecedorRepository, FornecedorRepository>();
             builder.Services.AddScoped<IFornecedorService, FornecedorService>();
+            builder.Services.AddScoped<IItemRepository, ItemRepository>();
+            builder.Services.AddScoped<IItemService, ItemService>();
 
             // 4. Controllers e Documentação Swagger
             builder.Services.AddControllers();

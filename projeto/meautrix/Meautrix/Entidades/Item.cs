@@ -15,7 +15,7 @@ namespace Meautrix.Entidades
         [StringLength(60)]
         public string IteNome { get; set; } = string.Empty;
 
-        [Column("ite_id")]
+        [Column("produtos_prod_id")]
         [Required(ErrorMessage = "O produto do item é obrigatório.")]
         public int ProdId { get; set; } // FK -> Produtos.ProdId
 

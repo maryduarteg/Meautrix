@@ -171,7 +171,7 @@ export default function CadastroFornecedoresPage() {
 
     try {
       const res = await fetch(`${FORNECEDOR_API_URL}/${id}`, {
-        method: "delete",
+        method: "patch",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ fornAtivo: newStatus }),
       })

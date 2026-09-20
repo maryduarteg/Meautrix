@@ -37,7 +37,7 @@ namespace Meautrix.Services
         public async Task<ProdutoResponseDTO?> BuscarPorIdAsync(int id)
         {
             var Produto = await _produtoRepository.BuscarPorIdAsync(id);
-            if (Produto == null || Produto.ProdAtivo == "I")
+            if (Produto == null)
                 return null;
             return MapToDTO(Produto);
         }
@@ -104,7 +104,7 @@ namespace Meautrix.Services
         {
             var produtoExistente = await _produtoRepository.BuscarPorIdAsync(id);
 
-            if (produtoExistente == null || produtoExistente.ProdAtivo == "I")
+            if (produtoExistente == null)
             {
                 throw new KeyNotFoundException("Produto não encontrada ou inativa no sistema.");
             }

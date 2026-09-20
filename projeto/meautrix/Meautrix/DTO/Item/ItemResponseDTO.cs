@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Meautrix.DTO.Item
 {
-    public class ItemResponseDTO : ControllerBase
+    public class ItemResponseDTO
     {
         public int IteId { get; set; }
         public string IteNome { get; set; }

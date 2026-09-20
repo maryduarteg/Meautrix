@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Meautrix.DTO.Item
 {
     
-    public class ItemAlterarParcialDTO : ControllerBase
+    public class ItemAlterarParcialDTO
     {
         public string? IteNome { get; set; }
         public int? ProdId { get; set; }
