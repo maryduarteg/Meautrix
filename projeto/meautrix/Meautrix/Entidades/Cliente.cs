@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -37,5 +37,29 @@ namespace Meautrix.Entidades
         [Required]
         [Column("cli_ativo")]
         public string CliAtivo { get; set; }
+
+        [Column("cli_estado")]
+        [StringLength(2)]
+        public string CliEstado { get; set; } = string.Empty;
+
+        [Column("cli_cidade")]
+        [StringLength(60)]
+        public string CliCidade { get; set; } = string.Empty;
+
+        [Column("cli_endereco")]
+        [StringLength(60)]
+        public string CliEndereco { get; set; } = string.Empty;
+
+        [Column("cli_endereco_numero")]
+        [StringLength(60)]
+        public string CliEnderecoNumero { get; set; } = string.Empty;
+
+        [Column("cli_complemento")]
+        [StringLength(60)]
+        public string CliComplemento { get; set; } = string.Empty;
+
+        [Column("cli_cep")]
+        [StringLength(8)]
+        public string CliCep { get; set; } = string.Empty;
     }
 }

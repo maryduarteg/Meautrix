@@ -250,11 +250,20 @@ export default function CadastroItemPage() {
 
   // Criar item (POST /api/item)
   async function createItem() {
+    const dataAquisicao = new Date(novoItem.loteDataAquisicao);
+    const dataVencimento = new Date(novoItem.loteDataVencimento);
+
+    if (dataVencimento.getTime() < dataAquisicao.getTime()) {
+      return toast.error("A data de vencimento deve ser maior que a data de aquisição")
+    }
     if (!novoItem.nome.trim() || !novoItem.prodId || !novoItem.loteNome.trim()) {
       return toast.error("Preencha nome, produto e nome do lote do item.")
     }
     if (!novoItem.loteDataAquisicao || !novoItem.loteDataVencimento) {
       return toast.error("Preencha a data de aquisição e a data de vencimento.")
+    }
+    if (Number(novoItem.quantidadeAtual) < 0 || Number(novoItem.quantidadeSaidaAlterada) < 0) {
+      return toast.error("Nenhuma quantidade deve ser menor que 0.")
     }
 
     try {

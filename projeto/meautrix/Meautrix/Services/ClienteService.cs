@@ -23,7 +23,13 @@ namespace Meautrix.Services
             CliGenero = c.CliGenero,
             CliDataNascimento = c.CliDataNascimento,
             CliAtivo = c.CliAtivo,
-            CliCpf = c.CliCpf
+            CliCpf = c.CliCpf,
+            CliEstado = c.CliEstado,
+            CliCidade = c.CliCidade,
+            CliEndereco = c.CliEndereco,
+            CliEnderecoNumero = c.CliEnderecoNumero,
+            CliComplemento = c.CliComplemento,
+            CliCep = c.CliCep
         };
 
 
@@ -64,7 +70,13 @@ namespace Meautrix.Services
                 CliCpf = dto.CliCpf,
                 CliGenero = dto.CliGenero,
                 CliDataNascimento = dto.CliDataNascimento,
-                CliAtivo = ativo
+                CliAtivo = ativo,
+                CliEstado = dto.CliEstado,
+                CliCidade = dto.CliCidade,
+                CliEndereco = dto.CliEndereco,
+                CliEnderecoNumero = dto.CliEnderecoNumero,
+                CliComplemento = dto.CliComplemento,
+                CliCep = dto.CliCep
             };
 
             await _clienteRepository.InserirAsync(novoCliente);
@@ -85,7 +97,12 @@ namespace Meautrix.Services
             cliente.CliGenero = dto.CliGenero;
             cliente.CliAtivo = dto.CliAtivo;
             cliente.CliDataNascimento = dto.CliDataNascimento;
-
+            cliente.CliEstado = dto.CliEstado;
+            cliente.CliCidade = dto.CliCidade;
+            cliente.CliEndereco = dto.CliEndereco;
+            cliente.CliEnderecoNumero = dto.CliEnderecoNumero;
+            cliente.CliComplemento = dto.CliComplemento;
+            cliente.CliCep = dto.CliCep;
 
             await _clienteRepository.AlterarAsync(cliente);
         }
@@ -97,11 +114,17 @@ namespace Meautrix.Services
             if (clienteExistente == null)
             {
                 throw new KeyNotFoundException("Cliente não encontrado.");
-            }
+            }'
 
             if (!string.IsNullOrEmpty(dto.CliNome)) clienteExistente.CliNome = dto.CliNome;
             if (!string.IsNullOrEmpty(dto.CliGenero)) clienteExistente.CliGenero = dto.CliGenero;
             if (!string.IsNullOrEmpty(dto.CliAtivo)) clienteExistente.CliAtivo = dto.CliAtivo;
+            if (!string.IsNullOrEmpty(dto.CliEstado)) clienteExistente.CliEstado = dto.CliEstado;
+            if (!string.IsNullOrEmpty(dto.CliCidade)) clienteExistente.CliCidade = dto.CliCidade;
+            if (!string.IsNullOrEmpty(dto.CliEndereco)) clienteExistente.CliEndereco = dto.CliEndereco;
+            if (!string.IsNullOrEmpty(dto.CliEnderecoNumero)) clienteExistente.CliEnderecoNumero = dto.CliEnderecoNumero;
+            if (!string.IsNullOrEmpty(dto.CliComplemento)) clienteExistente.CliComplemento = dto.CliComplemento;
+            if (!string.IsNullOrEmpty(dto.CliCep)) clienteExistente.CliCep = dto.CliCep;
 
 
             await _clienteRepository.AlterarAsync(clienteExistente);
