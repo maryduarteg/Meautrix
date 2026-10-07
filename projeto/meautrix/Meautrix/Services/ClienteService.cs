@@ -114,7 +114,7 @@ namespace Meautrix.Services
             if (clienteExistente == null)
             {
                 throw new KeyNotFoundException("Cliente não encontrado.");
-            }'
+            }
 
             if (!string.IsNullOrEmpty(dto.CliNome)) clienteExistente.CliNome = dto.CliNome;
             if (!string.IsNullOrEmpty(dto.CliGenero)) clienteExistente.CliGenero = dto.CliGenero;
