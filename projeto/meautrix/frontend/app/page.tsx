@@ -40,7 +40,7 @@ export default function LoginPage() {
 
       sessionStorage.setItem("meautrix.usuarioLogin", email.trim())
       toast.success(body?.mensagem ?? "Login realizado com sucesso.")
-      router.push("/cadastro")
+      router.push("/home")
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Não foi possível realizar o login.")
     } finally {

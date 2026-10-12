@@ -1,16 +1,30 @@
+
 "use client"
 
 import type React from "react"
-
 import { useEffect, useMemo, useState } from "react"
 import { toast } from "sonner"
-import { Plus, Power, Package, Search, X, Pencil, Loader2, List, ShieldCheck, Tag } from "lucide-react"
+import {
+  Plus,
+  Power,
+  Package,
+  Search,
+  X,
+  Pencil,
+  Loader2,
+  List,
+  ShieldCheck,
+  Tag,
+} from "lucide-react"
+
 import { DashboardShell } from "@/components/dashboard-shell"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Required } from "@/components/ui/required"
+import { RequiredMessage } from "@/components/ui/requiredMessage"
 import {
   Select,
   SelectContent,
@@ -24,10 +38,18 @@ const CATEGORIA_API_URL = "http://localhost:5139/api/categoriaproduto"
 const MEDIDA_API_URL = "http://localhost:5139/api/medida"
 const FORNECEDOR_API_URL = "http://localhost:5139/api/fornecedor"
 
+const SELECT_TRIGGER_NO_CLAMP =
+  "h-auto min-h-9 whitespace-normal text-left [&>span]:line-clamp-none"
 
-// Classe usada em todo SelectTrigger para impedir que o shadcn/ui trunque
-// (line-clamp-1) o texto do valor selecionado quando a descrição é longa.
-const SELECT_TRIGGER_NO_CLAMP = "h-auto min-h-9 whitespace-normal text-left [&>span]:line-clamp-none"
+const INVALID_INPUT = "border-destructive ring-2 ring-destructive/20"
+
+type FieldErrors = Partial<Record<string, string>>
+
+function FieldError({ error }: { error?: string }) {
+  if (!error) return null
+
+  return <p className="mt-1 text-xs text-destructive">{error}</p>
+}
 
 export interface Produto {
   prodId: number
@@ -35,7 +57,7 @@ export interface Produto {
   prodQuantidadeMinima: number
   medidasMedId: number
   catProdId: number
-  prodAtivo: string // 'A' (Ativo) ou 'I' (Inativo)
+  prodAtivo: string
   fornId: number
 }
 
@@ -43,9 +65,8 @@ export interface Fornecedor {
   fornId: number
   fornRazaoSocial: string
   fornCnpj: string
-  fornAtivo: string // 'A' (Ativo) ou 'I' (Inativo)
+  fornAtivo: string
 }
-
 
 export interface Categoria {
   catProdId: number
@@ -65,9 +86,9 @@ export default function CadastroPage() {
   const [categorias, setCategorias] = useState<Categoria[]>([])
   const [medidas, setMedidas] = useState<Medida[]>([])
   const [fornecedores, setFornecedores] = useState<Fornecedor[]>([])
+
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
-
   const [selectedId, setSelectedId] = useState<number | null>(null)
   const [showCreateForm, setShowCreateForm] = useState(false)
   const [editing, setEditing] = useState(false)
@@ -76,7 +97,10 @@ export default function CadastroPage() {
   const [descricaoFilter, setDescricaoFilter] = useState("")
   const [categoriaFilter, setCategoriaFilter] = useState("Todas")
 
-  // Form de edição
+  const [createErrors, setCreateErrors] = useState<FieldErrors>({})
+  const [editErrors, setEditErrors] = useState<FieldErrors>({})
+
+  // Formulário de edição
   const [editData, setEditData] = useState({
     descricao: "",
     catProdId: "",
@@ -85,7 +109,7 @@ export default function CadastroPage() {
     fornId: "",
   })
 
-  // Form de criação
+  // Formulário de criação
   const [novoProduto, setNovoProduto] = useState({
     descricao: "",
     catProdId: "",
@@ -94,9 +118,94 @@ export default function CadastroPage() {
     fornId: "",
   })
 
-  const categoriasAtivas = useMemo(() => categorias.filter((c) => c.catProdAtivo === "A"), [categorias])
-  const medidasAtivas = useMemo(() => medidas.filter((m) => m.medAtivo === "A"), [medidas])
-  const fornecedoresAtivos = useMemo(() => fornecedores.filter((f) => f.fornAtivo === "A"), [fornecedores])
+  const categoriasAtivas = useMemo(
+    () => categorias.filter((c) => c.catProdAtivo === "A"),
+    [categorias]
+  )
+
+  const medidasAtivas = useMemo(
+    () => medidas.filter((m) => m.medAtivo === "A"),
+    [medidas]
+  )
+
+  const fornecedoresAtivos = useMemo(
+    () => fornecedores.filter((f) => f.fornAtivo === "A"),
+    [fornecedores]
+  )
+
+  function clearCreateError(field: string) {
+    setCreateErrors((prev) => {
+      const next = { ...prev }
+      delete next[field]
+      return next
+    })
+  }
+
+  function clearEditError(field: string) {
+    setEditErrors((prev) => {
+      const next = { ...prev }
+      delete next[field]
+      return next
+    })
+  }
+
+  function validateProduto(data: typeof novoProduto): FieldErrors {
+    const errors: FieldErrors = {}
+
+    if (!data.descricao.trim()) {
+      errors.descricao = "Informe a descrição do produto."
+    } else if (data.descricao.trim().length > 90) {
+      errors.descricao = "A descrição deve possuir no máximo 90 caracteres."
+    }
+
+    if (!data.catProdId) {
+      errors.catProdId = "Selecione uma categoria."
+    }
+
+    if (!data.medidasMedId) {
+      errors.medidasMedId = "Selecione uma medida."
+    }
+
+    if (!data.fornId) {
+      errors.fornId = "Selecione um fornecedor."
+    }
+
+    if (data.quantidadeMinima.trim() === "") {
+      errors.quantidadeMinima = "Informe a quantidade mínima."
+    } else if (
+      !Number.isFinite(Number(data.quantidadeMinima)) ||
+      Number(data.quantidadeMinima) < 0
+    ) {
+      errors.quantidadeMinima =
+        "A quantidade mínima deve ser um número maior ou igual a zero."
+    }
+
+    return errors
+  }
+
+  function validateCreate(): boolean {
+    const errors = validateProduto(novoProduto)
+    setCreateErrors(errors)
+    return Object.keys(errors).length === 0
+  }
+
+  function validateEdit(): boolean {
+    const errors = validateProduto(editData)
+    setEditErrors(errors)
+    return Object.keys(errors).length === 0
+  }
+
+  function cancelCreate() {
+    setShowCreateForm(false)
+    setCreateErrors({})
+    setNovoProduto({
+      descricao: "",
+      catProdId: "",
+      medidasMedId: "",
+      quantidadeMinima: "",
+      fornId: "",
+    })
+  }
 
   function getCategoriaDescricao(id: number) {
     return categorias.find((c) => c.catProdId === id)?.catProdDescricao ?? "—"
@@ -114,8 +223,10 @@ export default function CadastroPage() {
     try {
       const res = await fetch(PRODUTO_API_URL)
       if (!res.ok) throw new Error("Falha ao buscar produtos.")
+
       const data: Produto[] = await res.json()
       setProdutos(data)
+
       if (data.length > 0 && selectedId === null) {
         setSelectedId(data[0].prodId)
       }
@@ -129,6 +240,7 @@ export default function CadastroPage() {
     try {
       const res = await fetch(CATEGORIA_API_URL)
       if (!res.ok) throw new Error("Falha ao buscar categorias.")
+
       const data: Categoria[] = await res.json()
       setCategorias(data)
     } catch (err) {
@@ -141,6 +253,7 @@ export default function CadastroPage() {
     try {
       const res = await fetch(MEDIDA_API_URL)
       if (!res.ok) throw new Error("Falha ao buscar medidas.")
+
       const data: Medida[] = await res.json()
       setMedidas(data)
     } catch (err) {
@@ -153,6 +266,7 @@ export default function CadastroPage() {
     try {
       const res = await fetch(FORNECEDOR_API_URL)
       if (!res.ok) throw new Error("Falha ao buscar fornecedores.")
+
       const data: Fornecedor[] = await res.json()
       setFornecedores(data)
     } catch (err) {
@@ -163,7 +277,12 @@ export default function CadastroPage() {
 
   async function fetchAll() {
     setLoading(true)
-    await Promise.all([fetchProdutos(), fetchCategorias(), fetchMedidas(), fetchFornecedores()])
+    await Promise.all([
+      fetchProdutos(),
+      fetchCategorias(),
+      fetchMedidas(),
+      fetchFornecedores(),
+    ])
     setLoading(false)
   }
 
@@ -176,7 +295,6 @@ export default function CadastroPage() {
     return produtos.find((p) => p.prodId === selectedId) || null
   }, [produtos, selectedId])
 
-  // Preenche o formulário de edição ao selecionar/editar produto
   useEffect(() => {
     if (selected) {
       setEditData({
@@ -191,9 +309,17 @@ export default function CadastroPage() {
 
   const filteredProdutos = useMemo(() => {
     return produtos.filter((p) => {
-      const matchesDesc = p.prodDescricao.toLowerCase().includes(descricaoFilter.toLowerCase())
-      const matchesStatus = statusFilter === "Todos" || p.prodAtivo === statusFilter
-      const matchesCategoria = categoriaFilter === "Todas" || String(p.catProdId) === categoriaFilter
+      const matchesDesc = p.prodDescricao
+        .toLowerCase()
+        .includes(descricaoFilter.toLowerCase())
+
+      const matchesStatus =
+        statusFilter === "Todos" || p.prodAtivo === statusFilter
+
+      const matchesCategoria =
+        categoriaFilter === "Todas" ||
+        String(p.catProdId) === categoriaFilter
+
       return matchesDesc && matchesStatus && matchesCategoria
     })
   }, [produtos, statusFilter, descricaoFilter, categoriaFilter])
@@ -203,24 +329,20 @@ export default function CadastroPage() {
     return descricao.trim().substring(0, 2).toUpperCase()
   }
 
-  // Alterar produto (PUT /api/produto/{id})
+  // Atualizar produto
   async function updateProduto() {
     if (!selected) return
-    if (!editData.descricao.trim() || !editData.catProdId || !editData.medidasMedId || !editData.fornId) {
-      return toast.error("Descrição, categoria, Medida e Fornecedor são obrigatórios.")
-    }
-    if (editData.descricao.length > 90) {
-      return toast.error("A descrição do produto deve possuir no máximo 90 caracteres.")
-    }
+    if (!validateEdit()) return
 
     try {
       setSubmitting(true)
+
       const res = await fetch(`${PRODUTO_API_URL}/${selected.prodId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           prodDescricao: editData.descricao.trim(),
-          prodQuantidadeMinima: Number(editData.quantidadeMinima) || 0,
+          prodQuantidadeMinima: Number(editData.quantidadeMinima),
           medidasMedId: Number(editData.medidasMedId),
           catProdId: Number(editData.catProdId),
           fornId: Number(editData.fornId),
@@ -238,25 +360,28 @@ export default function CadastroPage() {
           ? {
               ...p,
               prodDescricao: editData.descricao.trim(),
-              prodQuantidadeMinima: Number(editData.quantidadeMinima) || 0,
+              prodQuantidadeMinima: Number(editData.quantidadeMinima),
               medidasMedId: Number(editData.medidasMedId),
               catProdId: Number(editData.catProdId),
               fornId: Number(editData.fornId),
             }
           : p
       )
-      setProdutos(updatedList)
 
-      toast.success("Produto atualizado com sucesso!")
+      setProdutos(updatedList)
+      setEditErrors({})
       setEditing(false)
-    } catch (err: any) {
-      toast.error(err.message || "Erro ao atualizar produto.")
+      toast.success("Produto atualizado com sucesso!")
+    } catch (err: unknown) {
+      toast.error(
+        err instanceof Error ? err.message : "Erro ao atualizar produto."
+      )
     } finally {
       setSubmitting(false)
     }
   }
 
-  // Inativar / Ativar (PATCH /api/produto/{id})
+  // Inativar / ativar produto
   async function toggleProdutoStatus(id: number) {
     const produto = produtos.find((p) => p.prodId === id)
     if (!produto) return
@@ -275,31 +400,37 @@ export default function CadastroPage() {
         throw new Error(erro?.mensagem || "Não foi possível alterar o status.")
       }
 
-      const updatedList = produtos.map((p) => (p.prodId === id ? { ...p, prodAtivo: newStatus } : p))
-      setProdutos(updatedList)
-      toast.success(`Produto ${newStatus === "A" ? "reativado" : "inativado"} com sucesso!`)
-    } catch (err: any) {
-      toast.error(err.message || "Não foi possível alterar o status.")
+      setProdutos((prev) =>
+        prev.map((p) =>
+          p.prodId === id ? { ...p, prodAtivo: newStatus } : p
+        )
+      )
+
+      toast.success(
+        `Produto ${newStatus === "A" ? "reativado" : "inativado"} com sucesso!`
+      )
+    } catch (err: unknown) {
+      toast.error(
+        err instanceof Error
+          ? err.message
+          : "Não foi possível alterar o status."
+      )
     }
   }
 
-  // Criar produto (POST /api/produto)
+  // Criar produto
   async function createProduto() {
-    if (!novoProduto.descricao.trim() || !novoProduto.catProdId || !novoProduto.medidasMedId || !novoProduto.fornId) {
-      return toast.error("Preencha descrição, categoria, Medida e Fornecedor do produto.")
-    }
-    if (novoProduto.descricao.length > 90) {
-      return toast.error("A descrição do produto deve possuir no máximo 90 caracteres.")
-    }
+    if (!validateCreate()) return
 
     try {
       setSubmitting(true)
+
       const res = await fetch(PRODUTO_API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           prodDescricao: novoProduto.descricao.trim(),
-          prodQuantidadeMinima: Number(novoProduto.quantidadeMinima) || 0,
+          prodQuantidadeMinima: Number(novoProduto.quantidadeMinima),
           medidasMedId: Number(novoProduto.medidasMedId),
           catProdId: Number(novoProduto.catProdId),
           fornId: Number(novoProduto.fornId),
@@ -313,19 +444,33 @@ export default function CadastroPage() {
       }
 
       toast.success("Produto cadastrado com sucesso!")
-      setNovoProduto({ descricao: "", catProdId: "", medidasMedId: "", quantidadeMinima: "", fornId: "" })
+      setCreateErrors({})
+      setNovoProduto({
+        descricao: "",
+        catProdId: "",
+        medidasMedId: "",
+        quantidadeMinima: "",
+        fornId: "",
+      })
       setShowCreateForm(false)
-      await fetchProdutos() // recarrega para pegar o novo prodId gerado pelo banco
-    } catch (err: any) {
-      toast.error(err.message || "Erro ao cadastrar produto.")
+
+      await fetchProdutos()
+    } catch (err: unknown) {
+      toast.error(
+        err instanceof Error ? err.message : "Erro ao cadastrar produto."
+      )
     } finally {
       setSubmitting(false)
     }
   }
 
   return (
-    <DashboardShell title="Cadastro de Produtos" description="Cadastre, consulte e atualize os produtos utilizados nos procedimentos.">
+    <DashboardShell
+      title="Cadastro de Produtos"
+      description="Cadastre, consulte e atualize os produtos utilizados nos procedimentos."
+    >
       <div className="flex flex-col gap-6">
+        {/* Indicadores */}
         <div className="grid gap-4 sm:grid-cols-2">
           <Card>
             <CardContent className="flex items-center gap-3 p-5">
@@ -334,7 +479,9 @@ export default function CadastroPage() {
               </div>
               <div>
                 <p className="text-2xl font-semibold">{produtos.length}</p>
-                <p className="text-xs text-muted-foreground">Produtos cadastrados</p>
+                <p className="text-xs text-muted-foreground">
+                  Produtos cadastrados
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -345,58 +492,102 @@ export default function CadastroPage() {
                 <ShieldCheck className="h-5 w-5" />
               </div>
               <div>
-                <p className="text-2xl font-semibold">{produtos.filter((p) => p.prodAtivo === "A").length}</p>
-                <p className="text-xs text-muted-foreground">Produtos ativos</p>
+                <p className="text-2xl font-semibold">
+                  {produtos.filter((p) => p.prodAtivo === "A").length}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Produtos ativos
+                </p>
               </div>
             </CardContent>
           </Card>
         </div>
 
+        {/* Cadastro */}
         {showCreateForm ? (
           <Card className="border-primary/20">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base">
-                <Plus className="h-4 w-4 text-primary" />Cadastrar novo produto
+                <Plus className="h-4 w-4 text-primary" />
+                Cadastrar novo produto
               </CardTitle>
+              <RequiredMessage />
             </CardHeader>
+
             <CardContent className="grid gap-4 sm:grid-cols-2">
               <div className="sm:col-span-2">
-                <Label htmlFor="prod-descricao">Descrição do produto</Label>
+                <Label htmlFor="prod-descricao">
+                  Descrição do produto <Required />
+                </Label>
                 <Input
                   id="prod-descricao"
-                  className="mt-2"
+                  className={`mt-2 ${createErrors.descricao ? INVALID_INPUT : ""}`}
                   maxLength={90}
                   placeholder="Ex.: Ácido Hialurônico 1ml"
                   value={novoProduto.descricao}
-                  onChange={(e) => setNovoProduto((p) => ({ ...p, descricao: e.target.value }))}
+                  onChange={(e) => {
+                    setNovoProduto((p) => ({
+                      ...p,
+                      descricao: e.target.value,
+                    }))
+                    clearCreateError("descricao")
+                  }}
                 />
+                <FieldError error={createErrors.descricao} />
               </div>
+
               <div>
-                <Label>Categoria</Label>
-                <Select value={novoProduto.catProdId} onValueChange={(v) => setNovoProduto((p) => ({ ...p, catProdId: v }))}>
-                  <SelectTrigger className={`mt-2 ${SELECT_TRIGGER_NO_CLAMP}`}>
+                <Label>Categoria <Required /></Label>
+                <Select
+                  value={novoProduto.catProdId}
+                  onValueChange={(v) => {
+                    setNovoProduto((p) => ({ ...p, catProdId: v }))
+                    clearCreateError("catProdId")
+                  }}
+                >
+                  <SelectTrigger
+                    className={`mt-2 ${SELECT_TRIGGER_NO_CLAMP} ${createErrors.catProdId ? INVALID_INPUT : ""}`}
+                  >
                     <SelectValue placeholder="Selecione">
                       {novoProduto.catProdId
-                        ? categoriasAtivas.find((c) => String(c.catProdId) === novoProduto.catProdId)?.catProdDescricao
+                        ? categoriasAtivas.find(
+                            (c) =>
+                              String(c.catProdId) === novoProduto.catProdId
+                          )?.catProdDescricao
                         : undefined}
                     </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {categoriasAtivas.map((c) => (
-                      <SelectItem key={c.catProdId} value={String(c.catProdId)}>
+                      <SelectItem
+                        key={c.catProdId}
+                        value={String(c.catProdId)}
+                      >
                         {c.catProdDescricao}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
+                <FieldError error={createErrors.catProdId} />
               </div>
+
               <div>
-                <Label>Medida</Label>
-                <Select value={novoProduto.medidasMedId} onValueChange={(v) => setNovoProduto((p) => ({ ...p, medidasMedId: v }))}>
-                  <SelectTrigger className={`mt-2 ${SELECT_TRIGGER_NO_CLAMP}`}>
+                <Label>Medida <Required /></Label>
+                <Select
+                  value={novoProduto.medidasMedId}
+                  onValueChange={(v) => {
+                    setNovoProduto((p) => ({ ...p, medidasMedId: v }))
+                    clearCreateError("medidasMedId")
+                  }}
+                >
+                  <SelectTrigger
+                    className={`mt-2 ${SELECT_TRIGGER_NO_CLAMP} ${createErrors.medidasMedId ? INVALID_INPUT : ""}`}
+                  >
                     <SelectValue placeholder="Selecione">
                       {novoProduto.medidasMedId
-                        ? medidasAtivas.find((m) => String(m.medId) === novoProduto.medidasMedId)?.medSigla
+                        ? medidasAtivas.find(
+                            (m) => String(m.medId) === novoProduto.medidasMedId
+                          )?.medSigla
                         : undefined}
                     </SelectValue>
                   </SelectTrigger>
@@ -408,14 +599,26 @@ export default function CadastroPage() {
                     ))}
                   </SelectContent>
                 </Select>
+                <FieldError error={createErrors.medidasMedId} />
               </div>
+
               <div>
-                <Label>Fornecedor</Label>
-                <Select value={novoProduto.fornId} onValueChange={(v) => setNovoProduto((p) => ({ ...p, fornId: v }))}>
-                  <SelectTrigger className={`mt-2 ${SELECT_TRIGGER_NO_CLAMP}`}>
+                <Label>Fornecedor <Required /></Label>
+                <Select
+                  value={novoProduto.fornId}
+                  onValueChange={(v) => {
+                    setNovoProduto((p) => ({ ...p, fornId: v }))
+                    clearCreateError("fornId")
+                  }}
+                >
+                  <SelectTrigger
+                    className={`mt-2 ${SELECT_TRIGGER_NO_CLAMP} ${createErrors.fornId ? INVALID_INPUT : ""}`}
+                  >
                     <SelectValue placeholder="Selecione">
                       {novoProduto.fornId
-                        ? fornecedoresAtivos.find((f) => String(f.fornId) === novoProduto.fornId)?.fornRazaoSocial
+                        ? fornecedoresAtivos.find(
+                            (f) => String(f.fornId) === novoProduto.fornId
+                          )?.fornRazaoSocial
                         : undefined}
                     </SelectValue>
                   </SelectTrigger>
@@ -427,24 +630,49 @@ export default function CadastroPage() {
                     ))}
                   </SelectContent>
                 </Select>
+                <FieldError error={createErrors.fornId} />
               </div>
+
               <div>
-                <Label htmlFor="prod-qtd-min">Quantidade mínima (Alerta)</Label>
+                <Label htmlFor="prod-qtd-min">
+                  Quantidade mínima (Alerta) <Required />
+                </Label>
                 <Input
                   id="prod-qtd-min"
                   type="number"
                   min="0"
                   step="0.01"
-                  className="mt-2"
+                  className={`mt-2 ${createErrors.quantidadeMinima ? INVALID_INPUT : ""}`}
                   placeholder="Ex.: 5"
                   value={novoProduto.quantidadeMinima}
-                  onChange={(e) => setNovoProduto((p) => ({ ...p, quantidadeMinima: e.target.value }))}
+                  onChange={(e) => {
+                    setNovoProduto((p) => ({
+                      ...p,
+                      quantidadeMinima: e.target.value,
+                    }))
+                    clearCreateError("quantidadeMinima")
+                  }}
                 />
+                <FieldError error={createErrors.quantidadeMinima} />
               </div>
-              <div className="flex justify-end gap-2 sm:col-span-2 mt-2">
-                <Button type="button" variant="outline" onClick={() => setShowCreateForm(false)} disabled={submitting}>Cancelar</Button>
-                <Button type="button" onClick={createProduto} disabled={submitting}>
-                  {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+
+              <div className="mt-2 flex justify-end gap-2 sm:col-span-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={cancelCreate}
+                  disabled={submitting}
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  type="button"
+                  onClick={createProduto}
+                  disabled={submitting}
+                >
+                  {submitting && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  )}
                   Cadastrar produto
                 </Button>
               </div>
@@ -456,22 +684,39 @@ export default function CadastroPage() {
               <Label htmlFor="prod-desc-filter">Descrição</Label>
               <div className="relative mt-2">
                 <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input id="prod-desc-filter" value={descricaoFilter} onChange={(e) => setDescricaoFilter(e.target.value)} placeholder="Buscar por descrição..." className="pl-9" />
+                <Input
+                  id="prod-desc-filter"
+                  value={descricaoFilter}
+                  onChange={(e) => setDescricaoFilter(e.target.value)}
+                  placeholder="Buscar por descrição..."
+                  className="pl-9"
+                />
               </div>
             </div>
 
             <div className="flex-1">
               <Label htmlFor="prod-cat-filter">Categoria</Label>
-              <Select value={categoriaFilter} onValueChange={setCategoriaFilter}>
-                <SelectTrigger id="prod-cat-filter" className={`mt-2 ${SELECT_TRIGGER_NO_CLAMP}`}>
-                    <SelectValue placeholder="Selecione">
-                      {categoriaFilter === "Todas" ? "Todas" : getCategoriaDescricao(Number(categoriaFilter))}
-                    </SelectValue>
+              <Select
+                value={categoriaFilter}
+                onValueChange={setCategoriaFilter}
+              >
+                <SelectTrigger
+                  id="prod-cat-filter"
+                  className={`mt-2 ${SELECT_TRIGGER_NO_CLAMP}`}
+                >
+                  <SelectValue placeholder="Selecione">
+                    {categoriaFilter === "Todas"
+                      ? "Todas"
+                      : getCategoriaDescricao(Number(categoriaFilter))}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="Todas">Todas</SelectItem>
                   {categorias.map((c) => (
-                    <SelectItem key={c.catProdId} value={String(c.catProdId)}>
+                    <SelectItem
+                      key={c.catProdId}
+                      value={String(c.catProdId)}
+                    >
                       {c.catProdDescricao}
                     </SelectItem>
                   ))}
@@ -479,12 +724,28 @@ export default function CadastroPage() {
               </Select>
             </div>
 
-            <div className="flex rounded-lg bg-muted p-1" role="group" aria-label="Filtrar produtos por status">
-              {statusFilter !== "Todos" || descricaoFilter || categoriaFilter !== "Todas" ? (
-                <button type="button" onClick={() => { setDescricaoFilter(""); setStatusFilter("Todos"); setCategoriaFilter("Todas") }} className="mr-1 rounded-md px-2 text-muted-foreground hover:text-foreground" aria-label="Limpar filtros">
+            <div
+              className="flex rounded-lg bg-muted p-1"
+              role="group"
+              aria-label="Filtrar produtos por status"
+            >
+              {statusFilter !== "Todos" ||
+              descricaoFilter ||
+              categoriaFilter !== "Todas" ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setDescricaoFilter("")
+                    setStatusFilter("Todos")
+                    setCategoriaFilter("Todas")
+                  }}
+                  className="mr-1 rounded-md px-2 text-muted-foreground hover:text-foreground"
+                  aria-label="Limpar filtros"
+                >
                   <X className="h-4 w-4" />
                 </button>
               ) : null}
+
               {[
                 { label: "Todos", value: "Todos" },
                 { label: "Ativos", value: "A" },
@@ -493,53 +754,101 @@ export default function CadastroPage() {
                 <button
                   key={st.value}
                   type="button"
-                  onClick={() => setStatusFilter(st.value as any)}
-                  className={`flex-1 rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${statusFilter === st.value ? "bg-background text-primary shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+                  onClick={() =>
+                    setStatusFilter(st.value as "Todos" | "A" | "I")
+                  }
+                  className={`flex-1 rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
+                    statusFilter === st.value
+                      ? "bg-background text-primary shadow-sm"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
                 >
                   {st.label}
                 </button>
               ))}
             </div>
 
-            <Button onClick={() => setShowCreateForm(true)}>
-              <Plus className="mr-2 h-4 w-4" />Novo produto
+            <Button
+              onClick={() => {
+                setCreateErrors({})
+                setNovoProduto({
+                  descricao: "",
+                  catProdId: "",
+                  medidasMedId: "",
+                  quantidadeMinima: "",
+                  fornId: "",
+                })
+                setShowCreateForm(true)
+              }}
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Novo produto
             </Button>
           </div>
         )}
 
         <div className="grid gap-6 xl:grid-cols-[360px_1fr]">
+          {/* Lista */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base">
-                <List className="h-4 w-4 text-primary" />Produtos cadastrados
+                <List className="h-4 w-4 text-primary" />
+                Produtos cadastrados
               </CardTitle>
             </CardHeader>
+
             <CardContent className="flex flex-col gap-2">
               {loading ? (
                 <div className="flex items-center justify-center p-8">
                   <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
                 </div>
               ) : filteredProdutos.length === 0 ? (
-                <p className="p-4 text-center text-xs text-muted-foreground">Nenhum produto encontrado.</p>
+                <p className="p-4 text-center text-xs text-muted-foreground">
+                  Nenhum produto encontrado.
+                </p>
               ) : (
                 filteredProdutos.map((p) => (
                   <div
                     key={p.prodId}
                     role="button"
                     tabIndex={0}
-                    onClick={() => { setSelectedId(p.prodId); setEditing(false); }}
-                    className={`flex items-center gap-3 rounded-xl border p-3 text-left transition-colors cursor-pointer ${selected?.prodId === p.prodId ? "border-primary bg-secondary/70" : "border-border hover:bg-muted"}`}
+                    onClick={() => {
+                      setSelectedId(p.prodId)
+                      setEditing(false)
+                      setEditErrors({})
+                    }}
+                    className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3 text-left transition-colors ${
+                      selected?.prodId === p.prodId
+                        ? "border-primary bg-secondary/70"
+                        : "border-border hover:bg-muted"
+                    }`}
                   >
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
                       {getInitials(p.prodDescricao)}
                     </div>
+
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium">{p.prodDescricao}</p>
+                      <p className="truncate text-sm font-medium">
+                        {p.prodDescricao}
+                      </p>
                     </div>
-                    <Badge variant={p.prodAtivo === "A" ? "default" : "secondary"} className="text-[10px]">
+
+                    <Badge
+                      variant={p.prodAtivo === "A" ? "default" : "secondary"}
+                      className="text-[10px]"
+                    >
                       {p.prodAtivo === "A" ? "Ativo" : "Inativo"}
                     </Badge>
-                    <Button type="button" size="icon" variant="ghost" onClick={(e) => { e.stopPropagation(); toggleProdutoStatus(p.prodId) }}>
+
+                    <Button
+                      type="button"
+                      size="icon"
+                      variant="ghost"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        toggleProdutoStatus(p.prodId)
+                      }}
+                    >
                       <Power className="h-4 w-4" />
                     </Button>
                   </div>
@@ -548,132 +857,265 @@ export default function CadastroPage() {
             </CardContent>
           </Card>
 
+          {/* Detalhes e edição */}
           {selected && (
             <div className="flex flex-col gap-6">
               <Card>
                 <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                   <div>
-                    <CardTitle className="flex items-center gap-2 text-base"><Tag className="h-4 w-4 text-primary" />Dados do produto</CardTitle>
+                    <CardTitle className="flex items-center gap-2 text-base">
+                      <Tag className="h-4 w-4 text-primary" />
+                      Dados do produto
+                    </CardTitle>
+                    {editing ? <RequiredMessage /> : ""}
                   </div>
+
                   <div className="flex flex-wrap items-center gap-2">
-                    <Badge variant={selected.prodAtivo === "A" ? "default" : "secondary"}>
+                    <Badge
+                      variant={selected.prodAtivo === "A" ? "default" : "secondary"}
+                    >
                       {selected.prodAtivo === "A" ? "Ativo" : "Inativo"}
                     </Badge>
-                    <Button variant="outline" size="sm" onClick={() => setEditing((p) => !p)}>
-                      <Pencil className="mr-2 h-3.5 w-3.5" />{editing ? "Cancelar" : "Editar"}
+
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        if (editing && selected) {
+                          setEditData({
+                            descricao: selected.prodDescricao,
+                            catProdId: String(selected.catProdId),
+                            medidasMedId: String(selected.medidasMedId),
+                            quantidadeMinima: String(selected.prodQuantidadeMinima),
+                            fornId: String(selected.fornId),
+                          })
+                        }
+
+                        setEditErrors({})
+                        setEditing((p) => !p)
+                      }}
+                    >
+                      <Pencil className="mr-2 h-3.5 w-3.5" />
+                      {editing ? "Cancelar" : "Editar"}
                     </Button>
                   </div>
                 </CardHeader>
+
                 <CardContent className="grid gap-4 sm:grid-cols-2">
                   <div>
                     <Label>Identificador</Label>
-                    <Input value={selected.prodId} readOnly className="mt-2 bg-muted/40 font-mono text-xs" />
-                  </div>
-                  <div>
-                    <Label>Status</Label>
-                    <Input value={selected.prodAtivo === "A" ? "Ativo" : "Inativo"} readOnly className="mt-2 bg-muted/40" />
-                  </div>
-
-                  <div className="sm:col-span-2">
-                    <Label>Descrição</Label>
                     <Input
-                      value={editing ? editData.descricao : selected.prodDescricao}
-                      onChange={(e) => setEditData((p) => ({ ...p, descricao: e.target.value }))}
-                      readOnly={!editing}
-                      maxLength={90}
-                      className="mt-2"
+                      value={selected.prodId}
+                      readOnly
+                      className="mt-2 bg-muted/40 font-mono text-xs"
                     />
                   </div>
 
                   <div>
-                    <Label>Categoria</Label>
+                    <Label>Status</Label>
+                    <Input
+                      value={selected.prodAtivo === "A" ? "Ativo" : "Inativo"}
+                      readOnly
+                      className="mt-2 bg-muted/40"
+                    />
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <Label>
+                      Descrição {editing ? <Required /> : ""}
+                    </Label>
+                    <Input
+                      value={editing ? editData.descricao : selected.prodDescricao}
+                      onChange={(e) => {
+                        setEditData((p) => ({
+                          ...p,
+                          descricao: e.target.value,
+                        }))
+                        clearEditError("descricao")
+                      }}
+                      readOnly={!editing}
+                      maxLength={90}
+                      className={`mt-2 ${editing && editErrors.descricao ? INVALID_INPUT : ""}`}
+                    />
+                    {editing && <FieldError error={editErrors.descricao} />}
+                  </div>
+
+                  <div>
+                    <Label>
+                      Categoria {editing ? <Required /> : ""}
+                    </Label>
                     {editing ? (
-                      <Select value={editData.catProdId} onValueChange={(v) => setEditData((p) => ({ ...p, catProdId: v }))}>
-                        <SelectTrigger className={`mt-2 ${SELECT_TRIGGER_NO_CLAMP}`}>
-                          <SelectValue placeholder="Selecione">
-                            {editData.catProdId
-                              ? categoriasAtivas.find((c) => String(c.catProdId) === editData.catProdId)?.catProdDescricao
-                              : undefined}
-                          </SelectValue>
-                        </SelectTrigger>
-                        <SelectContent>
-                          {categoriasAtivas.map((c) => (
-                            <SelectItem key={c.catProdId} value={String(c.catProdId)}>
-                              {c.catProdDescricao}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <>
+                        <Select
+                          value={editData.catProdId}
+                          onValueChange={(v) => {
+                            setEditData((p) => ({ ...p, catProdId: v }))
+                            clearEditError("catProdId")
+                          }}
+                        >
+                          <SelectTrigger
+                            className={`mt-2 ${SELECT_TRIGGER_NO_CLAMP} ${editErrors.catProdId ? INVALID_INPUT : ""}`}
+                          >
+                            <SelectValue placeholder="Selecione">
+                              {editData.catProdId
+                                ? categoriasAtivas.find(
+                                    (c) =>
+                                      String(c.catProdId) === editData.catProdId
+                                  )?.catProdDescricao
+                                : undefined}
+                            </SelectValue>
+                          </SelectTrigger>
+                          <SelectContent>
+                            {categoriasAtivas.map((c) => (
+                              <SelectItem
+                                key={c.catProdId}
+                                value={String(c.catProdId)}
+                              >
+                                {c.catProdDescricao}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FieldError error={editErrors.catProdId} />
+                      </>
                     ) : (
-                      <Input value={getCategoriaDescricao(selected.catProdId)} readOnly className="mt-2 bg-muted/40" />
+                      <Input
+                        value={getCategoriaDescricao(selected.catProdId)}
+                        readOnly
+                        className="mt-2 bg-muted/40"
+                      />
                     )}
                   </div>
 
                   <div>
-                    <Label>Medida</Label>
+                    <Label>
+                      Medida {editing ? <Required /> : ""}
+                    </Label>
                     {editing ? (
-                      <Select value={editData.medidasMedId} onValueChange={(v) => setEditData((p) => ({ ...p, medidasMedId: v }))}>
-                        <SelectTrigger className={`mt-2 ${SELECT_TRIGGER_NO_CLAMP}`}>
-                          <SelectValue placeholder="Selecione">
-                            {editData.medidasMedId
-                              ? medidasAtivas.find((m) => String(m.medId) === editData.medidasMedId)?.medSigla
-                              : undefined}
-                          </SelectValue>
-                        </SelectTrigger>
-                        <SelectContent>
-                          {medidasAtivas.map((m) => (
-                            <SelectItem key={m.medId} value={String(m.medId)}>
-                              {m.medSigla} — {m.medDescricao}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <>
+                        <Select
+                          value={editData.medidasMedId}
+                          onValueChange={(v) => {
+                            setEditData((p) => ({ ...p, medidasMedId: v }))
+                            clearEditError("medidasMedId")
+                          }}
+                        >
+                          <SelectTrigger
+                            className={`mt-2 ${SELECT_TRIGGER_NO_CLAMP} ${editErrors.medidasMedId ? INVALID_INPUT : ""}`}
+                          >
+                            <SelectValue placeholder="Selecione">
+                              {editData.medidasMedId
+                                ? medidasAtivas.find(
+                                    (m) =>
+                                      String(m.medId) === editData.medidasMedId
+                                  )?.medSigla
+                                : undefined}
+                            </SelectValue>
+                          </SelectTrigger>
+                          <SelectContent>
+                            {medidasAtivas.map((m) => (
+                              <SelectItem
+                                key={m.medId}
+                                value={String(m.medId)}
+                              >
+                                {m.medSigla} — {m.medDescricao}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FieldError error={editErrors.medidasMedId} />
+                      </>
                     ) : (
-                      <Input value={`${getMedidaSigla(selected.medidasMedId)}`} readOnly className="mt-2 bg-muted/40" />
+                      <Input
+                        value={getMedidaSigla(selected.medidasMedId)}
+                        readOnly
+                        className="mt-2 bg-muted/40"
+                      />
                     )}
                   </div>
 
                   <div>
-                    <Label>Fornecedor</Label>
+                    <Label>
+                      Fornecedor {editing ? <Required /> : ""}
+                    </Label>
                     {editing ? (
-                      <Select value={editData.fornId} onValueChange={(v) => setEditData((p) => ({ ...p, fornId: v }))}>
-                        <SelectTrigger className={`mt-2 ${SELECT_TRIGGER_NO_CLAMP}`}>
-                          <SelectValue placeholder="Selecione">
-                            {editData.fornId
-                              ? fornecedoresAtivos.find((f) => String(f.fornId) === editData.fornId)?.fornRazaoSocial
-                              : undefined}
-                          </SelectValue>
-                        </SelectTrigger>
-                        <SelectContent>
-                          {fornecedoresAtivos.map((f) => (
-                            <SelectItem key={f.fornId} value={String(f.fornId)}>
-                              {f.fornRazaoSocial}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <>
+                        <Select
+                          value={editData.fornId}
+                          onValueChange={(v) => {
+                            setEditData((p) => ({ ...p, fornId: v }))
+                            clearEditError("fornId")
+                          }}
+                        >
+                          <SelectTrigger
+                            className={`mt-2 ${SELECT_TRIGGER_NO_CLAMP} ${editErrors.fornId ? INVALID_INPUT : ""}`}
+                          >
+                            <SelectValue placeholder="Selecione">
+                              {editData.fornId
+                                ? fornecedoresAtivos.find(
+                                    (f) =>
+                                      String(f.fornId) === editData.fornId
+                                  )?.fornRazaoSocial
+                                : undefined}
+                            </SelectValue>
+                          </SelectTrigger>
+                          <SelectContent>
+                            {fornecedoresAtivos.map((f) => (
+                              <SelectItem
+                                key={f.fornId}
+                                value={String(f.fornId)}
+                              >
+                                {f.fornRazaoSocial}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FieldError error={editErrors.fornId} />
+                      </>
                     ) : (
-                      <Input value={getFornecedorRazaoSocial(selected.fornId)} readOnly className="mt-2 bg-muted/40" />
+                      <Input
+                        value={getFornecedorRazaoSocial(selected.fornId)}
+                        readOnly
+                        className="mt-2 bg-muted/40"
+                      />
                     )}
                   </div>
 
                   <div>
-                    <Label>Quantidade mínima</Label>
+                    <Label>
+                      Quantidade mínima (Alerta) {editing ? <Required /> : ""}
+                    </Label>
                     <Input
                       type="number"
                       min="0"
                       step="0.01"
-                      value={editing ? editData.quantidadeMinima : selected.prodQuantidadeMinima}
-                      onChange={(e) => setEditData((p) => ({ ...p, quantidadeMinima: e.target.value }))}
+                      value={
+                        editing
+                          ? editData.quantidadeMinima
+                          : selected.prodQuantidadeMinima
+                      }
+                      onChange={(e) => {
+                        setEditData((p) => ({
+                          ...p,
+                          quantidadeMinima: e.target.value,
+                        }))
+                        clearEditError("quantidadeMinima")
+                      }}
                       readOnly={!editing}
-                      className="mt-2"
+                      className={`mt-2 ${editing && editErrors.quantidadeMinima ? INVALID_INPUT : ""}`}
                     />
+                    {editing && (
+                      <FieldError error={editErrors.quantidadeMinima} />
+                    )}
                   </div>
 
                   {editing && (
-                    <div className="sm:col-span-2 flex justify-end mt-4">
+                    <div className="mt-4 flex justify-end sm:col-span-2">
                       <Button onClick={updateProduto} disabled={submitting}>
-                        {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} Salvar alterações
+                        {submitting && (
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        )}
+                        Salvar alterações
                       </Button>
                     </div>
                   )}

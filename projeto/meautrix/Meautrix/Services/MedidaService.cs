@@ -7,7 +7,7 @@ namespace Meautrix.Services
 {
     public class MedidaService : IMedidaService
     {
-        private readonly IMedidaRepository _medidaRepository; 
+        private readonly IMedidaRepository _medidaRepository;
 
         public MedidaService(IMedidaRepository medidaRepository)
         {
@@ -17,10 +17,10 @@ namespace Meautrix.Services
         // Mapeia entidade para DTO de resposta, garantindo o nome UsuEAdmin no JSON
         private static MedidaResponseDTO MapToDTO(Medida m) => new()
         {
-            MedId        = m.MedId,
+            MedId = m.MedId,
             MedDescricao = m.MedDescricao,
-            MedSigla     = m.MedSigla,
-            MedAtivo     = m.MedAtivo
+            MedSigla = m.MedSigla,
+            MedAtivo = m.MedAtivo
         };
 
 
@@ -57,12 +57,12 @@ namespace Meautrix.Services
 
         public async Task CriarAsync(MedidaCriarDTO dto)
         {
-           
-            var ativo = (dto.MedAtivo  == "I") ? "I" : "A";
+
+            var ativo = (dto.MedAtivo == "I") ? "I" : "A";
 
             var novaMedida = new Medida
             {
-                MedDescricao  = dto.MedDescricao,
+                MedDescricao = dto.MedDescricao,
                 MedSigla = dto.MedSigla,
                 MedAtivo = ativo
             };
@@ -77,12 +77,12 @@ namespace Meautrix.Services
                 throw new KeyNotFoundException("Medida não encontrada.");
 
             // Converte string → char; padrão: 'N'
-            var novoAtivo = (dto.MedAtivo  == "I") ? 'I' : 'A';
+            var novoAtivo = (dto.MedAtivo == "I") ? 'I' : 'A';
 
 
             // Aplica as alterações
-            medida.MedDescricao  = dto.MedDescricao;
-            medida.MedSigla  = dto.MedSigla;
+            medida.MedDescricao = dto.MedDescricao;
+            medida.MedSigla = dto.MedSigla;
             medida.MedAtivo = dto.MedAtivo;
 
 
@@ -101,7 +101,7 @@ namespace Meautrix.Services
             if (!string.IsNullOrEmpty(dto.MedDescricao)) medidaExistente.MedDescricao = dto.MedDescricao;
             if (!string.IsNullOrEmpty(dto.MedSigla)) medidaExistente.MedSigla = dto.MedSigla;
             if (!string.IsNullOrEmpty(dto.MedAtivo)) medidaExistente.MedAtivo = dto.MedAtivo;
-   
+
 
             await _medidaRepository.AlterarAsync(medidaExistente);
         }

@@ -17,6 +17,7 @@ namespace Meautrix.Repository
         public DbSet<CategoriaProduto> Categorias_Produtos { get; set; }
         public DbSet<Produto> Produtos { get; set; }
         public DbSet<Item> Item { get; set; }
+        public DbSet<Procedimento> Procedimento { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

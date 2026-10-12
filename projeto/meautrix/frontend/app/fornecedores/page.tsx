@@ -11,14 +11,25 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Required } from "@/components/ui/required"
+import { RequiredMessage } from "@/components/ui/requiredMessage"
 
 const FORNECEDOR_API_URL = "http://localhost:5139/api/fornecedor"
+
+const INVALID_INPUT = "border-destructive ring-2 ring-destructive/20"
 
 export interface Fornecedor {
   fornId: number
   fornRazaoSocial: string
   fornCnpj: string
   fornAtivo: string // 'A' (Ativo) ou 'I' (Inativo)
+}
+
+type FieldErrors = Partial<Record<string, string>>
+
+function FieldError({ error }: { error?: string }) {
+  if (!error) return null
+  return <p className="mt-1 text-xs text-destructive">{error}</p>
 }
 
 // Aplica a máscara 00.000.000/0000-00 enquanto o usuário digita
@@ -47,6 +58,10 @@ export default function CadastroFornecedoresPage() {
   const [statusFilter, setStatusFilter] = useState<"Todos" | "A" | "I">("Todos")
   const [razaoSocialFilter, setRazaoSocialFilter] = useState("")
 
+  // Erros de validação por campo (criação e edição separados para não se misturarem)
+  const [createErrors, setCreateErrors] = useState<FieldErrors>({})
+  const [editErrors, setEditErrors] = useState<FieldErrors>({})
+
   // Form de edição
   const [editData, setEditData] = useState({
     razaoSocial: "",
@@ -58,6 +73,28 @@ export default function CadastroFornecedoresPage() {
     razaoSocial: "",
     cnpj: "",
   })
+
+  function clearCreateError(field: string) {
+    setCreateErrors((prev) => {
+      const next = { ...prev }
+      delete next[field]
+      return next
+    })
+  }
+
+  function clearEditError(field: string) {
+    setEditErrors((prev) => {
+      const next = { ...prev }
+      delete next[field]
+      return next
+    })
+  }
+
+  function closeCreateForm() {
+    setShowCreateForm(false)
+    setNovoFornecedor({ razaoSocial: "", cnpj: "" })
+    setCreateErrors({})
+  }
 
   async function fetchFornecedores() {
     try {
@@ -94,7 +131,7 @@ export default function CadastroFornecedoresPage() {
     if (selected) {
       setEditData({
         razaoSocial: selected.fornRazaoSocial,
-        cnpj: selected.fornCnpj,
+        cnpj: formatCnpj(selected.fornCnpj),
       })
     }
   }, [selected, editing])
@@ -112,18 +149,31 @@ export default function CadastroFornecedoresPage() {
     return razaoSocial.trim().substring(0, 2).toUpperCase()
   }
 
+  function validateFornecedor(data: { razaoSocial: string; cnpj: string }): FieldErrors {
+    const errors: FieldErrors = {}
+
+    if (!data.razaoSocial.trim()) {
+      errors.razaoSocial = "Informe a razão social."
+    } else if (data.razaoSocial.length > 120) {
+      errors.razaoSocial = "A razão social deve possuir no máximo 120 caracteres."
+    }
+
+    if (!data.cnpj.replace(/\D/g, "")) {
+      errors.cnpj = "Informe o CNPJ."
+    } else if (!isValidCnpj(data.cnpj)) {
+      errors.cnpj = "CNPJ inválido."
+    }
+
+    return errors
+  }
+
   // Alterar fornecedor (PUT /api/fornecedor/{id})
   async function updateFornecedor() {
     if (!selected) return
-    if (!editData.razaoSocial.trim() || !editData.cnpj.trim()) {
-      return toast.error("Razão social e CNPJ são obrigatórios.")
-    }
-    if (editData.razaoSocial.length > 120) {
-      return toast.error("A razão social deve possuir no máximo 120 caracteres.")
-    }
-    if (!isValidCnpj(editData.cnpj)) {
-      return toast.error("Informe um CNPJ válido.")
-    }
+
+    const errors = validateFornecedor(editData)
+    setEditErrors(errors)
+    if (Object.keys(errors).length > 0) return
 
     try {
       setSubmitting(true)
@@ -155,6 +205,7 @@ export default function CadastroFornecedoresPage() {
 
       toast.success("Fornecedor atualizado com sucesso!")
       setEditing(false)
+      setEditErrors({})
     } catch (err: any) {
       toast.error(err.message || "Erro ao atualizar fornecedor.")
     } finally {
@@ -171,7 +222,7 @@ export default function CadastroFornecedoresPage() {
 
     try {
       const res = await fetch(`${FORNECEDOR_API_URL}/${id}`, {
-        method: "patch",
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ fornAtivo: newStatus }),
       })
@@ -191,15 +242,9 @@ export default function CadastroFornecedoresPage() {
 
   // Criar fornecedor (POST /api/fornecedor)
   async function createFornecedor() {
-    if (!novoFornecedor.razaoSocial.trim() || !novoFornecedor.cnpj.trim()) {
-      return toast.error("Preencha razão social e CNPJ do fornecedor.")
-    }
-    if (novoFornecedor.razaoSocial.length > 120) {
-      return toast.error("A razão social deve possuir no máximo 120 caracteres.")
-    }
-    if (!isValidCnpj(novoFornecedor.cnpj)) {
-      return toast.error("Informe um CNPJ válido.")
-    }
+    const errors = validateFornecedor(novoFornecedor)
+    setCreateErrors(errors)
+    if (Object.keys(errors).length > 0) return
 
     try {
       setSubmitting(true)
@@ -219,8 +264,7 @@ export default function CadastroFornecedoresPage() {
       }
 
       toast.success("Fornecedor cadastrado com sucesso!")
-      setNovoFornecedor({ razaoSocial: "", cnpj: "" })
-      setShowCreateForm(false)
+      closeCreateForm()
       await fetchFornecedores() // recarrega para pegar o novo fornId gerado pelo banco
     } catch (err: any) {
       toast.error(err.message || "Erro ao cadastrar fornecedor.")
@@ -264,32 +308,42 @@ export default function CadastroFornecedoresPage() {
               <CardTitle className="flex items-center gap-2 text-base">
                 <Plus className="h-4 w-4 text-primary" />Cadastrar novo fornecedor
               </CardTitle>
+              <RequiredMessage />
             </CardHeader>
             <CardContent className="grid gap-4 sm:grid-cols-2">
               <div className="sm:col-span-2">
-                <Label htmlFor="forn-razao-social">Razão social</Label>
+                <Label htmlFor="forn-razao-social">Razão social <Required /></Label>
                 <Input
                   id="forn-razao-social"
-                  className="mt-2"
+                  className={`mt-2 ${createErrors.razaoSocial ? INVALID_INPUT : ""}`}
                   maxLength={120}
                   placeholder="Ex.: Distribuidora ABC Ltda"
                   value={novoFornecedor.razaoSocial}
-                  onChange={(e) => setNovoFornecedor((p) => ({ ...p, razaoSocial: e.target.value }))}
+                  onChange={(e) => {
+                    setNovoFornecedor((p) => ({ ...p, razaoSocial: e.target.value }))
+                    clearCreateError("razaoSocial")
+                  }}
                 />
+                <FieldError error={createErrors.razaoSocial} />
               </div>
               <div>
-                <Label htmlFor="forn-cnpj">CNPJ</Label>
+                <Label htmlFor="forn-cnpj">CNPJ <Required /></Label>
                 <Input
                   id="forn-cnpj"
-                  className="mt-2"
+                  className={`mt-2 ${createErrors.cnpj ? INVALID_INPUT : ""}`}
                   maxLength={18}
                   placeholder="00.000.000/0000-00"
+                  inputMode="numeric"
                   value={novoFornecedor.cnpj}
-                  onChange={(e) => setNovoFornecedor((p) => ({ ...p, cnpj: formatCnpj(e.target.value) }))}
+                  onChange={(e) => {
+                    setNovoFornecedor((p) => ({ ...p, cnpj: formatCnpj(e.target.value) }))
+                    clearCreateError("cnpj")
+                  }}
                 />
+                <FieldError error={createErrors.cnpj} />
               </div>
               <div className="flex justify-end gap-2 sm:col-span-2 mt-2">
-                <Button type="button" variant="outline" onClick={() => setShowCreateForm(false)} disabled={submitting}>Cancelar</Button>
+                <Button type="button" variant="outline" onClick={closeCreateForm} disabled={submitting}>Cancelar</Button>
                 <Button type="button" onClick={createFornecedor} disabled={submitting}>
                   {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   Cadastrar fornecedor
@@ -355,7 +409,11 @@ export default function CadastroFornecedoresPage() {
                     key={f.fornId}
                     role="button"
                     tabIndex={0}
-                    onClick={() => { setSelectedId(f.fornId); setEditing(false); }}
+                    onClick={() => {
+                      setSelectedId(f.fornId)
+                      setEditing(false)
+                      setEditErrors({})
+                    }}
                     className={`flex items-center gap-3 rounded-xl border p-3 text-left transition-colors cursor-pointer ${selected?.fornId === f.fornId ? "border-primary bg-secondary/70" : "border-border hover:bg-muted"}`}
                   >
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
@@ -381,13 +439,21 @@ export default function CadastroFornecedoresPage() {
               <Card>
                 <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                   <div>
-                    <CardTitle className="flex items-center gap-2 text-base"><Building2 className="h-4 w-4 text-primary" />Dados do fornecedor</CardTitle>
+                    <CardTitle className="flex items-center gap-2 text-base"><Building2 className="h-4 w-4 text-primary" />Dados do fornecedor </CardTitle>
+                    {editing ? <RequiredMessage /> : " "}
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
                     <Badge variant={selected.fornAtivo === "A" ? "default" : "secondary"}>
                       {selected.fornAtivo === "A" ? "Ativo" : "Inativo"}
                     </Badge>
-                    <Button variant="outline" size="sm" onClick={() => setEditing((p) => !p)}>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setEditing((p) => !p)
+                        setEditErrors({})
+                      }}
+                    >
                       <Pencil className="mr-2 h-3.5 w-3.5" />{editing ? "Cancelar" : "Editar"}
                     </Button>
                   </div>
@@ -403,25 +469,36 @@ export default function CadastroFornecedoresPage() {
                   </div>
 
                   <div className="sm:col-span-2">
-                    <Label>Razão social</Label>
+                    <Label htmlFor="forn-edit-razao-social">Razão social {editing ? <Required /> : " "}</Label>
                     <Input
+                      id="forn-edit-razao-social"
                       value={editing ? editData.razaoSocial : selected.fornRazaoSocial}
-                      onChange={(e) => setEditData((p) => ({ ...p, razaoSocial: e.target.value }))}
+                      onChange={(e) => {
+                        setEditData((p) => ({ ...p, razaoSocial: e.target.value }))
+                        clearEditError("razaoSocial")
+                      }}
                       readOnly={!editing}
                       maxLength={120}
-                      className="mt-2"
+                      className={`mt-2 ${editing && editErrors.razaoSocial ? INVALID_INPUT : ""}`}
                     />
+                    {editing && <FieldError error={editErrors.razaoSocial} />}
                   </div>
 
                   <div>
-                    <Label>CNPJ</Label>
+                    <Label htmlFor="forn-edit-cnpj">CNPJ {editing ? <Required /> : " "}</Label>
                     <Input
+                      id="forn-edit-cnpj"
                       value={editing ? editData.cnpj : formatCnpj(selected.fornCnpj)}
-                      onChange={(e) => setEditData((p) => ({ ...p, cnpj: formatCnpj(e.target.value) }))}
+                      onChange={(e) => {
+                        setEditData((p) => ({ ...p, cnpj: formatCnpj(e.target.value) }))
+                        clearEditError("cnpj")
+                      }}
                       readOnly={!editing}
                       maxLength={18}
-                      className="mt-2"
+                      inputMode="numeric"
+                      className={`mt-2 ${editing && editErrors.cnpj ? INVALID_INPUT : ""}`}
                     />
+                    {editing && <FieldError error={editErrors.cnpj} />}
                   </div>
 
                   {editing && (

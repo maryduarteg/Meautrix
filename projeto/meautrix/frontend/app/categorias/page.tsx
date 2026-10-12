@@ -9,13 +9,24 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { Required } from "@/components/ui/required"
+import { RequiredMessage } from "@/components/ui/requiredMessage"
 
 const API_URL = "http://localhost:5139/api/categoriaproduto"
+
+const INVALID_INPUT = "border-destructive ring-2 ring-destructive/20"
 
 export interface Categoria {
   catProdId: number
   catProdDescricao: string
   catProdAtivo: string // 'A' (Ativo) ou 'I' (Inativo)
+}
+
+type FieldErrors = Partial<Record<string, string>>
+
+function FieldError({ error }: { error?: string }) {
+  if (!error) return null
+  return <p className="mt-1 text-xs text-destructive">{error}</p>
 }
 
 export default function CategoriasPage() {
@@ -29,6 +40,10 @@ export default function CategoriasPage() {
   const [statusFilter, setStatusFilter] = useState<"Todos" | "A" | "I">("Todos")
   const [descricaoFilter, setDescricaoFilter] = useState("")
 
+  // Erros de validação por campo (criação e edição separados para não se misturarem)
+  const [createErrors, setCreateErrors] = useState<FieldErrors>({})
+  const [editErrors, setEditErrors] = useState<FieldErrors>({})
+
   // Form de edição
   const [editData, setEditData] = useState({
     descricao: "",
@@ -39,6 +54,28 @@ export default function CategoriasPage() {
   const [novaCategoria, setNovaCategoria] = useState({
     descricao: "",
   })
+
+  function clearCreateError(field: string) {
+    setCreateErrors((prev) => {
+      const next = { ...prev }
+      delete next[field]
+      return next
+    })
+  }
+
+  function clearEditError(field: string) {
+    setEditErrors((prev) => {
+      const next = { ...prev }
+      delete next[field]
+      return next
+    })
+  }
+
+  function closeCreateForm() {
+    setShowCreateForm(false)
+    setNovaCategoria({ descricao: "" })
+    setCreateErrors({})
+  }
 
   // Busca todas as categorias na API
   async function fetchCategorias() {
@@ -98,12 +135,32 @@ export default function CategoriasPage() {
       .toUpperCase()
   }
 
+  function validateEdit(): boolean {
+    const errors: FieldErrors = {}
+
+    if (!editData.descricao.trim()) {
+      errors.descricao = "Informe a descrição da categoria."
+    }
+
+    setEditErrors(errors)
+    return Object.keys(errors).length === 0
+  }
+
+  function validateCreate(): boolean {
+    const errors: FieldErrors = {}
+
+    if (!novaCategoria.descricao.trim()) {
+      errors.descricao = "Informe a descrição da categoria."
+    }
+
+    setCreateErrors(errors)
+    return Object.keys(errors).length === 0
+  }
+
   // Alterar categoria (PUT /api/categoriaproduto/{id})
   async function updateCategoria() {
     if (!selected) return
-    if (!editData.descricao.trim()) {
-      return toast.error("Descrição é obrigatória.")
-    }
+    if (!validateEdit()) return
 
     try {
       setSubmitting(true)
@@ -130,6 +187,7 @@ export default function CategoriasPage() {
 
       toast.success("Categoria atualizada com sucesso!")
       setEditing(false)
+      setEditErrors({})
     } catch (err: any) {
       toast.error(err.message || "Erro ao atualizar categoria.")
     } finally {
@@ -168,9 +226,7 @@ export default function CategoriasPage() {
 
   // Criar Categoria (POST /api/categoriaproduto)
   async function createCategoria() {
-    if (!novaCategoria.descricao.trim()) {
-      return toast.error("Preencha a descrição da categoria.")
-    }
+    if (!validateCreate()) return
 
     try {
       setSubmitting(true)
@@ -188,8 +244,7 @@ export default function CategoriasPage() {
       }
 
       toast.success("Categoria cadastrada com sucesso!")
-      setNovaCategoria({ descricao: "" })
-      setShowCreateForm(false)
+      closeCreateForm()
       await fetchCategorias() // recarrega a lista para pegar o novo ID gerado pelo banco
     } catch (err: any) {
       toast.error(err.message || "Erro ao cadastrar categoria.")
@@ -233,14 +288,25 @@ export default function CategoriasPage() {
               <CardTitle className="flex items-center gap-2 text-base">
                 <Plus className="h-4 w-4 text-primary" />Cadastrar nova categoria
               </CardTitle>
+              <RequiredMessage />
             </CardHeader>
             <CardContent className="grid gap-4 sm:grid-cols-1">
               <div>
-                <Label htmlFor="cat-descricao">Descrição da Categoria</Label>
-                <Input id="cat-descricao" className="mt-2" placeholder="Ex.: Produtos para Cabelo" value={novaCategoria.descricao} onChange={(e) => setNovaCategoria((p) => ({ ...p, descricao: e.target.value }))} />
+                <Label htmlFor="cat-descricao">Descrição da Categoria <Required /></Label>
+                <Input
+                  id="cat-descricao"
+                  className={`mt-2 ${createErrors.descricao ? INVALID_INPUT : ""}`}
+                  placeholder="Ex.: Produtos para Cabelo"
+                  value={novaCategoria.descricao}
+                  onChange={(e) => {
+                    setNovaCategoria((p) => ({ ...p, descricao: e.target.value }))
+                    clearCreateError("descricao")
+                  }}
+                />
+                <FieldError error={createErrors.descricao} />
               </div>
               <div className="flex justify-end gap-2">
-                <Button type="button" variant="outline" onClick={() => setShowCreateForm(false)} disabled={submitting}>Cancelar</Button>
+                <Button type="button" variant="outline" onClick={closeCreateForm} disabled={submitting}>Cancelar</Button>
                 <Button type="button" onClick={createCategoria} disabled={submitting}>
                   {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   Cadastrar categoria
@@ -306,7 +372,11 @@ export default function CategoriasPage() {
                     key={c.catProdId}
                     role="button"
                     tabIndex={0}
-                    onClick={() => { setSelectedId(c.catProdId); setEditing(false); }}
+                    onClick={() => {
+                      setSelectedId(c.catProdId)
+                      setEditing(false)
+                      setEditErrors({})
+                    }}
                     className={`flex items-center gap-3 rounded-xl border p-3 text-left transition-colors cursor-pointer ${selected?.catProdId === c.catProdId ? "border-primary bg-secondary/70" : "border-border hover:bg-muted"}`}
                   >
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
@@ -334,12 +404,20 @@ export default function CategoriasPage() {
                 <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                   <div>
                     <CardTitle className="flex items-center gap-2 text-base"><Tag className="h-4 w-4 text-primary" />Dados da categoria</CardTitle>
+                    {editing ? <RequiredMessage /> : " "}
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
                     <Badge variant={selected.catProdAtivo === "A" ? "default" : "secondary"}>
                       {selected.catProdAtivo === "A" ? "Ativa" : "Inativa"}
                     </Badge>
-                    <Button variant="outline" size="sm" onClick={() => setEditing((p) => !p)}>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setEditing((p) => !p)
+                        setEditErrors({})
+                      }}
+                    >
                       <Pencil className="mr-2 h-3.5 w-3.5" />{editing ? "Cancelar" : "Editar"}
                     </Button>
                   </div>
@@ -350,13 +428,18 @@ export default function CategoriasPage() {
                     <Input value={selected.catProdId} readOnly className="mt-2 bg-muted/40 font-mono text-xs" />
                   </div>
                   <div>
-                    <Label>Descrição</Label>
+                    <Label htmlFor="cat-edit-descricao">Descrição{editing ? <Required /> : " "}</Label>
                     <Input
+                      id="cat-edit-descricao"
                       value={editing ? editData.descricao : selected.catProdDescricao}
-                      onChange={(e) => setEditData((p) => ({ ...p, descricao: e.target.value }))}
+                      onChange={(e) => {
+                        setEditData((p) => ({ ...p, descricao: e.target.value }))
+                        clearEditError("descricao")
+                      }}
                       readOnly={!editing}
-                      className="mt-2"
+                      className={`mt-2 ${editing && editErrors.descricao ? INVALID_INPUT : ""}`}
                     />
+                    {editing && <FieldError error={editErrors.descricao} />}
                   </div>
                   <div>
                     <Label>Status</Label>

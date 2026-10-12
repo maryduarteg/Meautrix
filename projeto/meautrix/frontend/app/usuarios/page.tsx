@@ -1,40 +1,73 @@
 "use client"
 
 import React, { useEffect, useMemo, useState, useCallback } from "react"
-import { Eye, EyeOff, KeyRound, Pencil, ShieldCheck, UserRound, Users, Activity, UserPlus, Power, Loader2 } from "lucide-react"
+
+import {
+  Eye,
+  EyeOff,
+  KeyRound,
+  Pencil,
+  ShieldCheck,
+  UserRound,
+  Users,
+  UserPlus,
+  Power,
+  Loader2,
+} from "lucide-react"
+
 import { toast } from "sonner"
+
 import { DashboardShell } from "@/components/dashboard-shell"
 import { useStore } from "@/lib/store"
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+
+import { Required } from "@/components/ui/required"
+import { RequiredMessage } from "@/components/ui/requiredMessage"
 
 export interface User {
   usuId: number
   usuNome: string
   usuLogin: string
-  usuEAdmin: string // 'S' (Admin) ou 'N' (Operador)
-  usuAtivo: string  // 'A' (Ativo) ou 'I' (Inativo)
+  usuEAdmin: string
+  usuAtivo: string
+}
+
+const API_URL = "http://localhost:5139/api/usuarios"
+
+const INVALID_INPUT = "border-destructive ring-2 ring-destructive/20"
+
+type FieldErrors = Record<string, string>
+
+function FieldError({ error }: { error?: string }) {
+  if (!error) return null
+
+  return (
+    <p className="mt-1 text-xs text-destructive">
+      {error}
+    </p>
+  )
 }
 
 export default function UsuariosPage() {
   const { movements } = useStore()
-  const API_URL = "http://localhost:5139/api/usuarios"
 
   const [userList, setUserList] = useState<User[]>([])
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
-
   const [selectedId, setSelectedId] = useState<number | null>(null)
   const [showCreateForm, setShowCreateForm] = useState(false)
   const [editing, setEditing] = useState(false)
   const [statusFilter, setStatusFilter] = useState<"Todos" | "A" | "I">("Todos")
 
-  // Form de edição
+  const [createErrors, setCreateErrors] = useState<FieldErrors>({})
+  const [editErrors, setEditErrors] = useState<FieldErrors>({})
+
   const [editData, setEditData] = useState({
     usuNome: "",
     usuLogin: "",
@@ -44,7 +77,6 @@ export default function UsuariosPage() {
     confirmarSenha: "",
   })
 
-  // Form de criação
   const [newUser, setNewUser] = useState({
     usuNome: "",
     usuLogin: "",
@@ -52,16 +84,37 @@ export default function UsuariosPage() {
     confirmarSenha: "",
     usuEAdmin: "N",
   })
-  
+
   const [showPassword, setShowPassword] = useState(false)
+
+  const clearCreateError = (field: string) => {
+    setCreateErrors((prev) => {
+      const updated = { ...prev }
+      delete updated[field]
+      return updated
+    })
+  }
+
+  const clearEditError = (field: string) => {
+    setEditErrors((prev) => {
+      const updated = { ...prev }
+      delete updated[field]
+      return updated
+    })
+  }
 
   const fetchUsers = useCallback(async () => {
     try {
       setLoading(true)
+
       const response = await fetch(API_URL)
-      if (!response.ok) throw new Error("Falha ao carregar usuários.")
+
+      if (!response.ok) {
+        throw new Error("Falha ao carregar usuários.")
+      }
 
       const rawData = await response.json()
+
       const normalizedData: User[] = rawData.map((u: any) => ({
         usuId: u.usuId ?? u.UsuId,
         usuNome: u.usuNome ?? u.UsuNome ?? "",
@@ -71,6 +124,7 @@ export default function UsuariosPage() {
       }))
 
       setUserList(normalizedData)
+
       if (normalizedData.length > 0 && selectedId === null) {
         setSelectedId(normalizedData[0].usuId)
       }
@@ -89,7 +143,6 @@ export default function UsuariosPage() {
     return userList.find((u) => u.usuId === selectedId) || userList[0] || null
   }, [userList, selectedId])
 
-  // Preenche o formulário de edição ao selecionar/editar usuário
   useEffect(() => {
     if (selected) {
       setEditData({
@@ -105,14 +158,22 @@ export default function UsuariosPage() {
 
   const userMovements = useMemo(() => {
     if (!selected?.usuNome) return []
+
     return movements.filter((item) =>
-      item.professional ? item.professional.toLowerCase().includes(selected.usuNome.toLowerCase()) : false
+      item.professional
+        ? item.professional.toLowerCase().includes(selected.usuNome.toLowerCase())
+        : false
     )
   }, [movements, selected])
 
   function loginEmUso(login: string, ignoreUserId?: number) {
     const loginNormalizado = login.trim().toLocaleLowerCase()
-    return userList.some((user) => user.usuId !== ignoreUserId && user.usuLogin.trim().toLocaleLowerCase() === loginNormalizado)
+
+    return userList.some(
+      (user) =>
+        user.usuId !== ignoreUserId &&
+        user.usuLogin.trim().toLocaleLowerCase() === loginNormalizado
+    )
   }
 
   async function getApiError(response: Response, fallback: string) {
@@ -120,14 +181,15 @@ export default function UsuariosPage() {
     return body?.mensagem ?? fallback
   }
 
-  // Filtro correto usando 'A' (Ativo) e 'I' (Inativo)
   const filteredUsers = useMemo(() => {
     if (statusFilter === "Todos") return userList
+
     return userList.filter((u) => u.usuAtivo === statusFilter)
   }, [userList, statusFilter])
 
   const getInitials = (nome: string) => {
     if (!nome) return "U"
+
     return nome
       .trim()
       .split(" ")
@@ -138,62 +200,87 @@ export default function UsuariosPage() {
       .toUpperCase()
   }
 
-  // Alterar usuário via PUT /api/usuarios/{id}
-async function updateUser() {
-  if (!selected) return
-  if (!editData.usuNome.trim() || !editData.usuLogin.trim()) {
-    return toast.error("Nome e login são obrigatórios.")
-  }
-  if (loginEmUso(editData.usuLogin, selected.usuId)) {
-    return toast.error("Já existe um usuário cadastrado com este login.")
-  }
-  if (editData.usuSenha || editData.confirmarSenha) {
-    if (editData.usuSenha.length < 6) {
-      return toast.error("A nova senha deve ter pelo menos 6 caracteres.")
-    }
-    if (editData.usuSenha !== editData.confirmarSenha) {
-      return toast.error("As senhas não coincidem.")
-    }
-  }
+  async function updateUser() {
+    if (!selected) return
 
-  try {
-    setSubmitting(true)
+    const errors: FieldErrors = {}
 
-    const payload = {
-      usuId: selected.usuId,
-      usuNome: editData.usuNome.trim(),
-      usuLogin: editData.usuLogin.trim(),
-      usuEAdmin: editData.usuEAdmin || selected.usuEAdmin || "N",
-      usuAtivo: editData.usuAtivo || selected.usuAtivo || "A",
-      usuSenha: editData.usuSenha.trim() || undefined
+    if (!editData.usuNome.trim()) {
+      errors.usuNome = "O nome é obrigatório."
     }
 
-    const response = await fetch(`${API_URL}/${selected.usuId}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    })
+    if (!editData.usuLogin.trim()) {
+      errors.usuLogin = "O login é obrigatório."
+    } else if (loginEmUso(editData.usuLogin, selected.usuId)) {
+      errors.usuLogin = "Este login já está cadastrado."
+    }
 
-    if (!response.ok) throw new Error(await getApiError(response, "Erro ao atualizar usuário."))
+    if (editData.usuSenha || editData.confirmarSenha) {
+      if (editData.usuSenha.length < 6) {
+        errors.usuSenha = "A senha deve ter pelo menos 6 caracteres."
+      }
 
-    toast.success("Usuário atualizado com sucesso!")
-    setEditing(false)
-    fetchUsers()
-  } catch (error) {
-    toast.error(error instanceof Error ? error.message : "Erro ao atualizar usuário.")
-  } finally {
-    setSubmitting(false)
+      if (!editData.confirmarSenha) {
+        errors.confirmarSenha = "Confirme a nova senha."
+      } else if (editData.usuSenha !== editData.confirmarSenha) {
+        errors.confirmarSenha = "As senhas não coincidem."
+      }
+    }
+
+    setEditErrors(errors)
+
+    if (Object.keys(errors).length > 0) return
+
+    try {
+      setSubmitting(true)
+
+      const payload = {
+        usuId: selected.usuId,
+        usuNome: editData.usuNome.trim(),
+        usuLogin: editData.usuLogin.trim(),
+        usuEAdmin: editData.usuEAdmin || selected.usuEAdmin || "N",
+        usuAtivo: editData.usuAtivo || selected.usuAtivo || "A",
+        usuSenha: editData.usuSenha.trim() || undefined,
+      }
+
+      const response = await fetch(`${API_URL}/${selected.usuId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      })
+
+      if (!response.ok) {
+        throw new Error(
+          await getApiError(response, "Erro ao atualizar usuário.")
+        )
+      }
+
+      toast.success("Usuário atualizado com sucesso!")
+      setEditing(false)
+      setEditErrors({})
+      await fetchUsers()
+    } catch (error) {
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Erro ao atualizar usuário."
+      )
+    } finally {
+      setSubmitting(false)
+    }
   }
-}
 
-  // Inativar / Ativar via DELETE ou PUT
   async function toggleUserStatus(usuId: number) {
     const user = userList.find((u) => u.usuId === usuId)
+
     if (!user) return
 
     try {
       if (user.usuAtivo === "A") {
-        const response = await fetch(`${API_URL}/${usuId}`, { method: "DELETE" })
+        const response = await fetch(`${API_URL}/${usuId}`, {
+          method: "DELETE",
+        })
+
         if (!response.ok) throw new Error()
       } else {
         const response = await fetch(`${API_URL}/${usuId}`, {
@@ -204,30 +291,49 @@ async function updateUser() {
             usuAtivo: "A",
           }),
         })
+
         if (!response.ok) throw new Error()
       }
 
       toast.success("Status alterado com sucesso!")
-      fetchUsers()
+      await fetchUsers()
     } catch {
       toast.error("Não foi possível alterar o status.")
     }
   }
 
-  // Criar Usuário via POST /api/usuarios
   async function createUser() {
-    if (!newUser.usuNome.trim() || !newUser.usuLogin.trim() || newUser.usuSenha.length < 6) {
-      return toast.error("Preencha todos os campos corretamente (senha mín. 6 caracteres).")
+    const errors: FieldErrors = {}
+
+    if (!newUser.usuNome.trim()) {
+      errors.usuNome = "O nome é obrigatório."
     }
-    if (newUser.usuSenha !== newUser.confirmarSenha) {
-      return toast.error("As senhas não coincidem.")
+
+    if (!newUser.usuLogin.trim()) {
+      errors.usuLogin = "O login é obrigatório."
+    } else if (loginEmUso(newUser.usuLogin)) {
+      errors.usuLogin = "Este login já está cadastrado."
     }
-    if (loginEmUso(newUser.usuLogin)) {
-      return toast.error("Já existe um usuário cadastrado com este login.")
+
+    if (!newUser.usuSenha) {
+      errors.usuSenha = "A senha é obrigatória."
+    } else if (newUser.usuSenha.length < 6) {
+      errors.usuSenha = "A senha deve ter pelo menos 6 caracteres."
     }
+
+    if (!newUser.confirmarSenha) {
+      errors.confirmarSenha = "A confirmação da senha é obrigatória."
+    } else if (newUser.usuSenha !== newUser.confirmarSenha) {
+      errors.confirmarSenha = "As senhas não coincidem."
+    }
+
+    setCreateErrors(errors)
+
+    if (Object.keys(errors).length > 0) return
 
     try {
       setSubmitting(true)
+
       const response = await fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -240,21 +346,42 @@ async function updateUser() {
         }),
       })
 
-      if (!response.ok) throw new Error(await getApiError(response, "Erro ao cadastrar usuário."))
+      if (!response.ok) {
+        throw new Error(
+          await getApiError(response, "Erro ao cadastrar usuário.")
+        )
+      }
 
       toast.success("Usuário cadastrado com sucesso!")
-      setNewUser({ usuNome: "", usuLogin: "", usuSenha: "", confirmarSenha: "", usuEAdmin: "N" })
+
+      setNewUser({
+        usuNome: "",
+        usuLogin: "",
+        usuSenha: "",
+        confirmarSenha: "",
+        usuEAdmin: "N",
+      })
+
+      setCreateErrors({})
       setShowCreateForm(false)
-      fetchUsers()
+
+      await fetchUsers()
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Erro ao cadastrar usuário.")
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Erro ao cadastrar usuário."
+      )
     } finally {
       setSubmitting(false)
     }
   }
 
   return (
-    <DashboardShell title="Gerenciar Usuários" description="Consulte perfis, atualize acessos e acompanhe a atividade de cada usuário.">
+    <DashboardShell
+      title="Gerenciar Usuários"
+      description="Consulte perfis, atualize acessos e acompanhe a atividade de cada usuário."
+    >
       <div className="flex flex-col gap-6">
         <div className="grid gap-4 sm:grid-cols-2">
           <Card>
@@ -264,19 +391,25 @@ async function updateUser() {
               </div>
               <div>
                 <p className="text-2xl font-semibold">{userList.length}</p>
-                <p className="text-xs text-muted-foreground">Usuários cadastrados</p>
+                <p className="text-xs text-muted-foreground">
+                  Usuários cadastrados
+                </p>
               </div>
             </CardContent>
           </Card>
 
-          <Card >
+          <Card>
             <CardContent className="flex items-center gap-3 p-5">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-primary">
                 <ShieldCheck className="h-5 w-5" />
               </div>
               <div>
-                <p className="text-2xl font-semibold">{userList.filter((u) => u.usuAtivo === "A").length}</p>
-                <p className="text-xs text-muted-foreground">Acessos ativos</p>
+                <p className="text-2xl font-semibold">
+                  {userList.filter((u) => u.usuAtivo === "A").length}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Acessos ativos
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -286,37 +419,122 @@ async function updateUser() {
           <Card className="border-primary/20">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base">
-                <UserPlus className="h-4 w-4 text-primary" />Cadastrar novo usuário
+                <UserPlus className="h-4 w-4 text-primary" />
+                Cadastrar novo usuário
               </CardTitle>
+              <RequiredMessage />
             </CardHeader>
+
             <CardContent className="grid gap-4 sm:grid-cols-2">
               <div>
-                <Label htmlFor="user-nome">Nome completo</Label>
-                <Input id="user-nome" className="mt-2" placeholder="Ex.: Camila Souza" value={newUser.usuNome} onChange={(e) => setNewUser((p) => ({ ...p, usuNome: e.target.value }))} />
+                <Label htmlFor="user-nome">
+                  Nome completo <Required />
+                </Label>
+                <Input
+                  id="user-nome"
+                  className={`mt-2 ${createErrors.usuNome ? INVALID_INPUT : ""}`}
+                  placeholder="Ex.: Camila Souza"
+                  value={newUser.usuNome}
+                  onChange={(e) => {
+                    setNewUser((p) => ({ ...p, usuNome: e.target.value }))
+                    clearCreateError("usuNome")
+                  }}
+                />
+                <FieldError error={createErrors.usuNome} />
               </div>
+
               <div>
-                <Label htmlFor="user-login">Login</Label>
-                <Input id="user-login" className="mt-2" placeholder="Ex.: camila.souza" value={newUser.usuLogin} onChange={(e) => setNewUser((p) => ({ ...p, usuLogin: e.target.value }))} />
+                <Label htmlFor="user-login">
+                  Login <Required />
+                </Label>
+                <Input
+                  id="user-login"
+                  className={`mt-2 ${createErrors.usuLogin ? INVALID_INPUT : ""}`}
+                  placeholder="Ex.: camila.souza"
+                  value={newUser.usuLogin}
+                  onChange={(e) => {
+                    setNewUser((p) => ({ ...p, usuLogin: e.target.value }))
+                    clearCreateError("usuLogin")
+                  }}
+                />
+                <FieldError error={createErrors.usuLogin} />
               </div>
+
               <div>
-                <Label htmlFor="user-senha">Senha inicial</Label>
-                <Input id="user-senha" type="password" className="mt-2" placeholder="Mínimo de 6 caracteres" value={newUser.usuSenha} onChange={(e) => setNewUser((p) => ({ ...p, usuSenha: e.target.value }))} />
+                <Label htmlFor="user-senha">
+                  Senha inicial <Required />
+                </Label>
+                <Input
+                  id="user-senha"
+                  type="password"
+                  className={`mt-2 ${createErrors.usuSenha ? INVALID_INPUT : ""}`}
+                  placeholder="Mínimo de 6 caracteres"
+                  value={newUser.usuSenha}
+                  onChange={(e) => {
+                    setNewUser((p) => ({ ...p, usuSenha: e.target.value }))
+                    clearCreateError("usuSenha")
+                  }}
+                />
+                <FieldError error={createErrors.usuSenha} />
               </div>
+
               <div>
-                <Label htmlFor="user-confirmar-senha">Confirmar senha</Label>
-                <Input id="user-confirmar-senha" type="password" className="mt-2" placeholder="Repita a senha inicial" value={newUser.confirmarSenha} onChange={(e) => setNewUser((p) => ({ ...p, confirmarSenha: e.target.value }))} />
+                <Label htmlFor="user-confirmar-senha">
+                  Confirmar senha <Required />
+                </Label>
+                <Input
+                  id="user-confirmar-senha"
+                  type="password"
+                  className={`mt-2 ${createErrors.confirmarSenha ? INVALID_INPUT : ""}`}
+                  placeholder="Repita a senha inicial"
+                  value={newUser.confirmarSenha}
+                  onChange={(e) => {
+                    setNewUser((p) => ({
+                      ...p,
+                      confirmarSenha: e.target.value,
+                    }))
+                    clearCreateError("confirmarSenha")
+                  }}
+                />
+                <FieldError error={createErrors.confirmarSenha} />
               </div>
+
               <div>
                 <Label htmlFor="user-admin">Perfil de acesso</Label>
-                <select id="user-admin" className="mt-2 flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm" value={newUser.usuEAdmin} onChange={(e) => setNewUser((p) => ({ ...p, usuEAdmin: e.target.value }))}>
+                <select
+                  id="user-admin"
+                  className="mt-2 flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm"
+                  value={newUser.usuEAdmin}
+                  onChange={(e) =>
+                    setNewUser((p) => ({ ...p, usuEAdmin: e.target.value }))
+                  }
+                >
                   <option value="N">Operador</option>
                   <option value="S">Administrador</option>
                 </select>
               </div>
+
               <div className="flex justify-end gap-2 sm:col-span-2">
-                <Button type="button" variant="outline" onClick={() => setShowCreateForm(false)} disabled={submitting}>Cancelar</Button>
-                <Button type="button" onClick={createUser} disabled={submitting}>
-                  {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    setShowCreateForm(false)
+                    setCreateErrors({})
+                  }}
+                  disabled={submitting}
+                >
+                  Cancelar
+                </Button>
+
+                <Button
+                  type="button"
+                  onClick={createUser}
+                  disabled={submitting}
+                >
+                  {submitting && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  )}
                   Cadastrar usuário
                 </Button>
               </div>
@@ -324,8 +542,14 @@ async function updateUser() {
           </Card>
         ) : (
           <div className="flex justify-end">
-            <Button onClick={() => setShowCreateForm(true)}>
-              <UserPlus className="mr-2 h-4 w-4" />Cadastrar usuário
+            <Button
+              onClick={() => {
+                setCreateErrors({})
+                setShowCreateForm(true)
+              }}
+            >
+              <UserPlus className="mr-2 h-4 w-4" />
+              Cadastrar usuário
             </Button>
           </div>
         )}
@@ -334,8 +558,10 @@ async function updateUser() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base">
-                <Users className="h-4 w-4 text-primary" />Usuários cadastrados
+                <Users className="h-4 w-4 text-primary" />
+                Usuários cadastrados
               </CardTitle>
+
               <div className="mt-4 flex rounded-lg bg-muted p-1">
                 {[
                   { label: "Todos", value: "Todos" },
@@ -345,39 +571,81 @@ async function updateUser() {
                   <button
                     key={st.value}
                     type="button"
-                    onClick={() => setStatusFilter(st.value as any)}
-                    className={`flex-1 rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${statusFilter === st.value ? "bg-background text-primary shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+                    onClick={() =>
+                      setStatusFilter(st.value as "Todos" | "A" | "I")
+                    }
+                    className={`flex-1 rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
+                      statusFilter === st.value
+                        ? "bg-background text-primary shadow-sm"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
                   >
                     {st.label}
                   </button>
                 ))}
               </div>
             </CardHeader>
+
             <CardContent className="flex flex-col gap-2">
               {loading ? (
-                <div className="flex items-center justify-center p-6"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>
+                <div className="flex items-center justify-center p-6">
+                  <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                </div>
               ) : filteredUsers.length === 0 ? (
-                <p className="p-4 text-center text-xs text-muted-foreground">Nenhum usuário encontrado.</p>
+                <p className="p-4 text-center text-xs text-muted-foreground">
+                  Nenhum usuário encontrado.
+                </p>
               ) : (
                 filteredUsers.map((u) => (
                   <div
                     key={u.usuId}
                     role="button"
                     tabIndex={0}
-                    onClick={() => { setSelectedId(u.usuId); setEditing(false); }}
-                    className={`flex items-center gap-3 rounded-xl border p-3 text-left transition-colors cursor-pointer ${selected?.usuId === u.usuId ? "border-primary bg-secondary/70" : "border-border hover:bg-muted"}`}
+                    onClick={() => {
+                      setSelectedId(u.usuId)
+                      setEditing(false)
+                      setEditErrors({})
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        setSelectedId(u.usuId)
+                        setEditing(false)
+                        setEditErrors({})
+                      }
+                    }}
+                    className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3 text-left transition-colors ${
+                      selected?.usuId === u.usuId
+                        ? "border-primary bg-secondary/70"
+                        : "border-border hover:bg-muted"
+                    }`}
                   >
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
                       {getInitials(u.usuNome)}
                     </div>
+
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-medium">{u.usuNome}</p>
-                      <p className="truncate text-xs text-muted-foreground">{u.usuLogin}</p>
+                      <p className="truncate text-xs text-muted-foreground">
+                        {u.usuLogin}
+                      </p>
                     </div>
-                    <Badge variant={u.usuAtivo === "A" ? "default" : "secondary"} className="text-[10px]">
+
+                    <Badge
+                      variant={u.usuAtivo === "A" ? "default" : "secondary"}
+                      className="text-[10px]"
+                    >
                       {u.usuAtivo === "A" ? "Ativo" : "Inativo"}
                     </Badge>
-                    <Button type="button" size="icon" variant="ghost" onClick={(e) => { e.stopPropagation(); toggleUserStatus(u.usuId) }}>
+
+                    <Button
+                      type="button"
+                      size="icon"
+                      variant="ghost"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        toggleUserStatus(u.usuId)
+                      }}
+                    >
                       <Power className="h-4 w-4" />
                     </Button>
                   </div>
@@ -391,94 +659,197 @@ async function updateUser() {
               <Card>
                 <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                   <div>
-                    <CardTitle className="flex items-center gap-2 text-base"><UserRound className="h-4 w-4 text-primary" />Dados do usuário</CardTitle>
+                    <CardTitle className="flex items-center gap-2 text-base">
+                      <UserRound className="h-4 w-4 text-primary" />
+                      Dados do usuário
+                    </CardTitle>
+                    {editing ? <RequiredMessage /> : null}
                   </div>
+
                   <div className="flex flex-wrap items-center gap-2">
-                    <Badge variant={selected.usuAtivo === "A" ? "default" : "secondary"}>
+                    <Badge
+                      variant={selected.usuAtivo === "A" ? "default" : "secondary"}
+                    >
                       {selected.usuAtivo === "A" ? "Ativo" : "Inativo"}
                     </Badge>
-                    <Button variant="outline" size="sm" onClick={() => setEditing((p) => !p)}>
-                      <Pencil className="mr-2 h-3.5 w-3.5" />{editing ? "Cancelar" : "Editar"}
+
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setEditing((p) => !p)
+                        setEditErrors({})
+                      }}
+                    >
+                      <Pencil className="mr-2 h-3.5 w-3.5" />
+                      {editing ? "Cancelar" : "Editar"}
                     </Button>
                   </div>
                 </CardHeader>
+
                 <CardContent className="grid gap-4 sm:grid-cols-2">
                   <div>
                     <Label>ID do usuário</Label>
-                    <Input value={selected.usuId} readOnly className="mt-2 bg-muted/40 font-mono text-xs" />
+                    <Input
+                      value={selected.usuId}
+                      readOnly
+                      className="mt-2 bg-muted/40 font-mono text-xs"
+                    />
                   </div>
+
                   <div>
-                    <Label>Nome completo</Label>
+                    <Label>
+                      Nome completo {editing ? <Required /> : ""}
+                    </Label>
                     <Input
                       value={editing ? editData.usuNome : selected.usuNome}
-                      onChange={(e) => setEditData((p) => ({ ...p, usuNome: e.target.value }))}
+                      onChange={(e) => {
+                        setEditData((p) => ({
+                          ...p,
+                          usuNome: e.target.value,
+                        }))
+                        clearEditError("usuNome")
+                      }}
                       readOnly={!editing}
-                      className="mt-2"
+                      className={`mt-2 ${
+                        editing && editErrors.usuNome ? INVALID_INPUT : ""
+                      }`}
                     />
+                    {editing && <FieldError error={editErrors.usuNome} />}
                   </div>
+
                   <div>
-                    <Label>Login</Label>
+                    <Label>
+                      Login {editing ? <Required /> : ""}
+                    </Label>
                     <Input
                       value={editing ? editData.usuLogin : selected.usuLogin}
-                      onChange={(e) => setEditData((p) => ({ ...p, usuLogin: e.target.value }))}
+                      onChange={(e) => {
+                        setEditData((p) => ({
+                          ...p,
+                          usuLogin: e.target.value,
+                        }))
+                        clearEditError("usuLogin")
+                      }}
                       readOnly={!editing}
-                      className="mt-2"
+                      className={`mt-2 ${
+                        editing && editErrors.usuLogin ? INVALID_INPUT : ""
+                      }`}
                     />
+                    {editing && <FieldError error={editErrors.usuLogin} />}
                   </div>
+
                   <div>
                     <Label>Perfil de acesso</Label>
                     {editing ? (
                       <select
                         className="mt-2 flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm"
                         value={editData.usuEAdmin}
-                        onChange={(e) => setEditData((p) => ({ ...p, usuEAdmin: e.target.value }))}
+                        onChange={(e) =>
+                          setEditData((p) => ({
+                            ...p,
+                            usuEAdmin: e.target.value,
+                          }))
+                        }
                       >
                         <option value="N">Operador</option>
                         <option value="S">Administrador</option>
                       </select>
                     ) : (
-                      <Input value={selected.usuEAdmin === "S" ? "Administrador" : "Operador"} readOnly className="mt-2 bg-muted/40" />
+                      <Input
+                        value={
+                          selected.usuEAdmin === "S"
+                            ? "Administrador"
+                            : "Operador"
+                        }
+                        readOnly
+                        className="mt-2 bg-muted/40"
+                      />
                     )}
                   </div>
 
                   {editing && (
-                    <div className="sm:col-span-2 grid gap-4 sm:grid-cols-2">
+                    <div className="grid gap-4 sm:col-span-2 sm:grid-cols-2">
                       <Separator className="mb-2 sm:col-span-2" />
+
                       <div>
-                        <Label htmlFor="edit-password">Nova Senha (deixe em branco para não alterar)</Label>
+                        <Label htmlFor="edit-password">
+                          Nova senha (deixe em branco para não alterar)
+                        </Label>
+
                         <div className="relative mt-2">
                           <KeyRound className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+
                           <Input
                             id="edit-password"
                             type={showPassword ? "text" : "password"}
                             placeholder="Digite uma nova senha se quiser alterar"
                             value={editData.usuSenha}
-                            onChange={(e) => setEditData((p) => ({ ...p, usuSenha: e.target.value }))}
-                            className="pl-9 pr-10"
+                            onChange={(e) => {
+                              setEditData((p) => ({
+                                ...p,
+                                usuSenha: e.target.value,
+                              }))
+                              clearEditError("usuSenha")
+                            }}
+                            className={`pl-9 pr-10 ${
+                              editErrors.usuSenha ? INVALID_INPUT : ""
+                            }`}
                           />
-                          <button type="button" onClick={() => setShowPassword((p) => !p)} className="absolute right-3 top-2.5 text-muted-foreground">
-                            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword((p) => !p)}
+                            className="absolute right-3 top-2.5 text-muted-foreground"
+                            aria-label={
+                              showPassword ? "Ocultar senha" : "Mostrar senha"
+                            }
+                          >
+                            {showPassword ? (
+                              <EyeOff className="h-4 w-4" />
+                            ) : (
+                              <Eye className="h-4 w-4" />
+                            )}
                           </button>
                         </div>
+
+                        <FieldError error={editErrors.usuSenha} />
                       </div>
+
                       <div>
-                        <Label htmlFor="edit-confirm-password">Confirmar nova senha</Label>
+                        <Label htmlFor="edit-confirm-password">
+                          Confirmar nova senha
+                        </Label>
+
                         <Input
                           id="edit-confirm-password"
                           type={showPassword ? "text" : "password"}
                           placeholder="Repita a nova senha"
                           value={editData.confirmarSenha}
-                          onChange={(e) => setEditData((p) => ({ ...p, confirmarSenha: e.target.value }))}
-                          className="mt-2"
+                          onChange={(e) => {
+                            setEditData((p) => ({
+                              ...p,
+                              confirmarSenha: e.target.value,
+                            }))
+                            clearEditError("confirmarSenha")
+                          }}
+                          className={`mt-2 ${
+                            editErrors.confirmarSenha ? INVALID_INPUT : ""
+                          }`}
                         />
+
+                        <FieldError error={editErrors.confirmarSenha} />
                       </div>
                     </div>
                   )}
 
                   {editing && (
-                    <div className="sm:col-span-2 flex justify-end">
+                    <div className="flex justify-end sm:col-span-2">
                       <Button onClick={updateUser} disabled={submitting}>
-                        {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} Salvar alterações
+                        {submitting && (
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        )}
+                        Salvar alterações
                       </Button>
                     </div>
                   )}
