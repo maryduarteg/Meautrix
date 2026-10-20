@@ -30,7 +30,6 @@ namespace Meautrix.Repository
             existente.IteNome = item.IteNome;
             existente.ProdId = item.ProdId;
             existente.IteQuantidadeAtual = item.IteQuantidadeAtual;
-            existente.IteQuantidadeSaidaAlterada = item.IteQuantidadeSaidaAlterada;
             existente.IteLoteNome = item.IteLoteNome;
             existente.IteLoteDataAquisicao = item.IteLoteDataAquisicao;
             existente.IteLoteDataVencimento = item.IteLoteDataVencimento;
@@ -48,7 +47,6 @@ namespace Meautrix.Repository
             if (dados.ProdId.HasValue) existente.ProdId = dados.ProdId.Value;
             if (dados.IteAtivo.HasValue) existente.IteAtivo = dados.IteAtivo.Value;
             if (dados.IteQuantidadeAtual.HasValue) existente.IteQuantidadeAtual = dados.IteQuantidadeAtual.Value;
-            if (dados.IteQuantidadeSaidaAlterada.HasValue) existente.IteQuantidadeSaidaAlterada = dados.IteQuantidadeSaidaAlterada.Value;
             if (dados.IteLoteNome != null) existente.IteLoteNome = dados.IteLoteNome;
             if (dados.IteLoteDataAquisicao.HasValue) existente.IteLoteDataAquisicao = dados.IteLoteDataAquisicao.Value;
             if (dados.IteLoteDataVencimento.HasValue) existente.IteLoteDataVencimento = dados.IteLoteDataVencimento.Value;

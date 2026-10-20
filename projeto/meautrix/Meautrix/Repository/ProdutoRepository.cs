@@ -42,6 +42,15 @@ namespace Meautrix.Repository
                 .FirstOrDefaultAsync(p => p.CatProdId == categoria);
         }
 
+        public async Task<bool> ExisteDescricaoAsync(string descricao, int? idIgnorado = null)
+        {
+            var descricaoNormalizada = descricao.Trim().ToUpperInvariant();
+
+            return await _context.Produtos.AnyAsync(p =>
+                (!idIgnorado.HasValue || p.ProdId != idIgnorado.Value) &&
+                p.ProdDescricao.Trim().ToUpper() == descricaoNormalizada);
+        }
+
         public async Task InserirAsync(Produto produto)
         {
             await _context.Produtos.AddAsync(produto);

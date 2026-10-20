@@ -34,7 +34,6 @@ export interface Item {
   prodId: number
   iteAtivo: string // 'A' (Ativo) ou 'I' (Inativo)
   iteQuantidadeAtual: number
-  iteQuantidadeSaidaAlterada: number
   iteLoteNome: string
   iteLoteDataAquisicao: string // ISO date
   iteLoteDataVencimento: string // ISO date
@@ -65,7 +64,6 @@ export default function CadastroItemPage() {
     nome: "",
     prodId: "",
     quantidadeAtual: "",
-    quantidadeSaidaAlterada: "",
     loteNome: "",
     loteDataAquisicao: "",
     loteDataVencimento: "",
@@ -76,7 +74,6 @@ export default function CadastroItemPage() {
     nome: "",
     prodId: "",
     quantidadeAtual: "",
-    quantidadeSaidaAlterada: "",
     loteNome: "",
     loteDataAquisicao: "",
     loteDataVencimento: "",
@@ -144,7 +141,6 @@ export default function CadastroItemPage() {
         nome: selected.iteNome,
         prodId: String(selected.prodId),
         quantidadeAtual: String(selected.iteQuantidadeAtual),
-        quantidadeSaidaAlterada: String(selected.iteQuantidadeSaidaAlterada),
         loteNome: selected.iteLoteNome,
         loteDataAquisicao: selected.iteLoteDataAquisicao?.substring(0, 10) ?? "",
         loteDataVencimento: selected.iteLoteDataVencimento?.substring(0, 10) ?? "",
@@ -178,7 +174,7 @@ export default function CadastroItemPage() {
     if (!editData.prodId) {
       return toast.error("O produto é obrigatório")
     }
-    if (!editData.quantidadeAtual || !editData.quantidadeSaidaAlterada) {
+    if (!editData.quantidadeAtual) {
       return toast.error("Nenhuma quantidade pode estar vazia")
     }
     const data1 = new Date(editData.loteDataAquisicao);
@@ -186,7 +182,7 @@ export default function CadastroItemPage() {
     if (data2.getTime()<=data1.getTime()) {
       return toast.error("A data de vencimento deve ser maior que a data de aquisição")
     }
-    if (Number(editData.quantidadeAtual) < 0 || Number(editData.quantidadeSaidaAlterada) < 0) {
+    if (Number(editData.quantidadeAtual) < 0) {
       return toast.error("Nenhuma quantidade pode ser menor que zero")
     }
 
@@ -200,7 +196,6 @@ export default function CadastroItemPage() {
           prodId: Number(editData.prodId),
           iteAtivo: selected.iteAtivo,
           iteQuantidadeAtual: Number(editData.quantidadeAtual) || 0,
-          iteQuantidadeSaidaAlterada: Number(editData.quantidadeSaidaAlterada) || 0,
           iteLoteNome: editData.loteNome.trim(),
           iteLoteDataAquisicao: editData.loteDataAquisicao,
           iteLoteDataVencimento: editData.loteDataVencimento,
@@ -219,7 +214,6 @@ export default function CadastroItemPage() {
               iteNome: editData.nome.trim(),
               prodId: Number(editData.prodId),
               iteQuantidadeAtual: Number(editData.quantidadeAtual) || 0,
-              iteQuantidadeSaidaAlterada: Number(editData.quantidadeSaidaAlterada) || 0,
               iteLoteNome: editData.loteNome.trim(),
               iteLoteDataAquisicao: editData.loteDataAquisicao,
               iteLoteDataVencimento: editData.loteDataVencimento,
@@ -278,10 +272,10 @@ export default function CadastroItemPage() {
     if (!novoItem.loteDataAquisicao || !novoItem.loteDataVencimento) {
       return toast.error("Preencha a data de aquisição e a data de vencimento.")
     }
-    if (!novoItem.quantidadeAtual || !novoItem.quantidadeSaidaAlterada) {
+    if (!novoItem.quantidadeAtual) {
       return toast.error("Nenhuma quantidade deve ser estar vazia.")
     }
-    if (Number(novoItem.quantidadeAtual) < 0 || Number(novoItem.quantidadeSaidaAlterada) < 0) {
+    if (Number(novoItem.quantidadeAtual) < 0) {
       return toast.error("Nenhuma quantidade deve ser menor que 0.")
     }
 
@@ -294,7 +288,6 @@ export default function CadastroItemPage() {
           iteNome: novoItem.nome.trim(),
           prodId: Number(novoItem.prodId),
           iteQuantidadeAtual: Number(novoItem.quantidadeAtual) || 0,
-          iteQuantidadeSaidaAlterada: Number(novoItem.quantidadeSaidaAlterada) || 0,
           iteLoteNome: novoItem.loteNome.trim(),
           iteLoteDataAquisicao: novoItem.loteDataAquisicao,
           iteLoteDataVencimento: novoItem.loteDataVencimento,
@@ -311,7 +304,6 @@ export default function CadastroItemPage() {
         nome: "",
         prodId: "",
         quantidadeAtual: "",
-        quantidadeSaidaAlterada: "",
         loteNome: "",
         loteDataAquisicao: "",
         loteDataVencimento: "",

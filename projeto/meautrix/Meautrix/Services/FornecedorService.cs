@@ -2,6 +2,7 @@ using Meautrix.DTO.Fornecedor;
 using Meautrix.Entidades;
 using Meautrix.Interfaces;
 using Meautrix.Repository;
+using Meautrix.Validations;
 
 namespace Meautrix.Services
 {
@@ -52,18 +53,21 @@ namespace Meautrix.Services
         }
         public async Task CriarAsync(FornecedorCriarDTO dto)
         {
-            var fornecedorExistente = await _fornecedorRepository.BuscarPorCnpjAsync(dto.FornCnpj);
+            var cnpj = ValidarCnpj(dto.FornCnpj);
+            var fornecedorExistente = await _fornecedorRepository.BuscarPorCnpjAsync(cnpj);
             if (fornecedorExistente != null)
             {
                 throw new InvalidOperationException("Já existe um fornecedor cadastrado com este cnpj.");
             }
+
+            await ValidarRazaoSocialUnicaAsync(dto.FornRazaoSocial);
 
             var ativo = (dto.FornAtivo  == "I") ? "I" : "A";
 
             var novoFornecedor = new Fornecedor
             {
             
-                FornCnpj = dto.FornCnpj,
+                FornCnpj = cnpj,
                 FornRazaoSocial  = dto.FornRazaoSocial,
                 FornAtivo= ativo
             };
@@ -77,13 +81,17 @@ namespace Meautrix.Services
             if (fornecedor == null)
                 throw new KeyNotFoundException("Fornecedor não encontrado.");
 
+            var cnpj = ValidarCnpj(dto.FornCnpj);
+
+            await ValidarRazaoSocialUnicaAsync(dto.FornRazaoSocial, id);
+
             // Converte string → char; padrão: 'N'
             var novoAtivo = (dto.FornAtivo  == "I") ? 'I' : 'A';
 
 
             // Aplica as alterações
             fornecedor.FornRazaoSocial  = dto.FornRazaoSocial;
-            fornecedor.FornCnpj  = dto.FornCnpj;
+            fornecedor.FornCnpj = cnpj;
             fornecedor.FornAtivo = dto.FornAtivo;
 
 
@@ -99,12 +107,31 @@ namespace Meautrix.Services
                 throw new KeyNotFoundException("Fornecedor não encontrado ou inativo no sistema.");
             }
 
-            if (!string.IsNullOrEmpty(dto.FornCnpj)) fornecedorExistente.FornCnpj = dto.FornCnpj;
+            var cnpj = dto.FornCnpj != null ? ValidarCnpj(dto.FornCnpj) : null;
+            if (!string.IsNullOrEmpty(dto.FornRazaoSocial))
+                await ValidarRazaoSocialUnicaAsync(dto.FornRazaoSocial, id);
+
+            if (cnpj != null)
+                fornecedorExistente.FornCnpj = cnpj;
             if (!string.IsNullOrEmpty(dto.FornRazaoSocial)) fornecedorExistente.FornRazaoSocial = dto.FornRazaoSocial;
             if (!string.IsNullOrEmpty(dto.FornAtivo)) fornecedorExistente.FornAtivo = dto.FornAtivo;
    
 
             await _fornecedorRepository.AlterarAsync(fornecedorExistente);
+        }
+
+        private async Task ValidarRazaoSocialUnicaAsync(string? razaoSocial, int? idIgnorado = null)
+        {
+            if (await _fornecedorRepository.ExisteRazaoSocialAsync(razaoSocial ?? string.Empty, idIgnorado))
+                throw new InvalidOperationException("Já existe um fornecedor com esta razão social.");
+        }
+
+        private static string ValidarCnpj(string? cnpj)
+        {
+            if (!CnpjValidator.EhValido(cnpj))
+                throw new InvalidOperationException("CNPJ inválido.");
+
+            return CnpjValidator.Normalizar(cnpj);
         }
 
         public async Task InativarAsync(int id)

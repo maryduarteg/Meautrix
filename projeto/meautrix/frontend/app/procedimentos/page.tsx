@@ -91,6 +91,14 @@ export default function ProcedimentoPage() {
     })
   }
 
+  function descricaoDuplicada(descricao: string, idIgnorado?: number | null) {
+    const normalizada = descricao.trim().toUpperCase()
+
+    return procedimentoList.some(
+      (p) => p.procId !== idIgnorado && p.procDescricao.trim().toUpperCase() === normalizada
+    )
+  }
+
   // Validar cadastro
   function validateCreate(): boolean {
     const errors: FieldErrors = {}
@@ -101,6 +109,8 @@ export default function ProcedimentoPage() {
 
     if (!newProcedimento.procDescricao.trim()) {
       errors.procDescricao = "Informe a descrição do procedimento."
+    } else if (descricaoDuplicada(newProcedimento.procDescricao)) {
+      errors.procDescricao = "Já existe um procedimento com esta descrição."
     }
 
     setCreateErrors(errors)
@@ -118,6 +128,8 @@ export default function ProcedimentoPage() {
 
     if (!editData.procDescricao.trim()) {
       errors.procDescricao = "Informe a descrição do procedimento."
+    } else if (descricaoDuplicada(editData.procDescricao, selected?.procId)) {
+      errors.procDescricao = "Já existe um procedimento com esta descrição."
     }
 
     setEditErrors(errors)

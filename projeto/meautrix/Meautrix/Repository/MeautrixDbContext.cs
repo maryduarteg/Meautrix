@@ -18,6 +18,7 @@ namespace Meautrix.Repository
         public DbSet<Produto> Produtos { get; set; }
         public DbSet<Item> Item { get; set; }
         public DbSet<Procedimento> Procedimento { get; set; }
+        public DbSet<ProdutoProcedimento> ProdutosProcedimentos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -57,6 +58,11 @@ namespace Meautrix.Repository
                 entity.Property(i => i.IteLoteDataVencimento)
                     .HasColumnName("ite_lote_data_vencimento")
                     .HasColumnType("date");
+            });
+
+            modelBuilder.Entity<ProdutoProcedimento>(entity =>
+            {
+                entity.HasKey(vinculo => new { vinculo.ProdId, vinculo.ProcId });
             });
         }
     }

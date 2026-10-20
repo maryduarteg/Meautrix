@@ -126,6 +126,10 @@ export default function MedidasPage() {
 
     if (!novaMedida.descricao.trim()) {
       errors.descricao = "Informe a descrição da medida."
+    } else if (medidaList.some((m) =>
+      m.medDescricao.trim().toUpperCase() === novaMedida.descricao.trim().toUpperCase()
+    )) {
+      errors.descricao = "Já existe uma medida com esta descrição."
     }
 
     setCreateErrors(errors)
@@ -143,6 +147,11 @@ export default function MedidasPage() {
 
     if (!editData.descricao.trim()) {
       errors.descricao = "Informe a descrição da medida."
+    } else if (medidaList.some((m) =>
+      m.medId !== selected?.medId &&
+      m.medDescricao.trim().toUpperCase() === editData.descricao.trim().toUpperCase()
+    )) {
+      errors.descricao = "Já existe uma medida com esta descrição."
     }
 
     setEditErrors(errors)

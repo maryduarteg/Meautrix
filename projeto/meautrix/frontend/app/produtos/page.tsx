@@ -36,7 +36,6 @@ import {
 const PRODUTO_API_URL = "http://localhost:5139/api/produto"
 const CATEGORIA_API_URL = "http://localhost:5139/api/categoriaproduto"
 const MEDIDA_API_URL = "http://localhost:5139/api/medida"
-const FORNECEDOR_API_URL = "http://localhost:5139/api/fornecedor"
 
 const SELECT_TRIGGER_NO_CLAMP =
   "h-auto min-h-9 whitespace-normal text-left [&>span]:line-clamp-none"
@@ -58,14 +57,6 @@ export interface Produto {
   medidasMedId: number
   catProdId: number
   prodAtivo: string
-  fornId: number
-}
-
-export interface Fornecedor {
-  fornId: number
-  fornRazaoSocial: string
-  fornCnpj: string
-  fornAtivo: string
 }
 
 export interface Categoria {
@@ -85,7 +76,6 @@ export default function CadastroPage() {
   const [produtos, setProdutos] = useState<Produto[]>([])
   const [categorias, setCategorias] = useState<Categoria[]>([])
   const [medidas, setMedidas] = useState<Medida[]>([])
-  const [fornecedores, setFornecedores] = useState<Fornecedor[]>([])
 
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
@@ -106,7 +96,6 @@ export default function CadastroPage() {
     catProdId: "",
     medidasMedId: "",
     quantidadeMinima: "",
-    fornId: "",
   })
 
   // Formulário de criação
@@ -115,7 +104,6 @@ export default function CadastroPage() {
     catProdId: "",
     medidasMedId: "",
     quantidadeMinima: "",
-    fornId: "",
   })
 
   const categoriasAtivas = useMemo(
@@ -126,11 +114,6 @@ export default function CadastroPage() {
   const medidasAtivas = useMemo(
     () => medidas.filter((m) => m.medAtivo === "A"),
     [medidas]
-  )
-
-  const fornecedoresAtivos = useMemo(
-    () => fornecedores.filter((f) => f.fornAtivo === "A"),
-    [fornecedores]
   )
 
   function clearCreateError(field: string) {
@@ -149,13 +132,18 @@ export default function CadastroPage() {
     })
   }
 
-  function validateProduto(data: typeof novoProduto): FieldErrors {
+  function validateProduto(data: typeof novoProduto, idIgnorado?: number): FieldErrors {
     const errors: FieldErrors = {}
 
     if (!data.descricao.trim()) {
       errors.descricao = "Informe a descrição do produto."
     } else if (data.descricao.trim().length > 90) {
       errors.descricao = "A descrição deve possuir no máximo 90 caracteres."
+    } else if (produtos.some((p) =>
+      p.prodId !== idIgnorado &&
+      p.prodDescricao.trim().toUpperCase() === data.descricao.trim().toUpperCase()
+    )) {
+      errors.descricao = "Já existe um produto com esta descrição."
     }
 
     if (!data.catProdId) {
@@ -164,10 +152,6 @@ export default function CadastroPage() {
 
     if (!data.medidasMedId) {
       errors.medidasMedId = "Selecione uma medida."
-    }
-
-    if (!data.fornId) {
-      errors.fornId = "Selecione um fornecedor."
     }
 
     if (data.quantidadeMinima.trim() === "") {
@@ -190,7 +174,7 @@ export default function CadastroPage() {
   }
 
   function validateEdit(): boolean {
-    const errors = validateProduto(editData)
+    const errors = validateProduto(editData, selected?.prodId)
     setEditErrors(errors)
     return Object.keys(errors).length === 0
   }
@@ -203,7 +187,6 @@ export default function CadastroPage() {
       catProdId: "",
       medidasMedId: "",
       quantidadeMinima: "",
-      fornId: "",
     })
   }
 
@@ -213,10 +196,6 @@ export default function CadastroPage() {
 
   function getMedidaSigla(id: number) {
     return medidas.find((m) => m.medId === id)?.medSigla ?? "—"
-  }
-
-  function getFornecedorRazaoSocial(id: number) {
-    return fornecedores.find((f) => f.fornId === id)?.fornRazaoSocial ?? "—"
   }
 
   async function fetchProdutos() {
@@ -262,26 +241,12 @@ export default function CadastroPage() {
     }
   }
 
-  async function fetchFornecedores() {
-    try {
-      const res = await fetch(FORNECEDOR_API_URL)
-      if (!res.ok) throw new Error("Falha ao buscar fornecedores.")
-
-      const data: Fornecedor[] = await res.json()
-      setFornecedores(data)
-    } catch (err) {
-      toast.error("Erro ao carregar fornecedores.")
-      console.error(err)
-    }
-  }
-
   async function fetchAll() {
     setLoading(true)
     await Promise.all([
       fetchProdutos(),
       fetchCategorias(),
       fetchMedidas(),
-      fetchFornecedores(),
     ])
     setLoading(false)
   }
@@ -302,7 +267,6 @@ export default function CadastroPage() {
         catProdId: String(selected.catProdId),
         medidasMedId: String(selected.medidasMedId),
         quantidadeMinima: String(selected.prodQuantidadeMinima),
-        fornId: String(selected.fornId),
       })
     }
   }, [selected, editing])
@@ -345,7 +309,6 @@ export default function CadastroPage() {
           prodQuantidadeMinima: Number(editData.quantidadeMinima),
           medidasMedId: Number(editData.medidasMedId),
           catProdId: Number(editData.catProdId),
-          fornId: Number(editData.fornId),
           prodAtivo: selected.prodAtivo,
         }),
       })
@@ -363,7 +326,6 @@ export default function CadastroPage() {
               prodQuantidadeMinima: Number(editData.quantidadeMinima),
               medidasMedId: Number(editData.medidasMedId),
               catProdId: Number(editData.catProdId),
-              fornId: Number(editData.fornId),
             }
           : p
       )
@@ -433,7 +395,6 @@ export default function CadastroPage() {
           prodQuantidadeMinima: Number(novoProduto.quantidadeMinima),
           medidasMedId: Number(novoProduto.medidasMedId),
           catProdId: Number(novoProduto.catProdId),
-          fornId: Number(novoProduto.fornId),
           prodAtivo: "A",
         }),
       })
@@ -450,7 +411,6 @@ export default function CadastroPage() {
         catProdId: "",
         medidasMedId: "",
         quantidadeMinima: "",
-        fornId: "",
       })
       setShowCreateForm(false)
 
@@ -603,37 +563,6 @@ export default function CadastroPage() {
               </div>
 
               <div>
-                <Label>Fornecedor <Required /></Label>
-                <Select
-                  value={novoProduto.fornId}
-                  onValueChange={(v) => {
-                    setNovoProduto((p) => ({ ...p, fornId: v }))
-                    clearCreateError("fornId")
-                  }}
-                >
-                  <SelectTrigger
-                    className={`mt-2 ${SELECT_TRIGGER_NO_CLAMP} ${createErrors.fornId ? INVALID_INPUT : ""}`}
-                  >
-                    <SelectValue placeholder="Selecione">
-                      {novoProduto.fornId
-                        ? fornecedoresAtivos.find(
-                            (f) => String(f.fornId) === novoProduto.fornId
-                          )?.fornRazaoSocial
-                        : undefined}
-                    </SelectValue>
-                  </SelectTrigger>
-                  <SelectContent>
-                    {fornecedoresAtivos.map((f) => (
-                      <SelectItem key={f.fornId} value={String(f.fornId)}>
-                        {f.fornRazaoSocial}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FieldError error={createErrors.fornId} />
-              </div>
-
-              <div>
                 <Label htmlFor="prod-qtd-min">
                   Quantidade mínima (Alerta) <Required />
                 </Label>
@@ -776,7 +705,6 @@ export default function CadastroPage() {
                   catProdId: "",
                   medidasMedId: "",
                   quantidadeMinima: "",
-                  fornId: "",
                 })
                 setShowCreateForm(true)
               }}
@@ -887,7 +815,6 @@ export default function CadastroPage() {
                             catProdId: String(selected.catProdId),
                             medidasMedId: String(selected.medidasMedId),
                             quantidadeMinima: String(selected.prodQuantidadeMinima),
-                            fornId: String(selected.fornId),
                           })
                         }
 
@@ -1028,53 +955,6 @@ export default function CadastroPage() {
                     ) : (
                       <Input
                         value={getMedidaSigla(selected.medidasMedId)}
-                        readOnly
-                        className="mt-2 bg-muted/40"
-                      />
-                    )}
-                  </div>
-
-                  <div>
-                    <Label>
-                      Fornecedor {editing ? <Required /> : ""}
-                    </Label>
-                    {editing ? (
-                      <>
-                        <Select
-                          value={editData.fornId}
-                          onValueChange={(v) => {
-                            setEditData((p) => ({ ...p, fornId: v }))
-                            clearEditError("fornId")
-                          }}
-                        >
-                          <SelectTrigger
-                            className={`mt-2 ${SELECT_TRIGGER_NO_CLAMP} ${editErrors.fornId ? INVALID_INPUT : ""}`}
-                          >
-                            <SelectValue placeholder="Selecione">
-                              {editData.fornId
-                                ? fornecedoresAtivos.find(
-                                    (f) =>
-                                      String(f.fornId) === editData.fornId
-                                  )?.fornRazaoSocial
-                                : undefined}
-                            </SelectValue>
-                          </SelectTrigger>
-                          <SelectContent>
-                            {fornecedoresAtivos.map((f) => (
-                              <SelectItem
-                                key={f.fornId}
-                                value={String(f.fornId)}
-                              >
-                                {f.fornRazaoSocial}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FieldError error={editErrors.fornId} />
-                      </>
-                    ) : (
-                      <Input
-                        value={getFornecedorRazaoSocial(selected.fornId)}
                         readOnly
                         className="mt-2 bg-muted/40"
                       />

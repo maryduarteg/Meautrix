@@ -140,6 +140,11 @@ export default function CategoriasPage() {
 
     if (!editData.descricao.trim()) {
       errors.descricao = "Informe a descrição da categoria."
+    } else if (categoriaList.some((c) =>
+      c.catProdId !== selected?.catProdId &&
+      c.catProdDescricao.trim().toUpperCase() === editData.descricao.trim().toUpperCase()
+    )) {
+      errors.descricao = "Já existe uma categoria de produto com esta descrição."
     }
 
     setEditErrors(errors)
@@ -151,6 +156,10 @@ export default function CategoriasPage() {
 
     if (!novaCategoria.descricao.trim()) {
       errors.descricao = "Informe a descrição da categoria."
+    } else if (categoriaList.some((c) =>
+      c.catProdDescricao.trim().toUpperCase() === novaCategoria.descricao.trim().toUpperCase()
+    )) {
+      errors.descricao = "Já existe uma categoria de produto com esta descrição."
     }
 
     setCreateErrors(errors)

@@ -38,6 +38,15 @@ namespace Meautrix.Repository
                 .FirstOrDefaultAsync(f => f.FornRazaoSocial == razaosocial);
         }
 
+        public async Task<bool> ExisteRazaoSocialAsync(string razaoSocial, int? idIgnorado = null)
+        {
+            var razaoSocialNormalizada = razaoSocial.Trim().ToUpperInvariant();
+
+            return await _context.Fornecedores.AnyAsync(f =>
+                (!idIgnorado.HasValue || f.FornId != idIgnorado.Value) &&
+                f.FornRazaoSocial.Trim().ToUpper() == razaoSocialNormalizada);
+        }
+
         public async Task InserirAsync(Fornecedor fornecedor)
         {
             await _context.Fornecedores.AddAsync(fornecedor);

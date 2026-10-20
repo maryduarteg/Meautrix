@@ -8,6 +8,7 @@ namespace Meautrix.Interfaces
         Task<Fornecedor?> BuscarPorIdAsync(int id);
         Task<Fornecedor?> BuscarPorCnpjAsync(string cnpj);
         Task<Fornecedor?> BuscarPorRazaoSocialAsync(string razaoSocial);
+        Task<bool> ExisteRazaoSocialAsync(string razaoSocial, int? idIgnorado = null);
         Task InserirAsync(Fornecedor fornecedor);
         Task AlterarAsync(Fornecedor fornecedor);
     }

@@ -79,6 +79,10 @@ function formatCpf(value: string) {
     .replace(/(\d{3})(\d{1,2})$/, "$1-$2")
 }
 
+function formatCep(value: string) {
+  return value.replace(/\D/g, "").slice(0, 8).replace(/^(\d{5})(\d)/, "$1-$2")
+}
+
 function toClient(cliente: ClienteApi): Client {
   return {
     id: cliente.cliId,
@@ -93,7 +97,7 @@ function toClient(cliente: ClienteApi): Client {
     endereco: cliente.cliEndereco ?? "",
     numero: cliente.cliEnderecoNumero ?? "",
     complemento: cliente.cliComplemento ?? "",
-    cep: cliente.cliCep ?? "",
+    cep: formatCep(cliente.cliCep ?? ""),
   }
 }
 
@@ -287,6 +291,8 @@ export default function ClientesPage() {
     }
     if (!form.cep) {
       errors.cep = "Informe o CEP."
+    } else if (!/^\d{5}-\d{3}$/.test(form.cep)) {
+      errors.cep = "Informe um CEP com 8 dígitos."
     }
     if (!form.estado) {
       errors.estado = "Selecione o estado."
@@ -319,7 +325,7 @@ export default function ClientesPage() {
         cliEndereco: form.endereco,
         cliEnderecoNumero: form.numero,
         cliComplemento: form.complemento,
-        cliCep: form.cep,
+        cliCep: form.cep.replace(/\D/g, ""),
         ...(wasEditing
           ? { cliAtivo: selected?.active ? "A" : "I" }
           : { cliAtivo: "A", cliCpf: form.cpf.replace(/\D/g, "") }),
@@ -625,10 +631,13 @@ export default function ClientesPage() {
                       <Label htmlFor="client-form-cep">CEP <Required /></Label>
                       <Input
                         id="client-form-cep"
+                        inputMode="numeric"
+                        maxLength={9}
+                        autoComplete="postal-code"
                         className={`mt-2 ${fieldErrors.cep ? "border-destructive ring-2 ring-destructive/20" : ""}`}
                         value={form.cep}
                         onChange={(e) => {
-                          setForm((c) => ({ ...c, cep: e.target.value }))
+                          setForm((c) => ({ ...c, cep: formatCep(e.target.value) }))
                           clearFieldError("cep")
                         }}
                         placeholder="00000-000"

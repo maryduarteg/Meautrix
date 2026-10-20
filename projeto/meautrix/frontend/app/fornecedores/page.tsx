@@ -13,6 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Required } from "@/components/ui/required"
 import { RequiredMessage } from "@/components/ui/requiredMessage"
+import { formatCnpj, isValidCnpj, normalizeCnpj } from "@/lib/cnpj"
 
 const FORNECEDOR_API_URL = "http://localhost:5139/api/fornecedor"
 
@@ -30,20 +31,6 @@ type FieldErrors = Partial<Record<string, string>>
 function FieldError({ error }: { error?: string }) {
   if (!error) return null
   return <p className="mt-1 text-xs text-destructive">{error}</p>
-}
-
-// Aplica a máscara 00.000.000/0000-00 enquanto o usuário digita
-function formatCnpj(value: string) {
-  const digits = value.replace(/\D/g, "").slice(0, 14)
-  return digits
-    .replace(/^(\d{2})(\d)/, "$1.$2")
-    .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
-    .replace(/\.(\d{3})(\d)/, ".$1/$2")
-    .replace(/(\d{4})(\d)/, "$1-$2")
-}
-
-function isValidCnpj(value: string) {
-  return value.replace(/\D/g, "").length === 14
 }
 
 export default function CadastroFornecedoresPage() {
@@ -149,16 +136,21 @@ export default function CadastroFornecedoresPage() {
     return razaoSocial.trim().substring(0, 2).toUpperCase()
   }
 
-  function validateFornecedor(data: { razaoSocial: string; cnpj: string }): FieldErrors {
+  function validateFornecedor(data: { razaoSocial: string; cnpj: string }, idIgnorado?: number): FieldErrors {
     const errors: FieldErrors = {}
 
     if (!data.razaoSocial.trim()) {
       errors.razaoSocial = "Informe a razão social."
     } else if (data.razaoSocial.length > 120) {
       errors.razaoSocial = "A razão social deve possuir no máximo 120 caracteres."
+    } else if (fornecedores.some((f) =>
+      f.fornId !== idIgnorado &&
+      f.fornRazaoSocial.trim().toUpperCase() === data.razaoSocial.trim().toUpperCase()
+    )) {
+      errors.razaoSocial = "Já existe um fornecedor com esta razão social."
     }
 
-    if (!data.cnpj.replace(/\D/g, "")) {
+    if (!normalizeCnpj(data.cnpj)) {
       errors.cnpj = "Informe o CNPJ."
     } else if (!isValidCnpj(data.cnpj)) {
       errors.cnpj = "CNPJ inválido."
@@ -171,7 +163,7 @@ export default function CadastroFornecedoresPage() {
   async function updateFornecedor() {
     if (!selected) return
 
-    const errors = validateFornecedor(editData)
+    const errors = validateFornecedor(editData, selected.fornId)
     setEditErrors(errors)
     if (Object.keys(errors).length > 0) return
 
@@ -182,7 +174,7 @@ export default function CadastroFornecedoresPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           fornRazaoSocial: editData.razaoSocial.trim(),
-          fornCnpj: editData.cnpj.replace(/\D/g, ""),
+          fornCnpj: normalizeCnpj(editData.cnpj),
           fornAtivo: selected.fornAtivo,
         }),
       })
@@ -197,7 +189,7 @@ export default function CadastroFornecedoresPage() {
           ? {
               ...f,
               fornRazaoSocial: editData.razaoSocial.trim(),
-              fornCnpj: editData.cnpj.replace(/\D/g, ""),
+              fornCnpj: normalizeCnpj(editData.cnpj),
             }
           : f
       )
@@ -253,7 +245,7 @@ export default function CadastroFornecedoresPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           fornRazaoSocial: novoFornecedor.razaoSocial.trim(),
-          fornCnpj: novoFornecedor.cnpj.replace(/\D/g, ""),
+          fornCnpj: normalizeCnpj(novoFornecedor.cnpj),
           fornAtivo: "A",
         }),
       })
@@ -333,7 +325,7 @@ export default function CadastroFornecedoresPage() {
                   className={`mt-2 ${createErrors.cnpj ? INVALID_INPUT : ""}`}
                   maxLength={18}
                   placeholder="00.000.000/0000-00"
-                  inputMode="numeric"
+                  autoCapitalize="characters"
                   value={novoFornecedor.cnpj}
                   onChange={(e) => {
                     setNovoFornecedor((p) => ({ ...p, cnpj: formatCnpj(e.target.value) }))
@@ -495,7 +487,7 @@ export default function CadastroFornecedoresPage() {
                       }}
                       readOnly={!editing}
                       maxLength={18}
-                      inputMode="numeric"
+                      autoCapitalize="characters"
                       className={`mt-2 ${editing && editErrors.cnpj ? INVALID_INPUT : ""}`}
                     />
                     {editing && <FieldError error={editErrors.cnpj} />}

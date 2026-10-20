@@ -38,6 +38,15 @@ namespace Meautrix.Repository
                 .FirstOrDefaultAsync(m => m.MedDescricao == descricao);
         }
 
+        public async Task<bool> ExisteDescricaoAsync(string descricao, int? idIgnorado = null)
+        {
+            var descricaoNormalizada = descricao.Trim().ToUpperInvariant();
+
+            return await _context.Medidas.AnyAsync(p =>
+                (!idIgnorado.HasValue || p.MedId != idIgnorado.Value) &&
+                p.MedDescricao.Trim().ToUpper() == descricaoNormalizada);
+        }
+
         public async Task InserirAsync(Medida medida)
         {
             await _context.Medidas.AddAsync(medida);

@@ -31,6 +31,15 @@ namespace Meautrix.Repository
             return await _context.Procedimento
                 .FirstOrDefaultAsync(p => p.ProcDescricao == descricao);
         }
+        public async Task<bool> ExisteDescricaoAsync(string descricao, int? idIgnorado = null)
+        {
+            var descricaoNormalizada = descricao.Trim().ToUpperInvariant();
+
+            return await _context.Procedimento.AnyAsync(p =>
+                (!idIgnorado.HasValue || p.ProcId != idIgnorado.Value) &&
+                p.ProcDescricao.Trim().ToUpper() == descricaoNormalizada);
+        }
+
         public async Task<Procedimento?> BuscarPorNomeAsync(string nome)
         {
             return await _context.Procedimento

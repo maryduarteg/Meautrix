@@ -46,6 +46,7 @@ namespace Meautrix.Services
         }
         public async Task CriarAsync(CategoriaProdutoCriarDTO dto)
         {
+            await ValidarDescricaoUnicaAsync(dto.CatProdDescricao);
             var ativo = (dto.CatProdAtivo  == "I") ? "I" : "A";
 
             var novaCategoriaProduto = new CategoriaProduto
@@ -62,6 +63,8 @@ namespace Meautrix.Services
             var categoriaProduto = await _categoriaProdutoRepository.BuscarPorIdAsync(id);
             if (categoriaProduto == null)
                 throw new KeyNotFoundException("Categoria de produto não encontrada.");
+
+            await ValidarDescricaoUnicaAsync(dto.CatProdDescricao, id);
 
             // Converte string → char; padrão: 'N'
             var novoAtivo = (dto.CatProdAtivo == "I") ? 'I' : 'A';
@@ -84,11 +87,21 @@ namespace Meautrix.Services
                 throw new KeyNotFoundException("Categoria de produto não encontrada ou inativa no sistema.");
             }
 
-            if (!string.IsNullOrEmpty(dto.CatProdDescricao)) categoriaProdutoExistente.CatProdDescricao = dto.CatProdDescricao;
+            if (!string.IsNullOrEmpty(dto.CatProdDescricao))
+            {
+                await ValidarDescricaoUnicaAsync(dto.CatProdDescricao, id);
+                categoriaProdutoExistente.CatProdDescricao = dto.CatProdDescricao;
+            }
             if (!string.IsNullOrEmpty(dto.CatProdAtivo)) categoriaProdutoExistente.CatProdAtivo = dto.CatProdAtivo;
    
 
             await _categoriaProdutoRepository.AlterarAsync(categoriaProdutoExistente);
+        }
+
+        private async Task ValidarDescricaoUnicaAsync(string descricao, int? idIgnorado = null)
+        {
+            if (await _categoriaProdutoRepository.ExisteDescricaoAsync(descricao, idIgnorado))
+                throw new InvalidOperationException("Já existe uma categoria de produto com esta descrição.");
         }
 
         public async Task InativarAsync(int id)

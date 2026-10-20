@@ -74,6 +74,10 @@ namespace Meautrix.Controllers
             {
                 return NotFound(new { mensagem = ex.Message });
             }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { mensagem = ex.Message });
+            }
 
         }
 
@@ -88,6 +92,10 @@ namespace Meautrix.Controllers
             catch (KeyNotFoundException ex)
             {
                 return NotFound(new { mensagem = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { mensagem = ex.Message });
             }
 
         }

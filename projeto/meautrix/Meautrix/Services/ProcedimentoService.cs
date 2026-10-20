@@ -57,6 +57,7 @@ namespace Meautrix.Services
 
         public async Task CriarAsync(ProcedimentoCriarDTO dto)
         {
+            await ValidarDescricaoUnicaAsync(dto.ProcDescricao);
 
             var ativo = (dto.ProcAtivo == "I") ? "I" : "A";
 
@@ -75,6 +76,8 @@ namespace Meautrix.Services
             var procedimento = await _procedimentoRepository.BuscarPorIdAsync(id);
             if (procedimento == null)
                 throw new KeyNotFoundException("Procedimento não encontrado.");
+
+            await ValidarDescricaoUnicaAsync(dto.ProcDescricao, id);
 
             // Converte string → char; padrão: 'N'
             var novoAtivo = (dto.ProcAtivo == "I") ? 'I' : 'A';
@@ -98,12 +101,22 @@ namespace Meautrix.Services
                 throw new KeyNotFoundException("Procedimento não encontrado ou inativo no sistema.");
             }
 
-            if (!string.IsNullOrEmpty(dto.ProcDescricao)) procedimentoExistente.ProcDescricao = dto.ProcDescricao;
+            if (!string.IsNullOrEmpty(dto.ProcDescricao))
+            {
+                await ValidarDescricaoUnicaAsync(dto.ProcDescricao, id);
+                procedimentoExistente.ProcDescricao = dto.ProcDescricao;
+            }
             if (!string.IsNullOrEmpty(dto.ProcNome)) procedimentoExistente.ProcNome = dto.ProcNome;
             if (!string.IsNullOrEmpty(dto.ProcAtivo)) procedimentoExistente.ProcAtivo = dto.ProcAtivo;
 
 
             await _procedimentoRepository.AlterarAsync(procedimentoExistente);
+        }
+
+        private async Task ValidarDescricaoUnicaAsync(string descricao, int? idIgnorado = null)
+        {
+            if (await _procedimentoRepository.ExisteDescricaoAsync(descricao, idIgnorado))
+                throw new InvalidOperationException("Já existe um procedimento com esta descrição.");
         }
 
         public async Task InativarAsync(int id)

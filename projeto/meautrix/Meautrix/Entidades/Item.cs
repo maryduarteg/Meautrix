@@ -27,8 +27,6 @@ namespace Meautrix.Entidades
         public char IteAtivo { get; set; } // 'A' = ativo, 'I' = inativo
         [Column("ite_quantidade_atual")]
         public float IteQuantidadeAtual { get; set; }
-        [Column("ite_quantidade_saida_alterada")]
-        public float IteQuantidadeSaidaAlterada { get; set; }
         [Column("ite_lote_nome")]
         public string IteLoteNome { get; set; }
         [Column("ite_lote_data_aquisicao")]

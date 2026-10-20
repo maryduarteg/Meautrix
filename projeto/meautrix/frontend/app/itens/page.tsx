@@ -1,7 +1,7 @@
 
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useState, type ComponentProps } from "react"
 import { toast } from "sonner"
 import {
   Plus,
@@ -47,7 +47,6 @@ export interface Item {
   prodId: number
   iteAtivo: string
   iteQuantidadeAtual: number
-  iteQuantidadeSaidaAlterada: number
   iteLoteNome: string
   iteLoteDataAquisicao: string
   iteLoteDataVencimento: string
@@ -57,6 +56,37 @@ export interface Produto {
   prodId: number
   prodDescricao: string
   prodAtivo: string
+}
+
+function ProdutoSelectTrigger({
+  produtos,
+  className,
+  children,
+  ...props
+}: ComponentProps<typeof SelectTrigger> & { produtos: string[] }) {
+  return (
+    <span className="mt-2 inline-grid max-w-full min-w-36 grid-cols-[minmax(0,1fr)] align-top">
+      <span
+        aria-hidden="true"
+        className="pointer-events-none invisible col-start-1 row-start-1 grid min-w-0 overflow-hidden text-sm"
+      >
+        {["Selecione", ...produtos].map((descricao, index) => (
+          <span
+            key={index}
+            className="col-start-1 row-start-1 border pl-2.5 pr-8 whitespace-nowrap"
+          >
+            {descricao}
+          </span>
+        ))}
+      </span>
+      <SelectTrigger
+        className={`col-start-1 row-start-1 w-full min-w-0 ${SELECT_TRIGGER_NO_CLAMP} ${className ?? ""}`}
+        {...props}
+      >
+        {children}
+      </SelectTrigger>
+    </span>
+  )
 }
 
 type FieldErrors = Partial<Record<string, string>>
@@ -71,7 +101,6 @@ type ItemFormData = {
   nome: string
   prodId: string
   quantidadeAtual: string
-  quantidadeSaidaAlterada: string
   loteNome: string
   loteDataAquisicao: string
   loteDataVencimento: string
@@ -81,7 +110,6 @@ const EMPTY_ITEM: ItemFormData = {
   nome: "",
   prodId: "",
   quantidadeAtual: "",
-  quantidadeSaidaAlterada: "",
   loteNome: "",
   loteDataAquisicao: "",
   loteDataVencimento: "",
@@ -111,14 +139,6 @@ function validateItem(data: ItemFormData): FieldErrors {
     errors.quantidadeAtual = "Informe uma quantidade válida, maior ou igual a zero."
   }
 
-  if (data.quantidadeSaidaAlterada.trim() === "") {
-    errors.quantidadeSaidaAlterada = "Informe a quantidade de saída."
-  } else if (
-    !Number.isFinite(Number(data.quantidadeSaidaAlterada)) ||
-    Number(data.quantidadeSaidaAlterada) < 0
-  ) {
-    errors.quantidadeSaidaAlterada = "Informe uma quantidade válida, maior ou igual a zero."
-  }
 
   if (!data.loteDataAquisicao) {
     errors.loteDataAquisicao = "Informe a data de aquisição."
@@ -257,7 +277,6 @@ export default function CadastroItemPage() {
         nome: selected.iteNome,
         prodId: String(selected.prodId),
         quantidadeAtual: String(selected.iteQuantidadeAtual),
-        quantidadeSaidaAlterada: String(selected.iteQuantidadeSaidaAlterada),
         loteNome: selected.iteLoteNome,
         loteDataAquisicao: selected.iteLoteDataAquisicao?.substring(0, 10) ?? "",
         loteDataVencimento: selected.iteLoteDataVencimento?.substring(0, 10) ?? "",
@@ -300,7 +319,6 @@ export default function CadastroItemPage() {
           prodId: Number(editData.prodId),
           iteAtivo: selected.iteAtivo,
           iteQuantidadeAtual: Number(editData.quantidadeAtual),
-          iteQuantidadeSaidaAlterada: Number(editData.quantidadeSaidaAlterada),
           iteLoteNome: editData.loteNome.trim(),
           iteLoteDataAquisicao: editData.loteDataAquisicao,
           iteLoteDataVencimento: editData.loteDataVencimento,
@@ -319,7 +337,6 @@ export default function CadastroItemPage() {
               iteNome: editData.nome.trim(),
               prodId: Number(editData.prodId),
               iteQuantidadeAtual: Number(editData.quantidadeAtual),
-              iteQuantidadeSaidaAlterada: Number(editData.quantidadeSaidaAlterada),
               iteLoteNome: editData.loteNome.trim(),
               iteLoteDataAquisicao: editData.loteDataAquisicao,
               iteLoteDataVencimento: editData.loteDataVencimento,
@@ -384,7 +401,6 @@ export default function CadastroItemPage() {
           iteNome: novoItem.nome.trim(),
           prodId: Number(novoItem.prodId),
           iteQuantidadeAtual: Number(novoItem.quantidadeAtual),
-          iteQuantidadeSaidaAlterada: Number(novoItem.quantidadeSaidaAlterada),
           iteLoteNome: novoItem.loteNome.trim(),
           iteLoteDataAquisicao: novoItem.loteDataAquisicao,
           iteLoteDataVencimento: novoItem.loteDataVencimento,
@@ -475,8 +491,9 @@ export default function CadastroItemPage() {
                     clearCreateError("prodId")
                   }}
                 >
-                  <SelectTrigger
-                    className={`mt-2 ${SELECT_TRIGGER_NO_CLAMP} ${
+                  <ProdutoSelectTrigger
+                    produtos={produtosAtivos.map((p) => p.prodDescricao)}
+                    className={`${
                       createErrors.prodId ? INVALID_INPUT : ""
                     }`}
                   >
@@ -487,7 +504,7 @@ export default function CadastroItemPage() {
                           )?.prodDescricao
                         : undefined}
                     </SelectValue>
-                  </SelectTrigger>
+                  </ProdutoSelectTrigger>
                   <SelectContent>
                     {produtosAtivos.map((p) => (
                       <SelectItem key={p.prodId} value={String(p.prodId)}>
@@ -517,32 +534,8 @@ export default function CadastroItemPage() {
                 <FieldError error={createErrors.quantidadeAtual} />
               </div>
 
-              <div>
-                <Label htmlFor="ite-qtd-saida">
-                  Quantidade de saída <Required />
-                </Label>
-                <Input
-                  id="ite-qtd-saida"
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  className={`mt-2 ${
-                    createErrors.quantidadeSaidaAlterada ? INVALID_INPUT : ""
-                  }`}
-                  placeholder="Ex.: 0"
-                  value={novoItem.quantidadeSaidaAlterada}
-                  onChange={(e) => {
-                    setNovoItem((p) => ({
-                      ...p,
-                      quantidadeSaidaAlterada: e.target.value,
-                    }))
-                    clearCreateError("quantidadeSaidaAlterada")
-                  }}
-                />
-                <FieldError error={createErrors.quantidadeSaidaAlterada} />
-              </div>
 
-              <div className="sm:col-span-2">
+              <div>
                 <Label htmlFor="ite-lote-nome">Nome do lote <Required /></Label>
                 <Input
                   id="ite-lote-nome"
@@ -631,16 +624,16 @@ export default function CadastroItemPage() {
             <div className="flex-1">
               <Label htmlFor="ite-prod-filter">Produto</Label>
               <Select value={produtoFilter} onValueChange={setProdutoFilter}>
-                <SelectTrigger
+                <ProdutoSelectTrigger
+                  produtos={["Todos", ...produtos.map((p) => p.prodDescricao)]}
                   id="ite-prod-filter"
-                  className={`mt-2 ${SELECT_TRIGGER_NO_CLAMP}`}
                 >
                   <SelectValue placeholder="Selecione">
                     {produtoFilter === "Todos"
                       ? "Todos"
                       : getProdutoDescricao(Number(produtoFilter))}
                   </SelectValue>
-                </SelectTrigger>
+                </ProdutoSelectTrigger>
                 <SelectContent>
                   <SelectItem value="Todos">Todos</SelectItem>
                   {produtos.map((p) => (
@@ -849,8 +842,9 @@ export default function CadastroItemPage() {
                           clearEditError("prodId")
                         }}
                       >
-                        <SelectTrigger
-                          className={`mt-2 ${SELECT_TRIGGER_NO_CLAMP} ${
+                        <ProdutoSelectTrigger
+                          produtos={produtosAtivos.map((p) => p.prodDescricao)}
+                          className={`${
                             editErrors.prodId ? INVALID_INPUT : ""
                           }`}
                         >
@@ -861,7 +855,7 @@ export default function CadastroItemPage() {
                                 )?.prodDescricao
                               : undefined}
                           </SelectValue>
-                        </SelectTrigger>
+                        </ProdutoSelectTrigger>
 
                         <SelectContent>
                           {produtosAtivos.map((p) => (
@@ -908,37 +902,8 @@ export default function CadastroItemPage() {
                     {editing && <FieldError error={editErrors.quantidadeAtual} />}
                   </div>
 
-                  <div>
-                    <Label>Quantidade de saída {editing && <Required />}</Label>
-                    <Input
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      value={
-                        editing
-                          ? editData.quantidadeSaidaAlterada
-                          : selected.iteQuantidadeSaidaAlterada
-                      }
-                      onChange={(e) => {
-                        setEditData((p) => ({
-                          ...p,
-                          quantidadeSaidaAlterada: e.target.value,
-                        }))
-                        clearEditError("quantidadeSaidaAlterada")
-                      }}
-                      readOnly={!editing}
-                      className={`mt-2 ${
-                        editing && editErrors.quantidadeSaidaAlterada
-                          ? INVALID_INPUT
-                          : ""
-                      }`}
-                    />
-                    {editing && (
-                      <FieldError error={editErrors.quantidadeSaidaAlterada} />
-                    )}
-                  </div>
 
-                  <div className="sm:col-span-2">
+                  <div>
                     <Label>Nome do lote {editing && <Required />}</Label>
                     <Input
                       value={editing ? editData.loteNome : selected.iteLoteNome}

@@ -20,6 +20,7 @@ import {
   Tags,
   Ruler,
   ChevronDown,
+  ListPlus,
 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -30,6 +31,7 @@ import { Button } from "@/components/ui/button"
 const cadastros = [
   { href: "/produtos", label: "Gerenciar Produtos", icon: Package },
   { href: "/procedimentos", label: "Gerenciar Procedimentos", icon: Package },
+  { href: "/produtos-procedimentos", label: "Produtos por Procedimento", icon: ListPlus },
   { href: "/itens", label: "Gerenciar Itens", icon: Package },
   { href: "/fornecedores", label: "Gerenciar Fornecedores", icon: Package },
   { href: "/categorias", label: "Gerenciar Categorias", icon: Tags },

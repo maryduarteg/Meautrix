@@ -9,6 +9,7 @@ namespace Meautrix.Interfaces
         Task<Produto?> BuscarPorQuantidadeMinimaAsync(double quantidade);
         Task<Produto?> BuscarPorCategoriaAsync(int categoria);
         Task<Produto?> BuscarPorDescricaoAsync(string descricao);
+        Task<bool> ExisteDescricaoAsync(string descricao, int? idIgnorado = null);
         Task InserirAsync(Produto produto);
         Task AlterarAsync(Produto produto);
     }

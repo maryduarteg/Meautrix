@@ -22,8 +22,7 @@ namespace Meautrix.Services
             ProdQuantidadeMinima = p.ProdQuantidadeMinima,
             ProdAtivo            = p.ProdAtivo,
             MedidasMedId       = p.MedidasMedId,
-            CatProdId          = p.CatProdId,
-            FornId             = p.FornId
+            CatProdId          = p.CatProdId
             
         };
 
@@ -68,6 +67,7 @@ namespace Meautrix.Services
 
         public async Task CriarAsync(ProdutoCriarDTO dto)
         {
+            await ValidarDescricaoUnicaAsync(dto.ProdDescricao);
             var ativo = (dto.ProdAtivo  == "I") ? "I" : "A";
 
             var novoProduto = new Produto
@@ -87,6 +87,8 @@ namespace Meautrix.Services
             var Produto = await _produtoRepository.BuscarPorIdAsync(id);
             if (Produto == null)
                 throw new KeyNotFoundException(" de produto não encontrada.");
+
+            await ValidarDescricaoUnicaAsync(dto.ProdDescricao, id);
 
             // Converte string → char; padrão: 'N'
             var novoAtivo = (dto.ProdAtivo == "I") ? 'I' : 'A';
@@ -109,15 +111,24 @@ namespace Meautrix.Services
                 throw new KeyNotFoundException("Produto não encontrada ou inativa no sistema.");
             }
 
-            if (!string.IsNullOrEmpty(dto.ProdDescricao)) produtoExistente.ProdDescricao = dto.ProdDescricao;
+            if (!string.IsNullOrEmpty(dto.ProdDescricao))
+            {
+                await ValidarDescricaoUnicaAsync(dto.ProdDescricao, id);
+                produtoExistente.ProdDescricao = dto.ProdDescricao;
+            }
             if (dto.ProdQuantidadeMinima.HasValue) produtoExistente.ProdQuantidadeMinima = dto.ProdQuantidadeMinima.Value;
             if (dto.CatProdId.HasValue) produtoExistente.CatProdId = dto.CatProdId.Value;
             if (dto.MedidasMedId.HasValue) produtoExistente.MedidasMedId = dto.MedidasMedId.Value;
-            if (!string.IsNullOrEmpty(dto.ProdDescricao)) produtoExistente.ProdDescricao = dto.ProdDescricao;
             if (!string.IsNullOrEmpty(dto.ProdAtivo)) produtoExistente.ProdAtivo = dto.ProdAtivo;
    
 
             await _produtoRepository.AlterarAsync(produtoExistente);
+        }
+
+        private async Task ValidarDescricaoUnicaAsync(string descricao, int? idIgnorado = null)
+        {
+            if (await _produtoRepository.ExisteDescricaoAsync(descricao, idIgnorado))
+                throw new InvalidOperationException("Já existe um produto com esta descrição.");
         }
 
         public async Task InativarAsync(int id)

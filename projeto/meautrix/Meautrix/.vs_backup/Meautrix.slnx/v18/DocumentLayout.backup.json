@@ -1,0 +1,252 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Mary\\Desktop\\Meautrix\\projeto\\meautrix\\Meautrix\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A666809B-2FCB-11AE-FC4A-B4B9B1847A6C}|Meautrix.csproj|c:\\users\\mary\\desktop\\meautrix\\projeto\\meautrix\\meautrix\\dto\\produto\\produtoalterardto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A666809B-2FCB-11AE-FC4A-B4B9B1847A6C}|Meautrix.csproj|solutionrelative:dto\\produto\\produtoalterardto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A666809B-2FCB-11AE-FC4A-B4B9B1847A6C}|Meautrix.csproj|c:\\users\\mary\\desktop\\meautrix\\projeto\\meautrix\\meautrix\\interfaces\\services\\icategoriaprodutoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A666809B-2FCB-11AE-FC4A-B4B9B1847A6C}|Meautrix.csproj|solutionrelative:interfaces\\services\\icategoriaprodutoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A666809B-2FCB-11AE-FC4A-B4B9B1847A6C}|Meautrix.csproj|c:\\users\\mary\\desktop\\meautrix\\projeto\\meautrix\\meautrix\\interfaces\\repositories\\icategoriaprodutorepository .cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A666809B-2FCB-11AE-FC4A-B4B9B1847A6C}|Meautrix.csproj|solutionrelative:interfaces\\repositories\\icategoriaprodutorepository .cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A666809B-2FCB-11AE-FC4A-B4B9B1847A6C}|Meautrix.csproj|c:\\users\\mary\\desktop\\meautrix\\projeto\\meautrix\\meautrix\\dto\\medida\\medidacriardto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A666809B-2FCB-11AE-FC4A-B4B9B1847A6C}|Meautrix.csproj|solutionrelative:dto\\medida\\medidacriardto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A666809B-2FCB-11AE-FC4A-B4B9B1847A6C}|Meautrix.csproj|c:\\users\\mary\\desktop\\meautrix\\projeto\\meautrix\\meautrix\\entidades\\item.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A666809B-2FCB-11AE-FC4A-B4B9B1847A6C}|Meautrix.csproj|solutionrelative:entidades\\item.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A666809B-2FCB-11AE-FC4A-B4B9B1847A6C}|Meautrix.csproj|c:\\users\\mary\\desktop\\meautrix\\projeto\\meautrix\\meautrix\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A666809B-2FCB-11AE-FC4A-B4B9B1847A6C}|Meautrix.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A666809B-2FCB-11AE-FC4A-B4B9B1847A6C}|Meautrix.csproj|c:\\users\\mary\\desktop\\meautrix\\projeto\\meautrix\\meautrix\\services\\procedimentoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A666809B-2FCB-11AE-FC4A-B4B9B1847A6C}|Meautrix.csproj|solutionrelative:services\\procedimentoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A666809B-2FCB-11AE-FC4A-B4B9B1847A6C}|Meautrix.csproj|c:\\users\\mary\\desktop\\meautrix\\projeto\\meautrix\\meautrix\\services\\medidaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A666809B-2FCB-11AE-FC4A-B4B9B1847A6C}|Meautrix.csproj|solutionrelative:services\\medidaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 17,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:132:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0174dea2-fdbe-4ef1-8f99-c0beae78880f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:139:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:140:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:141:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:146:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:142:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:143:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:144:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{e506b91c-c606-466a-90a9-123d1d1e12b3}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{5a4e9529-b6a0-46b5-be4f-0f0b239bc0eb}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ProdutoAlterarDTO.cs",
+              "DocumentMoniker": "C:\\Users\\Mary\\Desktop\\Meautrix\\projeto\\meautrix\\Meautrix\\DTO\\Produto\\ProdutoAlterarDTO.cs",
+              "RelativeDocumentMoniker": "DTO\\Produto\\ProdutoAlterarDTO.cs",
+              "ToolTip": "C:\\Users\\Mary\\Desktop\\Meautrix\\projeto\\meautrix\\Meautrix\\DTO\\Produto\\ProdutoAlterarDTO.cs",
+              "RelativeToolTip": "DTO\\Produto\\ProdutoAlterarDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-20T22:41:19.072Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ICategoriaProdutoService.cs",
+              "DocumentMoniker": "C:\\Users\\Mary\\Desktop\\Meautrix\\projeto\\meautrix\\Meautrix\\Interfaces\\Services\\ICategoriaProdutoService.cs",
+              "RelativeDocumentMoniker": "Interfaces\\Services\\ICategoriaProdutoService.cs",
+              "ToolTip": "C:\\Users\\Mary\\Desktop\\Meautrix\\projeto\\meautrix\\Meautrix\\Interfaces\\Services\\ICategoriaProdutoService.cs",
+              "RelativeToolTip": "Interfaces\\Services\\ICategoriaProdutoService.cs",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAwwA4AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-15T23:40:59.631Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ICategoriaProdutoRepository .cs",
+              "DocumentMoniker": "C:\\Users\\Mary\\Desktop\\Meautrix\\projeto\\meautrix\\Meautrix\\Interfaces\\Repositories\\ICategoriaProdutoRepository .cs",
+              "RelativeDocumentMoniker": "Interfaces\\Repositories\\ICategoriaProdutoRepository .cs",
+              "ToolTip": "C:\\Users\\Mary\\Desktop\\Meautrix\\projeto\\meautrix\\Meautrix\\Interfaces\\Repositories\\ICategoriaProdutoRepository .cs",
+              "RelativeToolTip": "Interfaces\\Repositories\\ICategoriaProdutoRepository .cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-15T23:22:10.13Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "MedidaCriarDTO.cs",
+              "DocumentMoniker": "C:\\Users\\Mary\\Desktop\\Meautrix\\projeto\\meautrix\\Meautrix\\DTO\\Medida\\MedidaCriarDTO.cs",
+              "RelativeDocumentMoniker": "DTO\\Medida\\MedidaCriarDTO.cs",
+              "ToolTip": "C:\\Users\\Mary\\Desktop\\Meautrix\\projeto\\meautrix\\Meautrix\\DTO\\Medida\\MedidaCriarDTO.cs",
+              "RelativeToolTip": "DTO\\Medida\\MedidaCriarDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-15T22:37:10.728Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Item.cs",
+              "DocumentMoniker": "C:\\Users\\Mary\\Desktop\\Meautrix\\projeto\\meautrix\\Meautrix\\Entidades\\Item.cs",
+              "RelativeDocumentMoniker": "Entidades\\Item.cs",
+              "ToolTip": "C:\\Users\\Mary\\Desktop\\Meautrix\\projeto\\meautrix\\Meautrix\\Entidades\\Item.cs",
+              "RelativeToolTip": "Entidades\\Item.cs",
+              "ViewState": "AgIAABkAAAAAAAAAAAAAACUAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-15T22:20:46.13Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Mary\\Desktop\\Meautrix\\projeto\\meautrix\\Meautrix\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\Mary\\Desktop\\Meautrix\\projeto\\meautrix\\Meautrix\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAACkAAAAAAAAAAAAAACUAAABiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-12T15:56:19.378Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "MedidaService.cs",
+              "DocumentMoniker": "C:\\Users\\Mary\\Desktop\\Meautrix\\projeto\\meautrix\\Meautrix\\Services\\MedidaService.cs",
+              "RelativeDocumentMoniker": "Services\\MedidaService.cs",
+              "ToolTip": "C:\\Users\\Mary\\Desktop\\Meautrix\\projeto\\meautrix\\Meautrix\\Services\\MedidaService.cs",
+              "RelativeToolTip": "Services\\MedidaService.cs",
+              "ViewState": "AgIAABYAAAAAAAAAAAAAABwAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-12T15:34:12.633Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "ProcedimentoService.cs",
+              "DocumentMoniker": "C:\\Users\\Mary\\Desktop\\Meautrix\\projeto\\meautrix\\Meautrix\\Services\\ProcedimentoService.cs",
+              "RelativeDocumentMoniker": "Services\\ProcedimentoService.cs",
+              "ToolTip": "C:\\Users\\Mary\\Desktop\\Meautrix\\projeto\\meautrix\\Meautrix\\Services\\ProcedimentoService.cs",
+              "RelativeToolTip": "Services\\ProcedimentoService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAHAAAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-12T15:29:28.891Z"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 233,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:133:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:134:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:135:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:136:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:137:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:138:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:145:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -57,6 +57,7 @@ namespace Meautrix.Services
 
         public async Task CriarAsync(MedidaCriarDTO dto)
         {
+            await ValidarDescricaoUnicaAsync(dto.MedDescricao);
 
             var ativo = (dto.MedAtivo == "I") ? "I" : "A";
 
@@ -75,6 +76,8 @@ namespace Meautrix.Services
             var medida = await _medidaRepository.BuscarPorIdAsync(id);
             if (medida == null)
                 throw new KeyNotFoundException("Medida não encontrada.");
+
+            await ValidarDescricaoUnicaAsync(dto.MedDescricao, id);
 
             // Converte string → char; padrão: 'N'
             var novoAtivo = (dto.MedAtivo == "I") ? 'I' : 'A';
@@ -98,12 +101,22 @@ namespace Meautrix.Services
                 throw new KeyNotFoundException("Medida não encontrada ou inativa no sistema.");
             }
 
-            if (!string.IsNullOrEmpty(dto.MedDescricao)) medidaExistente.MedDescricao = dto.MedDescricao;
+            if (!string.IsNullOrEmpty(dto.MedDescricao))
+            {
+                await ValidarDescricaoUnicaAsync(dto.MedDescricao, id);
+                medidaExistente.MedDescricao = dto.MedDescricao;
+            }
             if (!string.IsNullOrEmpty(dto.MedSigla)) medidaExistente.MedSigla = dto.MedSigla;
             if (!string.IsNullOrEmpty(dto.MedAtivo)) medidaExistente.MedAtivo = dto.MedAtivo;
 
 
             await _medidaRepository.AlterarAsync(medidaExistente);
+        }
+
+        private async Task ValidarDescricaoUnicaAsync(string descricao, int? idIgnorado = null)
+        {
+            if (await _medidaRepository.ExisteDescricaoAsync(descricao, idIgnorado))
+                throw new InvalidOperationException("Já existe uma medida com esta descrição.");
         }
 
         public async Task InativarAsync(int id)
