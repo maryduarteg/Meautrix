@@ -9,8 +9,8 @@ namespace Meautrix.Interfaces
         Task<ProcedimentoResponseDTO?> BuscarPorNomeAsync(string nome);
         Task<ProcedimentoResponseDTO?> BuscarPorDescricaoAsync(string descricao);
         Task CriarAsync(ProcedimentoCriarDTO dto);
-        Task AlterarAsync(int id, ProcedimentoAlterarDTO dto);
-        Task AlterarParcialAsync(int id, ProcedimentoAlterarParcialDTO dto);
+        Task<string?> AlterarAsync(int id, ProcedimentoAlterarDTO dto);
+        Task<string?> AlterarParcialAsync(int id, ProcedimentoAlterarParcialDTO dto);
         Task InativarAsync(int id);
     }
 }

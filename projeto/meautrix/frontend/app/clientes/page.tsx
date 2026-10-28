@@ -759,9 +759,9 @@ export default function ClientesPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="overflow-x-auto">
+              <div className="consulta-scroll" tabIndex={0} role="region" aria-label="Clientes cadastrados">
                 <table className="w-full text-sm">
-                  <thead>
+                  <thead className="sticky top-0 z-10 bg-card">
                     <tr className="border-b text-left text-xs text-muted-foreground">
                       <th className="pb-3 font-medium">Cliente</th>
                       <th className="pb-3 font-medium">CPF</th>

@@ -21,6 +21,13 @@ namespace Meautrix.Entidades
         [StringLength(60)]
         public string ProcDescricao { get; set; } = string.Empty;
 
+        [Column("proc_duracao_minutos")]
+        [Range(1, int.MaxValue)]
+        public int? ProcDuracaoMinutos { get; set; }
+
+        [Column("proc_valor", TypeName = "numeric(10,2)")]
+        public decimal? ProcValor { get; set; }
+
 
         /// <summary>
         /// Indicador de situação dp procimento: 'A' para Ativo, 'I' para Inativo.

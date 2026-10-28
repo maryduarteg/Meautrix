@@ -15,6 +15,7 @@ import {
   Menu,
   X,
   CalendarDays,
+  CalendarX2,
   Users,
   UserRound,
   Tags,
@@ -26,12 +27,12 @@ import {
 import { cn } from "@/lib/utils"
 
 import { Button } from "@/components/ui/button"
+import { toast } from "sonner"
 
 
 const cadastros = [
   { href: "/produtos", label: "Gerenciar Produtos", icon: Package },
   { href: "/procedimentos", label: "Gerenciar Procedimentos", icon: Package },
-  { href: "/produtos-procedimentos", label: "Produtos por Procedimento", icon: ListPlus },
   { href: "/itens", label: "Gerenciar Itens", icon: Package },
   { href: "/fornecedores", label: "Gerenciar Fornecedores", icon: Package },
   { href: "/categorias", label: "Gerenciar Categorias", icon: Tags },
@@ -59,6 +60,25 @@ export function DashboardShell({
   const [open, setOpen] = useState(false)
   const [cadastrosOpen, setCadastrosOpen] = useState(false)
   const [relatoriosOpen, setRelatoriosOpen] = useState(false)
+  const [saindo, setSaindo] = useState(false)
+
+  async function sair() {
+    setSaindo(true)
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5139"}/logout`, {
+        method: "POST",
+        credentials: "include",
+      })
+      if (!response.ok) throw new Error()
+      sessionStorage.removeItem("meautrix.usuarioLogin")
+      router.push("/")
+      router.refresh()
+    } catch {
+      toast("Não foi possível sair. Tente novamente.")
+    } finally {
+      setSaindo(false)
+    }
+  }
 
   const cadastroAtivo = cadastros.some((item) => pathname === item.href)
   const relatorioAtivo = relatorios.some((item) => pathname === item.href)
@@ -155,19 +175,61 @@ export function DashboardShell({
             })}
           </div>
 
-          {/* Procedimentos do Dia */}
           <Link
-            href="/procedimentosCliente"
+            href="/agendamentos"
             onClick={() => setOpen(false)}
             className={cn(
               "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
-              pathname === "/procedimentosCliente"
+              pathname === "/agendamentos"
                 ? "bg-sidebar-primary text-sidebar-primary-foreground"
                 : "text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
             )}
           >
             <CalendarDays className="h-4 w-4" />
-            Procedimentos do Dia
+            Agendamento de Procedimentos
+          </Link>
+
+          <Link
+            href="/cancelamentos"
+            onClick={() => setOpen(false)}
+            className={cn(
+              "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+              pathname === "/cancelamentos"
+                ? "bg-sidebar-primary text-sidebar-primary-foreground"
+                : "text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+            )}
+          >
+            <CalendarX2 className="h-4 w-4" />
+            Cancelamento de Procedimentos
+          </Link>
+
+          {/* Produtos por procedimento*/}
+          <Link
+            href="/promocoes"
+            onClick={() => setOpen(false)}
+            className={cn(
+              "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+              pathname === "/promocoes"
+                ? "bg-sidebar-primary text-sidebar-primary-foreground"
+                : "text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+            )}
+          >
+            <Tags className="h-4 w-4" />
+            Promoções
+          </Link>
+
+          <Link
+            href="/produtos-procedimentos"
+            onClick={() => setOpen(false)}
+            className={cn(
+              "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+              pathname === "/produtos-procedimentos"
+                ? "bg-sidebar-primary text-sidebar-primary-foreground"
+                : "text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+            )}
+          >
+            <ListPlus className="h-4 w-4" />
+              Produtos por Procedimento
           </Link>
 
           {/* Dar Baixa */}
@@ -242,7 +304,8 @@ export function DashboardShell({
 
         <div className="px-4 pb-6">
           <button
-            onClick={() => router.push("/")}
+            onClick={sair}
+            disabled={saindo}
             className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
           >
             <LogOut className="h-4 w-4" />

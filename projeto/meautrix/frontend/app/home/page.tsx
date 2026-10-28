@@ -1,325 +1,180 @@
 "use client"
 
-import type React from "react"
-
-import { useEffect, useMemo, useState } from "react"
-import { toast } from "sonner"
-import { Plus, Power, Boxes, Search, X, Pencil, Loader2, List, ShieldCheck, CalendarClock } from "lucide-react"
+import { useCallback, useEffect, useState } from "react"
+import Link from "next/link"
+import { CalendarDays, Clock, Loader2 } from "lucide-react"
 import { DashboardShell } from "@/components/dashboard-shell"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5139"
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-
-const ITEM_API_URL = "http://localhost:5139/api/item"
-const PRODUTO_API_URL = "http://localhost:5139/api/produto"
-
-// Classe usada em todo SelectTrigger para impedir que o shadcn/ui trunque
-// (line-clamp-1) o texto do valor selecionado quando a descrição é longa.
-const SELECT_TRIGGER_NO_CLAMP = "h-auto min-h-9 whitespace-normal text-left [&>span]:line-clamp-none"
-
-export interface Item {
-  iteId: number
-  iteNome: string
-  prodId: number
-  iteAtivo: string // 'A' (Ativo) ou 'I' (Inativo)
-  iteQuantidadeAtual: number
-  iteLoteNome: string
-  iteLoteDataAquisicao: string // ISO date
-  iteLoteDataVencimento: string // ISO date
+type Usuario = { usuNome: string }
+type Agendamento = {
+  id: number
+  dataAgendadoPara: string
+  procedimentoNome: string
+  clienteNome: string | null
+  duracaoMinutos: number | null
+  cancelado: "S" | "N"
 }
 
-export interface Produto {
-  prodId: number
-  prodDescricao: string
-  prodAtivo: string
+function dataAtual() {
+  return new Intl.DateTimeFormat("sv-SE", {
+    timeZone: "America/Sao_Paulo", year: "numeric", month: "2-digit", day: "2-digit",
+  }).format(new Date())
 }
 
-export default function CadastroItemPage() {
-  const [itens, setItens] = useState<Item[]>([])
-  const [produtos, setProdutos] = useState<Produto[]>([])
-  const [loading, setLoading] = useState(true)
-  const [submitting, setSubmitting] = useState(false)
+function procedimentosDoDia(agendamentos: Agendamento[], dia: string) {
+  // A API retorna os horários locais da clínica sem indicação de fuso.
+  return agendamentos
+    .filter(a => a.cancelado !== "S" && a.dataAgendadoPara.slice(0, 10) === dia)
+    .sort((a, b) => a.dataAgendadoPara.localeCompare(b.dataAgendadoPara) || a.id - b.id)
+}
 
-  const [selectedId, setSelectedId] = useState<number | null>(null)
-  const [showCreateForm, setShowCreateForm] = useState(false)
-  const [editing, setEditing] = useState(false)
-
-  const [statusFilter, setStatusFilter] = useState<"Todos" | "A" | "I">("Todos")
-  const [nomeFilter, setNomeFilter] = useState("")
-  const [produtoFilter, setProdutoFilter] = useState("Todos")
-
-  // Form de edição
-  const [editData, setEditData] = useState({
-    nome: "",
-    prodId: "",
-    quantidadeAtual: "",
-    loteNome: "",
-    loteDataAquisicao: "",
-    loteDataVencimento: "",
-  })
-
-  // Form de criação
-  const [novoItem, setNovoItem] = useState({
-    nome: "",
-    prodId: "",
-    quantidadeAtual: "",
-    loteNome: "",
-    loteDataAquisicao: "",
-    loteDataVencimento: "",
-  })
-
-  const produtosAtivos = useMemo(() => produtos.filter((p) => p.prodAtivo === "A"), [produtos])
-
-  function getProdutoDescricao(id: number) {
-    return produtos.find((p) => p.prodId === id)?.prodDescricao ?? "—"
-  }
-
-  function formatDate(iso: string) {
-    if (!iso) return "—"
-    const d = new Date(iso)
-    if (Number.isNaN(d.getTime())) return "—"
-    return d.toLocaleDateString("pt-BR")
-  }
-
-  async function fetchItens() {
-    try {
-      const res = await fetch(ITEM_API_URL)
-      if (!res.ok) throw new Error("Falha ao buscar itens.")
-      const data: Item[] = await res.json()
-      setItens(data)
-      if (data.length > 0 && selectedId === null) {
-        setSelectedId(data[0].iteId)
-      }
-    } catch (err) {
-      toast.error("Erro ao carregar itens.")
-      console.error(err)
-    }
-  }
-
-  async function fetchProdutos() {
-    try {
-      const res = await fetch(PRODUTO_API_URL)
-      if (!res.ok) throw new Error("Falha ao buscar produtos.")
-      const data: Produto[] = await res.json()
-      setProdutos(data)
-    } catch (err) {
-      toast.error("Erro ao carregar produtos.")
-      console.error(err)
-    }
-  }
-
-  async function fetchAll() {
-    setLoading(true)
-    await Promise.all([fetchItens(), fetchProdutos()])
-    setLoading(false)
-  }
-
-  useEffect(() => {
-    fetchAll()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const selected = useMemo(() => {
-    return itens.find((i) => i.iteId === selectedId) || null
-  }, [itens, selectedId])
-
-  // Preenche o formulário de edição ao selecionar/editar item
-  useEffect(() => {
-    if (selected) {
-      setEditData({
-        nome: selected.iteNome,
-        prodId: String(selected.prodId),
-        quantidadeAtual: String(selected.iteQuantidadeAtual),
-        loteNome: selected.iteLoteNome,
-        loteDataAquisicao: selected.iteLoteDataAquisicao?.substring(0, 10) ?? "",
-        loteDataVencimento: selected.iteLoteDataVencimento?.substring(0, 10) ?? "",
-      })
-    }
-  }, [selected, editing])
-
-  const filteredItens = useMemo(() => {
-    return itens.filter((i) => {
-      const matchesNome = i.iteNome.toLowerCase().includes(nomeFilter.toLowerCase())
-      const matchesStatus = statusFilter === "Todos" || i.iteAtivo === statusFilter
-      const matchesProduto = produtoFilter === "Todos" || String(i.prodId) === produtoFilter
-      return matchesNome && matchesStatus && matchesProduto
+async function carregarDadosHome(signal: AbortSignal) {
+  async function buscar<T>(caminho: string): Promise<T> {
+    const resposta = await fetch(`${API_URL}${caminho}`, {
+      credentials: "include", cache: "no-store",
+      signal: AbortSignal.any([signal, AbortSignal.timeout(15000)]),
     })
-  }, [itens, statusFilter, nomeFilter, produtoFilter])
-
-  const getInitials = (nome: string) => {
-    if (!nome) return "I"
-    return nome.trim().substring(0, 2).toUpperCase()
+    if (!resposta.ok) {
+      throw new Error(resposta.status === 401 ? "sessao-expirada" : "falha-carregamento")
+    }
+    return resposta.json()
   }
+  return Promise.allSettled([
+    buscar<Usuario>("/api/Usuarios/me"),
+    buscar<Agendamento[]>("/api/agendamentos"),
+  ])
+}
 
-  // Alterar item (PUT /api/item/{id})
-  async function updateItem() {
-    if (!selected) return
-    if (!editData.nome.trim() || !editData.prodId || !editData.loteNome.trim()) {
-      return toast.error("Nome, produto e nome do lote são obrigatórios.")
-    }
-    if (!editData.loteDataAquisicao || !editData.loteDataVencimento) {
-      return toast.error("Data de aquisição e data de vencimento são obrigatórias.")
-    }
-    if (!editData.prodId) {
-      return toast.error("O produto é obrigatório")
-    }
-    if (!editData.quantidadeAtual) {
-      return toast.error("Nenhuma quantidade pode estar vazia")
-    }
-    const data1 = new Date(editData.loteDataAquisicao);
-    const data2 = new Date(editData.loteDataVencimento);
-    if (data2.getTime()<=data1.getTime()) {
-      return toast.error("A data de vencimento deve ser maior que a data de aquisição")
-    }
-    if (Number(editData.quantidadeAtual) < 0) {
-      return toast.error("Nenhuma quantidade pode ser menor que zero")
-    }
+export default function HomePage() {
+  const [nome, setNome] = useState("")
+  const [dia, setDia] = useState("")
+  const [agendamentos, setAgendamentos] = useState<Agendamento[]>([])
+  const [carregando, setCarregando] = useState(true)
+  const [erro, setErro] = useState("")
+  const [erroNome, setErroNome] = useState("")
+  const [sessaoExpirada, setSessaoExpirada] = useState(false)
+  const [tentativa, setTentativa] = useState(0)
+  const tentarNovamente = useCallback(() => setTentativa(valor => valor + 1), [])
 
-    try {
-      setSubmitting(true)
-      const res = await fetch(`${ITEM_API_URL}/${selected.iteId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          iteNome: editData.nome.trim(),
-          prodId: Number(editData.prodId),
-          iteAtivo: selected.iteAtivo,
-          iteQuantidadeAtual: Number(editData.quantidadeAtual) || 0,
-          iteLoteNome: editData.loteNome.trim(),
-          iteLoteDataAquisicao: editData.loteDataAquisicao,
-          iteLoteDataVencimento: editData.loteDataVencimento,
-        }),
-      })
+  useEffect(() => {
+    const atualizarDia = () => setDia(dataAtual())
+    atualizarDia()
+    const intervalo = window.setInterval(atualizarDia, 60000)
+    window.addEventListener("focus", tentarNovamente)
+    return () => {
+      window.clearInterval(intervalo)
+      window.removeEventListener("focus", tentarNovamente)
+    }
+  }, [tentarNovamente])
 
-      if (!res.ok) {
-        const erro = await res.json().catch(() => null)
-        throw new Error(erro?.mensagem || "Erro ao atualizar item.")
+  useEffect(() => {
+    if (!dia) return
+    const controller = new AbortController()
+    async function carregar() {
+      setCarregando(true)
+      setErro("")
+      setSessaoExpirada(false)
+      setErroNome("")
+      const [usuario, lista] = await carregarDadosHome(controller.signal)
+      if (controller.signal.aborted) return
+      const expirou = [usuario, lista].some(resultado =>
+        resultado.status === "rejected" && resultado.reason instanceof Error && resultado.reason.message === "sessao-expirada")
+      setSessaoExpirada(expirou)
+      if (expirou) {
+        setNome("")
+        setAgendamentos([])
+        setErro("Sua sessão expirou. Entre novamente para consultar os procedimentos do dia.")
+      } else {
+        if (usuario.status === "fulfilled") setNome(usuario.value.usuNome)
+        else setErroNome("Não foi possível carregar seu nome.")
+        if (lista.status === "fulfilled") setAgendamentos(lista.value)
+        else setErro("Não foi possível carregar os procedimentos do dia. Tente novamente.")
       }
-
-      const updatedList = itens.map((i) =>
-        i.iteId === selected.iteId
-          ? {
-              ...i,
-              iteNome: editData.nome.trim(),
-              prodId: Number(editData.prodId),
-              iteQuantidadeAtual: Number(editData.quantidadeAtual) || 0,
-              iteLoteNome: editData.loteNome.trim(),
-              iteLoteDataAquisicao: editData.loteDataAquisicao,
-              iteLoteDataVencimento: editData.loteDataVencimento,
-            }
-          : i
-      )
-      setItens(updatedList)
-
-      toast.success("Item atualizado com sucesso!")
-      setEditing(false)
-    } catch (err: any) {
-      toast.error(err.message || "Erro ao atualizar item.")
-    } finally {
-      setSubmitting(false)
+      setCarregando(false)
     }
-  }
+    void carregar()
+    return () => controller.abort()
+  }, [dia, tentativa])
 
-  // Inativar / Ativar (PATCH /api/item/{id})
-  async function toggleItemStatus(id: number) {
-    const item = itens.find((i) => i.iteId === id)
-    if (!item) return
-
-    const newStatus = item.iteAtivo === "A" ? "I" : "A"
-
-    try {
-      const res = await fetch(`${ITEM_API_URL}/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ iteAtivo: newStatus }),
-      })
-
-      if (!res.ok) {
-        const erro = await res.json().catch(() => null)
-        throw new Error(erro?.mensagem || "Não foi possível alterar o status.")
-      }
-
-      const updatedList = itens.map((i) => (i.iteId === id ? { ...i, iteAtivo: newStatus } : i))
-      setItens(updatedList)
-      toast.success(`Item ${newStatus === "A" ? "reativado" : "inativado"} com sucesso!`)
-    } catch (err: any) {
-      toast.error(err.message || "Não foi possível alterar o status.")
-    }
-  }
-
-  // Criar item (POST /api/item)
-  async function createItem() {
-    const dataAquisicao = new Date(novoItem.loteDataAquisicao);
-    const dataVencimento = new Date(novoItem.loteDataVencimento);
-
-    if (dataVencimento.getTime() < dataAquisicao.getTime()) {
-      return toast.error("A data de vencimento deve ser maior que a data de aquisição")
-    }
-    if (!novoItem.nome.trim() || !novoItem.prodId || !novoItem.loteNome.trim()) {
-      return toast.error("Preencha nome, produto e nome do lote do item.")
-    }
-    if (!novoItem.loteDataAquisicao || !novoItem.loteDataVencimento) {
-      return toast.error("Preencha a data de aquisição e a data de vencimento.")
-    }
-    if (!novoItem.quantidadeAtual) {
-      return toast.error("Nenhuma quantidade deve ser estar vazia.")
-    }
-    if (Number(novoItem.quantidadeAtual) < 0) {
-      return toast.error("Nenhuma quantidade deve ser menor que 0.")
-    }
-
-    try {
-      setSubmitting(true)
-      const res = await fetch(ITEM_API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          iteNome: novoItem.nome.trim(),
-          prodId: Number(novoItem.prodId),
-          iteQuantidadeAtual: Number(novoItem.quantidadeAtual) || 0,
-          iteLoteNome: novoItem.loteNome.trim(),
-          iteLoteDataAquisicao: novoItem.loteDataAquisicao,
-          iteLoteDataVencimento: novoItem.loteDataVencimento,
-        }),
-      })
-
-      if (!res.ok) {
-        const erro = await res.json().catch(() => null)
-        throw new Error(erro?.mensagem || "Erro ao cadastrar item.")
-      }
-
-      toast.success("Item cadastrado com sucesso!")
-      setNovoItem({
-        nome: "",
-        prodId: "",
-        quantidadeAtual: "",
-        loteNome: "",
-        loteDataAquisicao: "",
-        loteDataVencimento: "",
-      })
-      setShowCreateForm(false)
-      await fetchItens() // recarrega para pegar o novo iteId gerado pelo banco
-    } catch (err: any) {
-      toast.error(err.message || "Erro ao cadastrar item.")
-    } finally {
-      setSubmitting(false)
-    }
-  }
+  const procedimentos = procedimentosDoDia(agendamentos, dia)
+  const dataFormatada = dia ? dia.split("-").reverse().join("/") : ""
 
   return (
-    <DashboardShell title="Meautrix" description="Sua plataforma de gerenciamento de estoque de clínica estética.">
-      
+    <DashboardShell title="Home">
+      <div className="mx-auto max-w-5xl space-y-6">
+        <section className="rounded-2xl border border-primary/10 bg-primary/5 p-6 md:p-8">
+          <p className="mb-2 text-sm font-medium text-primary">Boas-vindas ao Meautrix</p>
+          <h2 className="break-words text-2xl font-semibold text-foreground md:text-3xl">
+            {nome ? `Olá, ${nome}!` : "Olá!"}
+          </h2>
+          {erroNome && <div className="mt-3 flex flex-wrap items-center gap-3">
+            <p role="alert" className="text-sm text-destructive">{erroNome}</p>
+            <Button variant="outline" size="sm" onClick={tentarNovamente}>Tentar novamente</Button>
+          </div>}
+        </section>
+
+        <Card>
+          <CardHeader className="gap-3 border-b sm:flex sm:items-center sm:justify-between">
+            <div>
+              <h2 className="text-lg font-semibold">Estes são os procedimentos do dia:</h2>
+              <p className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
+                <CalendarDays className="h-4 w-4" aria-hidden="true" />
+                {dataFormatada || "Hoje"}
+              </p>
+            </div>
+            <Link href="/agendamentos" className="text-sm font-medium text-primary hover:underline">
+              Ver agendamentos
+            </Link>
+          </CardHeader>
+          <CardContent aria-busy={carregando} aria-live="polite">
+            {carregando ? (
+              <div className="flex items-center justify-center gap-2 py-12 text-muted-foreground" role="status">
+                <Loader2 className="h-5 w-5 animate-spin" aria-hidden="true" />
+                Carregando procedimentos do dia...
+              </div>
+            ) : erro ? (
+              <div className="space-y-4 py-8 text-center">
+                <p role="alert" className="text-sm text-destructive">{erro}</p>
+                {sessaoExpirada ? (
+                  <Link href="/" className="text-sm font-medium text-primary hover:underline">Entrar novamente</Link>
+                ) : (
+                  <Button variant="outline" onClick={tentarNovamente}>Tentar novamente</Button>
+                )}
+              </div>
+            ) : procedimentos.length === 0 ? (
+              <div className="py-12 text-center">
+                <CalendarDays className="mx-auto mb-3 h-8 w-8 text-muted-foreground" aria-hidden="true" />
+                <p className="font-medium">Nenhum procedimento agendado para hoje.</p>
+                <p className="mt-1 text-sm text-muted-foreground">Os agendamentos deste dia aparecerão aqui.</p>
+              </div>
+            ) : (
+              <ul className="divide-y divide-border">
+                {procedimentos.map(procedimento => (
+                  <li key={procedimento.id} className="flex flex-col gap-3 py-5 sm:flex-row sm:items-center sm:gap-6">
+                    <div className="flex shrink-0 items-center gap-2 font-semibold text-primary">
+                      <Clock className="h-4 w-4" aria-hidden="true" />
+                      <time dateTime={procedimento.dataAgendadoPara}>{procedimento.dataAgendadoPara.slice(11, 16)}</time>
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <h3 className="break-words font-medium">{procedimento.procedimentoNome}</h3>
+                      <p className="mt-1 break-words text-sm text-muted-foreground">
+                        Cliente: {procedimento.clienteNome || "Não informado"}
+                      </p>
+                    </div>
+                    <span className="shrink-0 text-sm text-muted-foreground">
+                      {procedimento.duracaoMinutos ? `${procedimento.duracaoMinutos} min` : "Duração não informada"}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </CardContent>
+        </Card>
+      </div>
     </DashboardShell>
   )
 }

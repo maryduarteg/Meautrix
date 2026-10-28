@@ -2,6 +2,8 @@ using Meautrix.Interfaces;
 using Meautrix.Repository;
 using Meautrix.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Security.Claims;
 
 namespace Meautrix
 {
@@ -23,7 +25,8 @@ namespace Meautrix
                 {
                     policy.WithOrigins("http://localhost:3000")
                           .AllowAnyHeader()
-                          .AllowAnyMethod();
+                          .AllowAnyMethod()
+                          .AllowCredentials();
                 });
             });
 
@@ -46,6 +49,29 @@ namespace Meautrix
             builder.Services.AddScoped<IProcedimentoService, ProcedimentoService>();
             builder.Services.AddScoped<IProdutoProcedimentoRepository, ProdutoProcedimentoRepository>();
             builder.Services.AddScoped<IProdutoProcedimentoService, ProdutoProcedimentoService>();
+            builder.Services.AddScoped<IAgendamentoRepository, AgendamentoRepository>();
+            builder.Services.AddScoped<IAgendamentoService, AgendamentoService>();
+            builder.Services.AddScoped<IPromocaoRepository, PromocaoRepository>();
+            builder.Services.AddScoped<IPromocaoService, PromocaoService>();
+            builder.Services.AddScoped<IPromocaoProcedimentoRepository, PromocaoProcedimentoRepository>();
+            builder.Services.AddScoped<IPromocaoProcedimentoService, PromocaoProcedimentoService>();
+            builder.Services.AddSingleton(TimeProvider.System);
+
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.Cookie.Name = "meautrix.sessao";
+                    options.Cookie.HttpOnly = true;
+                    options.Cookie.SameSite = SameSiteMode.Lax;
+                    options.ExpireTimeSpan = TimeSpan.FromHours(8);
+                    options.Events.OnValidatePrincipal = async context =>
+                    {
+                        var repository = context.HttpContext.RequestServices.GetRequiredService<IUsuarioRepository>();
+                        if (!int.TryParse(context.Principal?.FindFirstValue(ClaimTypes.NameIdentifier), out var id) ||
+                            (await repository.BuscarPorIdAsync(id))?.UsuAtivo != 'A')
+                            context.RejectPrincipal();
+                    };
+                });
 
             // 4. Controllers e Documentação Swagger
             builder.Services.AddControllers();
@@ -67,6 +93,7 @@ namespace Meautrix
             // Redirecionamento HTTPS desativado em desenvolvimento local para evitar erro 307
             // app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
 

@@ -1,6 +1,10 @@
 ﻿using Meautrix.DTO.Usuario;
 using Meautrix.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace Meautrix.Controllers
 {
@@ -9,10 +13,12 @@ namespace Meautrix.Controllers
     public class UsuariosController : ControllerBase
     {
         private readonly IUsuarioService _usuarioService;
+        private readonly IUsuarioRepository _usuarioRepository;
 
-        public UsuariosController(IUsuarioService usuarioService)
+        public UsuariosController(IUsuarioService usuarioService, IUsuarioRepository usuarioRepository)
         {
             _usuarioService = usuarioService;
+            _usuarioRepository = usuarioRepository;
         }
 
         [HttpGet]
@@ -22,7 +28,21 @@ namespace Meautrix.Controllers
             return Ok(usuarios);
         }
 
-        [HttpGet("{id}")]
+        [Authorize]
+        [HttpGet("me")]
+        public async Task<IActionResult> ObterUsuarioLogado()
+        {
+            if (!int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var id))
+                return Unauthorized();
+
+            var usuario = await _usuarioRepository.BuscarPorIdAsync(id);
+            if (usuario == null || usuario.UsuAtivo != 'A')
+                return Unauthorized();
+
+            return Ok(new { usuNome = usuario.UsuNome });
+        }
+
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> ObterPorId(int id)
         {
             var usuario = await _usuarioService.BuscarPorIdAsync(id);
@@ -54,11 +74,26 @@ namespace Meautrix.Controllers
             if (string.IsNullOrWhiteSpace(dto.UsuLogin) || string.IsNullOrWhiteSpace(dto.UsuSenha))
                 return BadRequest(new { mensagem = "Informe o login e a senha." });
 
-            var usuario = await _usuarioService.BuscarPorLoginAsync(dto.UsuLogin);
-            if (usuario == null || !string.Equals(dto.UsuSenha, usuario.UsuSenha, StringComparison.Ordinal))
+            var usuario = await _usuarioRepository.BuscarPorLoginAsync(dto.UsuLogin);
+            if (usuario == null || usuario.UsuAtivo != 'A' || !string.Equals(dto.UsuSenha, usuario.UsuSenha, StringComparison.Ordinal))
                 return Unauthorized(new { mensagem = "Login ou senha inválidos." });
 
+            var identidade = new ClaimsIdentity(new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, usuario.UsuId.ToString()),
+                new Claim(ClaimTypes.Name, usuario.UsuLogin)
+            }, CookieAuthenticationDefaults.AuthenticationScheme);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(identidade));
+
             return Ok(new { mensagem = "Login realizado com sucesso." });
+        }
+
+        [HttpPost("/logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return NoContent();
         }
 
         [HttpPut("{id}")]

@@ -46,6 +46,10 @@ namespace Meautrix.Repository
                 .FirstOrDefaultAsync( p => p.ProcNome == nome);
         }
 
+        public Task<bool> TemAgendamentosComDuracaoAnteriorAsync(int id, int novaDuracao, DateTime agora) =>
+            _context.Agendamentos.AnyAsync(a => a.Cancelado != "S" && a.ProcedimentoId == id && a.DataAgendadoPara >= agora &&
+                (!a.DuracaoMinutos.HasValue || a.DuracaoMinutos.Value != novaDuracao));
+
         public async Task InserirAsync(Procedimento procedimento)
         {
             await _context.Procedimento.AddAsync(procedimento);

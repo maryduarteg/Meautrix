@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <Compile Include="../../Meautrix/Entidades/Agendamento.cs" Link="Source/Agendamento.cs" />
+    <Compile Include="../../Meautrix/Entidades/Procedimento.cs" Link="Source/Procedimento.cs" />
+    <Compile Include="../../Meautrix/Entidades/Cliente.cs" Link="Source/Cliente.cs" />
+    <Compile Include="../../Meautrix/DTO/Agendamento/*.cs" Link="Source/%(Filename)%(Extension)" />
+    <Compile Include="../../Meautrix/Interfaces/Repositories/IAgendamentoRepository.cs" Link="Source/IAgendamentoRepository.cs" />
+    <Compile Include="../../Meautrix/Interfaces/Services/IAgendamentoService.cs" Link="Source/IAgendamentoService.cs" />
+    <Compile Include="../../Meautrix/Services/AgendamentoService.cs" Link="Source/AgendamentoService.cs" />
+    <Compile Include="../../Meautrix/Services/ProcedimentoService.cs" Link="Source/ProcedimentoService.cs" />
+    <Compile Include="../../Meautrix/Interfaces/Repositories/IProcedimentoRepository.cs" Link="Source/IProcedimentoRepository.cs" />
+    <Compile Include="../../Meautrix/Interfaces/Services/IProcedimentoService.cs" Link="Source/IProcedimentoService.cs" />
+    <Compile Include="../../Meautrix/DTO/Procedimentos/*.cs" Link="Source/%(Filename)%(Extension)" />
+    <Compile Include="../../Meautrix/Controllers/AgendamentosController.cs" Link="Source/AgendamentosController.cs" />
+  </ItemGroup>
+</Project>

@@ -84,6 +84,20 @@
   --sidebar-ring: #f7759f;
 }
 
+@layer components {
+  .consulta-scroll {
+    max-height: min(32rem, 60dvh);
+    min-height: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+  }
+
+  .consulta-scroll > * {
+    flex-shrink: 0;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

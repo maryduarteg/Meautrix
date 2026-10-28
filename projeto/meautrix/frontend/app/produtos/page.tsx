@@ -717,7 +717,7 @@ export default function CadastroPage() {
 
         <div className="grid gap-6 xl:grid-cols-[360px_1fr]">
           {/* Lista */}
-          <Card>
+          <Card className="min-w-0 self-start">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base">
                 <List className="h-4 w-4 text-primary" />
@@ -725,7 +725,7 @@ export default function CadastroPage() {
               </CardTitle>
             </CardHeader>
 
-            <CardContent className="flex flex-col gap-2">
+            <CardContent className="consulta-scroll flex flex-col gap-2" tabIndex={0} role="region" aria-label="Produtos cadastrados">
               {loading ? (
                 <div className="flex items-center justify-center p-8">
                   <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />

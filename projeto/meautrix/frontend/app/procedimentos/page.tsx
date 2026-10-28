@@ -28,12 +28,28 @@ export interface Procedimento {
   procId: number
   procNome: string
   procDescricao: string
+  procDuracaoMinutos: number | null
+  procValor: number | null
   procAtivo: string
 }
 
 const INVALID_INPUT = "border-destructive ring-2 ring-destructive/20"
 
 type FieldErrors = Partial<Record<string, string>>
+
+function duracaoValida(value: string) {
+  const minutos = Number(value)
+  return Number.isInteger(minutos) && minutos > 0 && minutos <= 2147483647
+}
+
+function valorValido(value: string) {
+  const normalizado = value.trim().replace(",", ".")
+  return /^\d+(?:\.\d{1,2})?$/.test(normalizado) && Number(normalizado) <= 99999999.99
+}
+
+function formatarValor(value: number | null) {
+  return value === null ? "Não informado" : value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })
+}
 
 function FieldError({ error }: { error?: string }) {
   if (!error) return null
@@ -60,11 +76,14 @@ export default function ProcedimentoPage() {
 
   const [createErrors, setCreateErrors] = useState<FieldErrors>({})
   const [editErrors, setEditErrors] = useState<FieldErrors>({})
+  const [avisoDuracao, setAvisoDuracao] = useState("")
 
   // Formulário de edição
   const [editData, setEditData] = useState({
     procNome: "",
     procDescricao: "",
+    procDuracaoMinutos: "",
+    procValor: "",
     procAtivo: "A",
   })
 
@@ -72,6 +91,8 @@ export default function ProcedimentoPage() {
   const [newProcedimento, setNewProcedimento] = useState({
     procNome: "",
     procDescricao: "",
+    procDuracaoMinutos: "",
+    procValor: "",
   })
 
   // Limpar erros individuais
@@ -113,6 +134,12 @@ export default function ProcedimentoPage() {
       errors.procDescricao = "Já existe um procedimento com esta descrição."
     }
 
+    if (!duracaoValida(newProcedimento.procDuracaoMinutos))
+      errors.procDuracaoMinutos = "Informe uma duração em minutos inteiros, maior que zero."
+
+    if (!valorValido(newProcedimento.procValor))
+      errors.procValor = "Informe um valor entre R$ 0,00 e R$ 99.999.999,99, com até duas casas decimais."
+
     setCreateErrors(errors)
 
     return Object.keys(errors).length === 0
@@ -132,6 +159,12 @@ export default function ProcedimentoPage() {
       errors.procDescricao = "Já existe um procedimento com esta descrição."
     }
 
+    if (!duracaoValida(editData.procDuracaoMinutos))
+      errors.procDuracaoMinutos = "Informe uma duração em minutos inteiros, maior que zero."
+
+    if (!valorValido(editData.procValor))
+      errors.procValor = "Informe um valor entre R$ 0,00 e R$ 99.999.999,99, com até duas casas decimais."
+
     setEditErrors(errors)
 
     return Object.keys(errors).length === 0
@@ -144,6 +177,8 @@ export default function ProcedimentoPage() {
     setNewProcedimento({
       procNome: "",
       procDescricao: "",
+      procDuracaoMinutos: "",
+      procValor: "",
     })
   }
 
@@ -164,6 +199,8 @@ export default function ProcedimentoPage() {
         procId: p.procId,
         procNome: p.procNome ?? "",
         procDescricao: p.procDescricao ?? "",
+        procDuracaoMinutos: p.procDuracaoMinutos ?? null,
+        procValor: p.procValor ?? null,
         procAtivo: String(p.procAtivo ?? "A").toUpperCase(),
       }))
 
@@ -198,6 +235,8 @@ export default function ProcedimentoPage() {
       setEditData({
         procNome: selected.procNome,
         procDescricao: selected.procDescricao,
+        procDuracaoMinutos: String(selected.procDuracaoMinutos ?? ""),
+        procValor: selected.procValor === null ? "" : selected.procValor.toFixed(2).replace(".", ","),
         procAtivo: selected.procAtivo,
       })
     }
@@ -253,6 +292,8 @@ export default function ProcedimentoPage() {
         procId: selected.procId,
         procNome: editData.procNome.trim(),
         procDescricao: editData.procDescricao.trim(),
+        procDuracaoMinutos: Number(editData.procDuracaoMinutos),
+        procValor: Number(editData.procValor.trim().replace(",", ".")),
         procAtivo: editData.procAtivo || selected.procAtivo || "A",
       }
 
@@ -268,6 +309,8 @@ export default function ProcedimentoPage() {
         )
       }
 
+      const resultado = await response.json().catch(() => null)
+      setAvisoDuracao(resultado?.aviso ?? "")
       toast.success("Procedimento atualizado com sucesso!")
 
       setEditing(false)
@@ -300,10 +343,9 @@ export default function ProcedimentoPage() {
         if (!response.ok) throw new Error()
       } else {
         const response = await fetch(`${API_URL}/${procId}`, {
-          method: "PUT",
+          method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            ...proc,
             procAtivo: "A",
           }),
         })
@@ -331,6 +373,8 @@ export default function ProcedimentoPage() {
         body: JSON.stringify({
           procNome: newProcedimento.procNome.trim(),
           procDescricao: newProcedimento.procDescricao.trim(),
+          procDuracaoMinutos: Number(newProcedimento.procDuracaoMinutos),
+          procValor: Number(newProcedimento.procValor.trim().replace(",", ".")),
           procAtivo: "A",
         }),
       })
@@ -347,6 +391,8 @@ export default function ProcedimentoPage() {
       setNewProcedimento({
         procNome: "",
         procDescricao: "",
+        procDuracaoMinutos: "",
+        procValor: "",
       })
       setShowCreateForm(false)
 
@@ -368,6 +414,12 @@ export default function ProcedimentoPage() {
       description="Cadastre, consulte e atualize os procedimentos oferecidos."
     >
       <div className="flex flex-col gap-6">
+        {avisoDuracao && (
+          <div role="alert" className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+            <p>{avisoDuracao}</p>
+            <Button variant="outline" size="sm" onClick={() => setAvisoDuracao("")}>Entendi</Button>
+          </div>
+        )}
         {/* Indicadores */}
         <div className="grid gap-4 sm:grid-cols-2">
           <Card>
@@ -462,6 +514,30 @@ export default function ProcedimentoPage() {
                 <FieldError error={createErrors.procDescricao} />
               </div>
 
+              <div>
+                <Label htmlFor="procedimento-duracao">Duração (minutos) <Required /></Label>
+                <Input id="procedimento-duracao" type="number" min="1" step="1"
+                  className={`mt-2 ${createErrors.procDuracaoMinutos ? INVALID_INPUT : ""}`}
+                  placeholder="Ex.: 60" value={newProcedimento.procDuracaoMinutos}
+                  onChange={e => {
+                    setNewProcedimento(p => ({ ...p, procDuracaoMinutos: e.target.value }))
+                    clearCreateError("procDuracaoMinutos")
+                  }} />
+                <FieldError error={createErrors.procDuracaoMinutos} />
+              </div>
+
+              <div>
+                <Label htmlFor="procedimento-valor">Valor (R$) <Required /></Label>
+                <Input id="procedimento-valor" type="text" inputMode="decimal" maxLength={11}
+                  className={`mt-2 ${createErrors.procValor ? INVALID_INPUT : ""}`}
+                  placeholder="Ex.: 150,00" value={newProcedimento.procValor} aria-invalid={!!createErrors.procValor}
+                  onChange={e => {
+                    setNewProcedimento(p => ({ ...p, procValor: e.target.value }))
+                    clearCreateError("procValor")
+                  }} />
+                <FieldError error={createErrors.procValor} />
+              </div>
+
               <div className="flex justify-end gap-2 sm:col-span-2">
                 <Button
                   type="button"
@@ -493,6 +569,8 @@ export default function ProcedimentoPage() {
                 setNewProcedimento({
                   procNome: "",
                   procDescricao: "",
+                  procDuracaoMinutos: "",
+                  procValor: "",
                 })
                 setShowCreateForm(true)
               }}
@@ -505,7 +583,7 @@ export default function ProcedimentoPage() {
 
         <div className="grid gap-6 xl:grid-cols-[360px_1fr]">
           {/* Lista de procedimentos */}
-          <Card>
+          <Card className="min-w-0 self-start">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base">
                 <Users className="h-4 w-4 text-primary" />
@@ -536,7 +614,7 @@ export default function ProcedimentoPage() {
               </div>
             </CardHeader>
 
-            <CardContent className="flex flex-col gap-2">
+            <CardContent className="consulta-scroll flex flex-col gap-2" tabIndex={0} role="region" aria-label="Procedimentos cadastrados">
               {loading ? (
                 <div className="flex items-center justify-center p-6">
                   <Loader2 className="h-6 w-6 animate-spin text-primary" />
@@ -573,6 +651,7 @@ export default function ProcedimentoPage() {
                       <p className="truncate text-xs text-muted-foreground">
                         {p.procDescricao}
                       </p>
+                      <p className="mt-1 text-xs font-medium text-primary">{formatarValor(p.procValor)}</p>
                     </div>
 
                     <Badge
@@ -628,6 +707,8 @@ export default function ProcedimentoPage() {
                           setEditData({
                             procNome: selected.procNome,
                             procDescricao: selected.procDescricao,
+                            procDuracaoMinutos: String(selected.procDuracaoMinutos ?? ""),
+                            procValor: selected.procValor === null ? "" : selected.procValor.toFixed(2).replace(".", ","),
                             procAtivo: selected.procAtivo,
                           })
                           setEditErrors({})
@@ -708,6 +789,33 @@ export default function ProcedimentoPage() {
                     {editing && (
                       <FieldError error={editErrors.procDescricao} />
                     )}
+                  </div>
+
+                  <div>
+                    <Label htmlFor="procedimento-editar-duracao">Duração (minutos) {editing && <Required />}</Label>
+                    <Input id="procedimento-editar-duracao" type={editing ? "number" : "text"} min="1" step="1"
+                      value={editing ? editData.procDuracaoMinutos : selected.procDuracaoMinutos ?? "Não informada"}
+                      readOnly={!editing}
+                      className={`mt-2 ${editing && editErrors.procDuracaoMinutos ? INVALID_INPUT : ""}`}
+                      onChange={e => {
+                        setEditData(p => ({ ...p, procDuracaoMinutos: e.target.value }))
+                        clearEditError("procDuracaoMinutos")
+                      }} />
+                    {editing && <FieldError error={editErrors.procDuracaoMinutos} />}
+                  </div>
+
+                  <div>
+                    <Label htmlFor="procedimento-valor-editar">Valor (R$) {editing && <Required />}</Label>
+                    <Input id="procedimento-valor-editar" type="text" inputMode="decimal"
+                      maxLength={editing ? 11 : undefined} readOnly={!editing}
+                      value={editing ? editData.procValor : formatarValor(selected.procValor)}
+                      aria-invalid={editing && !!editErrors.procValor}
+                      className={`mt-2 ${editing && editErrors.procValor ? INVALID_INPUT : ""}`}
+                      onChange={e => {
+                        setEditData(p => ({ ...p, procValor: e.target.value }))
+                        clearEditError("procValor")
+                      }} />
+                    {editing && <FieldError error={editErrors.procValor} />}
                   </div>
 
                   <div>

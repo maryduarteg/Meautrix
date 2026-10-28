@@ -76,8 +76,8 @@ namespace Meautrix.Controllers
         {
             try
             {
-                await _procedimentoService.AlterarAsync(id, dto);
-                return NoContent();
+                var aviso = await _procedimentoService.AlterarAsync(id, dto);
+                return Ok(new { mensagem = "Procedimento atualizado com sucesso.", aviso });
             }
             catch (KeyNotFoundException ex)
             {
@@ -94,8 +94,8 @@ namespace Meautrix.Controllers
         {
             try
             {
-                await _procedimentoService.AlterarParcialAsync(id, dto);
-                return NoContent();
+                var aviso = await _procedimentoService.AlterarParcialAsync(id, dto);
+                return Ok(new { mensagem = "Procedimento atualizado com sucesso.", aviso });
             }
             catch (KeyNotFoundException ex)
             {

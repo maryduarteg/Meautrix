@@ -19,10 +19,38 @@ namespace Meautrix.Repository
         public DbSet<Item> Item { get; set; }
         public DbSet<Procedimento> Procedimento { get; set; }
         public DbSet<ProdutoProcedimento> ProdutosProcedimentos { get; set; }
+        public DbSet<Agendamento> Agendamentos { get; set; }
+        public DbSet<Promocao> Promocoes { get; set; }
+        public DbSet<PromocaoProcedimento> PromocoesProcedimentos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Promocao>(entity =>
+            {
+                entity.Property(p => p.PromId).UseIdentityByDefaultColumn();
+                entity.Property(p => p.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            });
+
+            modelBuilder.Entity<PromocaoProcedimento>(entity =>
+            {
+                entity.Property(vinculo => vinculo.PromProcId).UseIdentityByDefaultColumn();
+                entity.Property(vinculo => vinculo.PromProcDesconto).HasPrecision(10, 2);
+                entity.HasIndex(vinculo => new { vinculo.PromocoesPromId, vinculo.ProcedimentosProcId }).IsUnique();
+                entity.HasOne(vinculo => vinculo.Promocao)
+                    .WithMany()
+                    .HasForeignKey(vinculo => vinculo.PromocoesPromId)
+                    .OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne(vinculo => vinculo.Procedimento)
+                    .WithMany()
+                    .HasForeignKey(vinculo => vinculo.ProcedimentosProcId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<Agendamento>()
+                .Property(a => a.Cancelado)
+                .HasDefaultValue("N");
 
             // Mapeamento adicional e restrições de tabelas
             modelBuilder.Entity<Cliente>(entity =>
